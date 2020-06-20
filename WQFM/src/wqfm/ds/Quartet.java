@@ -1,4 +1,4 @@
-package wqfm.datastructure;
+package wqfm.ds;
 
 /**
  *
