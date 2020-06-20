@@ -23,46 +23,54 @@ BUT FOR NOW, use HashMap [EXACTLY same method signatures for both data-structure
  */
 public class CustomDS {
 
-    List<List<Quartet>> table1_quartets_double_list;
-    List<Pair<Integer, Integer>> table2_weight_indexOfQrt;
-    HashMap<String, List<Pair>> map_taxa_relevant_quartet_indices;
+    public List<List<Quartet>> table1_quartets_double_list;
+    public HashMap<Double, Integer> table2_map_weight_indexQuartet;
+    public HashMap<String, List<Pair<Integer, Integer>>> map_taxa_relevant_quartet_indices;
 
+//    public List<Pair<Double, Integer>> table2_weight_indexOfQrt; // Use map as above
+    
     public CustomDS() {
         this.table1_quartets_double_list = new ArrayList<>();
-        this.table2_weight_indexOfQrt = new ArrayList<>();
+//        this.table2_weight_indexOfQrt = new ArrayList<>();
         this.map_taxa_relevant_quartet_indices = new HashMap<>();
+        this.table2_map_weight_indexQuartet = new HashMap<>();
     }
 
     private void printTable1() {
         System.out.println("----------- Table1 [Double list of quartets] ------------------");
         for (int i = 0; i < table1_quartets_double_list.size(); i++) {
-            System.out.println("Row index: " + i);
+            System.out.print("Row: " + i + " -> ");
             for (int j = 0; j < table1_quartets_double_list.get(i).size(); j++) {
                 System.out.print(table1_quartets_double_list.get(i).get(j) + "  ");
             }
+            System.out.println("");
         }
     }
 
     private void printTable2() {
-        System.out.println("----------- Table 2 [Weight <-> Index] pair ------------------");
-        for (int i = 0; i < table2_weight_indexOfQrt.size(); i++) {
+        System.out.println("----------- Table 2 [Weight, Index_Table_1] pair ------------------");
+        /*for (int i = 0; i < table2_weight_indexOfQrt.size(); i++) {
             Pair pair = table2_weight_indexOfQrt.get(i);
             System.out.println("i = " + i + " , weight = " + pair.getKey() + " , idx_table_1_ROW_IDX = " + pair.getValue());
+        }*/
+        for(Double key_weight: table2_map_weight_indexQuartet.keySet()){
+            int val_rowIDX_tab2 = table2_map_weight_indexQuartet.get(key_weight);
+            System.out.println("Key_WEIGHT: <" + key_weight + ">: Value_rowTable2IDX: " + val_rowIDX_tab2);
         }
     }
 
     private void printMap() {
         System.out.println("----------- Printing Map <Taxa,RelevantQuartet_RowCol> ---------");
-        for(String key_taxa: map_taxa_relevant_quartet_indices.keySet()){
-            List<Pair> value_r_c_index_pair = map_taxa_relevant_quartet_indices.get(key_taxa);
+        for (String key_taxa : map_taxa_relevant_quartet_indices.keySet()) {
+            List<Pair<Integer, Integer>> value_r_c_index_pair = map_taxa_relevant_quartet_indices.get(key_taxa);
             System.out.print("Taxa:<" + key_taxa + ">: ");
-            for(int i=0; i<value_r_c_index_pair.size(); i++){
+            for (int i = 0; i < value_r_c_index_pair.size(); i++) {
                 Pair pair = value_r_c_index_pair.get(i);
                 System.out.print("(" + pair.getKey() + "," + pair.getValue() + "), ");
             }
             System.out.println("");
         }
-        
+
     }
 
     public void printCustomDS() {
