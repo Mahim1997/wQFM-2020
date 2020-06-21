@@ -39,7 +39,7 @@ public class CustomDS {
     private void printTable1() {
         System.out.println("----------- Table1 [Double list of quartets] ------------------");
         for (int i = 0; i < table1_quartets_double_list.size(); i++) {
-            System.out.print("Row: " + i + " -> ");
+            System.out.print("Row: " + i + ", size = " +  table1_quartets_double_list.get(i).size() + " ---> ");
             for (int j = 0; j < table1_quartets_double_list.get(i).size(); j++) {
                 System.out.print(table1_quartets_double_list.get(i).get(j) + "  ");
             }
@@ -59,11 +59,11 @@ public class CustomDS {
         }
     }
 
-    private void printMap() {
+    private void printMap_RelevantQuartetsPerTaxa() {
         System.out.println("----------- Printing Map <Taxa,RelevantQuartet_RowCol> ---------");
         for (String key_taxa : map_taxa_relevant_quartet_indices.keySet()) {
             List<Pair<Integer, Integer>> value_r_c_index_pair = map_taxa_relevant_quartet_indices.get(key_taxa);
-            System.out.print("Taxa:<" + key_taxa + ">: ");
+            System.out.print("Taxa:<" + key_taxa + ">: Length: " + value_r_c_index_pair.size() + "  ==>> ");
             for (int i = 0; i < value_r_c_index_pair.size(); i++) {
                 Pair pair = value_r_c_index_pair.get(i);
                 System.out.print("(" + pair.getKey() + "," + pair.getValue() + "), ");
@@ -76,7 +76,7 @@ public class CustomDS {
     public void printCustomDS() {
         printTable1();
         printTable2();
-        printMap();
+        printMap_RelevantQuartetsPerTaxa();
     }
 
 }

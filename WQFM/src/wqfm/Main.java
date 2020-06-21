@@ -14,7 +14,12 @@ public class Main {
 
         long time_1 = System.currentTimeMillis();
 
+//        for(int i=0; i<89; i++){
+//            Runner.testRerootFunction();
+//        }
+
         Runner.runFunctions();
+        
 
         long time_del = System.currentTimeMillis() - time_1;
         System.out.println("Time (ms) = " + time_del);

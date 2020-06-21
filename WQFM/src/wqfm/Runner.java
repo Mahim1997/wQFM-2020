@@ -19,18 +19,9 @@ public class Runner {
 
     //Main method to run all functions ... [ABSTRACT everything from Main class]
     public static void runFunctions() {
-
-        mainMethod();
+        testSortHashMap();
+//        mainMethod();
 //        testCustomDS();
-
-    }
-
-    static void testCustomDS() {
-        CustomDS customDS = new CustomDS();
-        customDS.table1_quartets_double_list.add(new ArrayList<>());
-        List<Quartet> get = customDS.table1_quartets_double_list.get(0);
-        get.add(new Quartet("A", "B", "C", "D", 10));
-        customDS.printCustomDS();
 
     }
 
@@ -39,15 +30,23 @@ public class Runner {
         System.out.println("Reading from file <" + Main.INPUT_FILE_NAME + "> done");
 
         Runner runner = new Runner(); //Create object and handle [IF THREAD used later on]
-        CustomDS customDS = runner.populateCustomTables(lines);
+        CustomDS customDS = null;
+        try {
+            customDS = runner.readFileAndpopulateCustomTables(Main.INPUT_FILE_NAME); // Initial population of custom-datastructure-tables 
+        } catch (Exception e) {
+            System.out.println("Error reading input from file <" + Main.INPUT_FILE_NAME + "> ... exiting program.");
+            System.exit(-1);
+        }
         customDS.printCustomDS();
     }
 
-    private CustomDS populateCustomTables(List<String> lines) {
+
+    private CustomDS readFileAndpopulateCustomTables(String inputFileName) throws Exception {
         CustomDS customDS = new CustomDS();
+        Scanner sc = new Scanner(new FileInputStream(inputFileName));
         String line;
-        for (int iter_lines = 0; iter_lines < lines.size(); iter_lines++) {
-            line = lines.get(iter_lines);
+        while (sc.hasNextLine()) {
+            line = sc.nextLine();
             Quartet quartet = new Quartet(line);
 //            System.out.print(i + ":" + line + "  ");
 //            quartet.printQuartet();
@@ -92,6 +91,7 @@ public class Runner {
         return customDS;
     }
 
+    // READ and populate tables at the same function ABOVE...
     private static List<String> readFile(String inputFileName) {
         List<String> lines = new ArrayList<>();
         try {
@@ -124,7 +124,7 @@ public class Runner {
 
     // Using python3 and dendropy ... this reroot_tree_new.py works
     // Command is: python3 reroot_tree_new.py <tree-newick> <outgroup> DON'T FORGET SEMI-COLON
-    private static void testRerootFunction() {
+    public static void testRerootFunction() {
         String newickTree = "((3,(1,2)),((6,5),4));";
         String outGroupNode = "5";
 
@@ -154,4 +154,19 @@ public class Runner {
         System.out.println(roll);
 
     }
+
+    private static void testCustomDS() {
+        CustomDS customDS = new CustomDS();
+        customDS.table1_quartets_double_list.add(new ArrayList<>());
+        List<Quartet> get = customDS.table1_quartets_double_list.get(0);
+        get.add(new Quartet("A", "B", "C", "D", 10));
+        customDS.printCustomDS();
+
+    }
+
+
+    private static void testSortHashMap() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
