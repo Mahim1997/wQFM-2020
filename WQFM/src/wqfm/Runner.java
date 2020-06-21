@@ -24,9 +24,9 @@ public class Runner {
     public static void runFunctions() {
 //        testSortHashMap();
 //        testCustomDS();
-        test_TriplePair();
+//        test_TriplePair();
 
-//        mainMethod();
+        mainMethod();
     }
 
     private static void mainMethod() {
@@ -50,13 +50,147 @@ public class Runner {
                 list_taxa, customDS.table4_quartetes_indices_list); //call the recursive DNC function
 
     }
+    //------------------Initial Bipartition : ZAHIN-----------------
+    private void print_initial_bipartition(List<String> list_taxa_string,List<Integer> partition_list){
+        System.out.print("LEFT: ");
+        for(int i=0;i<partition_list.size();i++){
+            if(partition_list.get(i)==-1) System.out.print(list_taxa_string.get(i)+"-->");
+        }
+        System.out.print("\nRIGHT: ");
+        for(int i=0;i<partition_list.size();i++){
+             if(partition_list.get(i)==1) System.out.print(list_taxa_string.get(i)+"-->");
+        }
+    }
+    private void Initial_Bipartition(CustomDS customDS,
+            int level, List<String> list_taxa_string,
+            List<Pair<Integer, Integer>> list_quartets_indices){
+       // partition_list is the list which will the partitions of each taxa
+       // -1 : left , 0 : unassigned , +1 : right
+       //initiazing partition_list with 0 (all are unassigned)
+       List<Integer> partition_list = new ArrayList<Integer>(Collections.nCopies(list_taxa_string.size(), 0));
+       int count_taxa_left_partition = 0;
+       int count_taxa_right_partition = 0;
+       for(Double key_weight: customDS.table2_map_weight_indexQuartet.keySet()){
+            int rowIDX = customDS.table2_map_weight_indexQuartet.get(key_weight);
+            //System.out.println("Key_WEIGHT: <" + key_weight + ">: Value_rowTable2_IDX: " + rowIDX);
+            for (int j = 0; j < customDS.table1_quartets_double_list.get(rowIDX).size(); j++) {
+                //thus we can get quartets in sorted order (according to weight)
+             //   System.out.print(customDS.table1_quartets_double_list.get(rowIDX).get(j) + "  ");
+                Quartet quartet_under_consideration = customDS.table1_quartets_double_list.get(rowIDX).get(j);
+                String q1 = quartet_under_consideration.taxa_sisters_left[0];
+                String q2 = quartet_under_consideration.taxa_sisters_left[1];
+                String q3 = quartet_under_consideration.taxa_sisters_right[0];
+                String q4 = quartet_under_consideration.taxa_sisters_right[1];
+                //get indices of these taxas
+                int idx_q1 = list_taxa_string.indexOf(q1);
+                int idx_q2 = list_taxa_string.indexOf(q2);
+                int idx_q3 = list_taxa_string.indexOf(q3);
+                int idx_q4 = list_taxa_string.indexOf(q4);
+//                System.out.println(idx_q1);
+//                System.out.println(idx_q2);
+//                System.out.println(idx_q3);
+//                System.out.println(idx_q4);
+                //check status of q1,q2,q3,q4
+                int status_q1,status_q2,status_q3,status_q4; //status of q1,q2,q3,q4 respectively
+                status_q1 = partition_list.get(idx_q1);
+                status_q2 = partition_list.get(idx_q2);
+                status_q3 = partition_list.get(idx_q3);
+                status_q4 = partition_list.get(idx_q4);
+                //all unassigned
+                if (status_q1==0 && status_q2==0 && status_q3==0 && status_q4==0){ // assign q1,q2 to left and q3,q4 to right
+                    partition_list.set(idx_q1, -1);
+                    partition_list.set(idx_q2, -1);
+                    partition_list.set(idx_q3, 1);
+                    partition_list.set(idx_q4, 1);
+                    count_taxa_left_partition +=2;
+                    count_taxa_right_partition +=2;
+                    status_q1=-1;
+                    status_q2=-1;
+                    status_q3=1;
+                    status_q4=1;
+                    //System.out.println(partition_list.get(idx_q1));
+                }
+                else {
+                    if(status_q1==0) //q1 not present in any partition
+			{	//if status_q2 is assigned
+				if(status_q2!=0){ //look for q2's partition. put q1 in there
+					if(status_q2==-1) {status_q1=-1;partition_list.set(idx_q1, -1);count_taxa_left_partition++;}
+					else {status_q1=1;partition_list.set(idx_q1, 1);count_taxa_right_partition++;}
+				}
+                                //q3 is assgined
+				else if(status_q3!=0){
+                                        // q3 in left, put q1 in right
+					if(status_q3==-1) {status_q1=1;partition_list.set(idx_q1, 1);count_taxa_right_partition++;}
+                                        // status_q3 in right,put status_q1 in left
+					else {status_q1=-1;partition_list.set(idx_q1, -1);count_taxa_left_partition++;}
+				}
+				else if(status_q4!=0)
+				{
+					 // q4 in left, put q1 in right
+					if(status_q4==-1) {status_q1=1;partition_list.set(idx_q1, 1);count_taxa_right_partition++;}
+                                        //q4 in right,put q1 in left
+					else {status_q1=-1;partition_list.set(idx_q1, -1);count_taxa_left_partition++;}
+				}
+				
+			}
+                    if(status_q2==0)
+			{
+				//look for q1's partition, put q2 in there
+				if(status_q1==-1) {status_q2=-1;partition_list.set(idx_q2,-1);count_taxa_left_partition++;}
+				else {status_q2 =1;partition_list.set(idx_q2,1);count_taxa_right_partition++;}
+				
+			}
+                    if(status_q3==0)
+			{
+				if(status_q4!=0) //q4 is assigned, look for q4 and put q3 in there
+				{
+					if(status_q4==1) {status_q3=1;partition_list.set(idx_q3, 1);count_taxa_right_partition++;}
+					else {status_q3=-1;partition_list.set(idx_q3, -1);count_taxa_left_partition++;}
+				}
+				else{
+					if(status_q1==1) {status_q3=-1;partition_list.set(idx_q3, -1);count_taxa_left_partition++;}
+					else {status_q3=1;partition_list.set(idx_q3, 1);count_taxa_right_partition++;}
+				}
+			}
+		    if(status_q4==0)
+			{
+                            if(status_q3==-1) {status_q4=-1;partition_list.set(idx_q4,-1);count_taxa_left_partition++;}
+			    else {status_q4 =1;partition_list.set(idx_q4,1);count_taxa_right_partition++;}
+				
+			}
+                }
+                
+                
+                
+               
+            }
+        }//done going through all quartets
+       
+       //now assign remaining taxa randomly step4
+       int flag = 0;
+       for (int i=0;i<partition_list.size();i++){
+           if (partition_list.get(i)==0){
+           if(count_taxa_left_partition<count_taxa_right_partition)
+			flag=2;
+		else if(count_taxa_left_partition>count_taxa_right_partition)
+			flag=1;
+		else flag++;
+
+		if(flag%2==0){partition_list.set(i, -1);count_taxa_left_partition++;}
+		else {partition_list.set(i, 1);count_taxa_right_partition++;}
+                
+           }
+       }
+       print_initial_bipartition(list_taxa_string,partition_list);
+    }
 
     // ------>>>> Main RECURSIVE function ....
     private String recursiveDivideAndConquer(CustomDS customDS,
             int level, List<String> list_taxa_string,
-            List<Pair<Integer, Integer>> list_quartets_indices) {
+            List<Pair<Integer, Integer>> list_quartets_indices)
+    {
         System.out.println("-->>Inside recursiveDNC() function ... of Runner.java LINE 57");
-
+        Initial_Bipartition( customDS,level, list_taxa_string,list_quartets_indices);
         /*  CustomDS.getDummyTaxonName(level) returns a dummy taxon with this level.
             TO DO HERE .... recursive-DNC function
             1. SET INTIIAL RETURN CONDITIONS ...
