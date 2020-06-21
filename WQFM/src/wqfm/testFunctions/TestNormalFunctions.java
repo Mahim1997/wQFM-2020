@@ -116,7 +116,38 @@ public class TestNormalFunctions {
         list_pairs.add(new Pair(5, 4));
         list_pairs.add(new Pair(10, 5));
 
-        for(Pair<Integer, Integer> pair: list_pairs){
+        for (Pair<Integer, Integer> pair : list_pairs) {
+            System.out.println(pair);
+        }
+
+        Map<Integer, Integer> treeMap = new TreeMap<>(Collections.reverseOrder());
+        for (Pair<Integer, Integer> pair : list_pairs) {
+            treeMap.put(pair.getKey(), pair.getValue());
+        }
+        System.out.println("---------------------------------------");
+        for (Integer key : treeMap.keySet()) {
+            int val = treeMap.get(key);
+            System.out.println(key + "," + val);
+        }
+    }
+
+    public static void testSortPair() { //takes more time than map putting...
+        List<Pair<Integer, Integer>> list_pairs = new ArrayList<>();
+        list_pairs.add(new Pair(22, 1));
+        list_pairs.add(new Pair(31, 2));
+        list_pairs.add(new Pair(43, 3));
+        list_pairs.add(new Pair(5, 4));
+        list_pairs.add(new Pair(10, 5));
+
+        for (Pair<Integer, Integer> pair : list_pairs) {
+            System.out.println(pair);
+        }
+        System.out.println("---------------------------------------");
+
+        list_pairs.sort((o1, o2) -> {
+            return o2.getKey() - o1.getKey(); //To change body of generated lambdas, choose Tools | Templates.
+        });
+        for (Pair<Integer, Integer> pair : list_pairs) {
             System.out.println(pair);
         }
     }

@@ -4,7 +4,9 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 import javafx.util.Pair;
 import wqfm.ds.CustomDS;
 import wqfm.ds.Quartet;
@@ -18,9 +20,10 @@ public class Runner {
 
     //Main method to run all functions ... [ABSTRACT everything from Main class]
     public static void runFunctions() {
-        TestNormalFunctions.testTreeMapFromPairIntegers();
+//        TestNormalFunctions.testTreeMapFromPairIntegers();
+//        TestNormalFunctions.testSortPair();
 
-//        mainMethod();
+        mainMethod();
     }
 
     private static void mainMethod() {
@@ -48,7 +51,7 @@ public class Runner {
             int level, List<String> list_taxa_string,
             List<Pair<Integer, Integer>> list_quartets_indices) {
         System.out.println("-->>Inside recursiveDNC() function ... of Runner.java LINE 57");
-        
+
         List<Integer> initial_logical_partition_list = getInitialBipartition(customDS, level, list_taxa_string, list_quartets_indices);
         System.out.println("Printing Initial Bipartition");
         printBipartition(list_taxa_string, initial_logical_partition_list);
@@ -92,6 +95,7 @@ public class Runner {
         }
         System.out.println("");
     }
+
     //Function to obtain initial (logical) bipartition 
     private List<Integer> getInitialBipartition(CustomDS customDS,
             int level, List<String> list_taxa_string,
@@ -104,13 +108,28 @@ public class Runner {
         int count_taxa_right_partition = 0;
 
         //Need to create a TreeMap for Pair of list_quartetes_indices...
-        for (Double key_weight : customDS.table2_map_weight_indexQuartet.keySet()) {
-            int rowIDX = customDS.table2_map_weight_indexQuartet.get(key_weight);
-            //System.out.println("Key_WEIGHT: <" + key_weight + ">: Value_rowTable2_IDX: " + rowIDX);
-            for (int j = 0; j < customDS.table1_quartets_double_list.get(rowIDX).size(); j++) {
-                //thus we can get quartets in sorted order (according to weight)
-                //   System.out.print(customDS.table1_quartets_double_list.get(rowIDX).get(j) + "  ");
-                Quartet quartet_under_consideration = customDS.table1_quartets_double_list.get(rowIDX).get(j);
+        Map<Integer, List<Integer>> mapOfRowAndColumns = new TreeMap<>(Collections.reverseOrder()); //implicit sorting of List<row,col> wrt row [remember, unique row <-> unique weight] via TreeMap
+        for (int i = 0; i < list_quartets_indices.size(); i++) {
+            Pair<Integer, Integer> pair = list_quartets_indices.get(i);
+            if (mapOfRowAndColumns.containsKey(pair.getKey()) == false) { // map DOESN'T CONTAIN THIS ROW ... intiialize the array list
+                mapOfRowAndColumns.put(pair.getKey(), new ArrayList<>());
+            }
+            mapOfRowAndColumns.get(pair.getKey()).add(pair.getValue()); //now append to the array list of map[row]. THIS column
+        }
+
+//        for (Double key_weight : customDS.table2_map_weight_indexQuartet.keySet()) {
+        for (int rowIDX : mapOfRowAndColumns.keySet()) { /*Mahim*/
+//            int rowIDX = customDS.table2_map_weight_indexQuartet.get(key_weight);
+//            System.out.println("Key_WEIGHT: <" + key_weight + ">: Value_rowTable2_IDX: " + rowIDX);
+//            for (int j = 0; j < customDS.table1_quartets_double_list.get(rowIDX).size(); j++) {
+            List<Integer> columns_list_quartets_this_row = mapOfRowAndColumns.get(rowIDX); /*Mahim*/
+            for (int j = 0; j < columns_list_quartets_this_row.size(); j++) { /*Mahim*/
+                int columnIDX = columns_list_quartets_this_row.get(j);/*Mahim*/
+//                System.out.println("Considering quartet <" + rowIDX + "," + j + ">");
+//                System.out.print(customDS.table1_quartets_double_list.get(rowIDX).get(j) + "  ");
+//                Quartet quartet_under_consideration = customDS.table1_quartets_double_list.get(rowIDX).get(j);
+                /*Mahim*/                
+                Quartet quartet_under_consideration = customDS.table1_quartets_double_list.get(rowIDX).get(columnIDX);
                 String q1 = quartet_under_consideration.taxa_sisters_left[0];
                 String q2 = quartet_under_consideration.taxa_sisters_left[1];
                 String q3 = quartet_under_consideration.taxa_sisters_right[0];
