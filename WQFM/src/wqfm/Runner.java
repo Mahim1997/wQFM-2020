@@ -24,10 +24,9 @@ public class Runner {
     public static void runFunctions() {
 //        testSortHashMap();
 //        testCustomDS();
+        test_TriplePair();
 
-        mainMethod();
-
-
+//        mainMethod();
     }
 
     private static void mainMethod() {
@@ -42,10 +41,46 @@ public class Runner {
             System.out.println("Error reading input from file <" + Main.INPUT_FILE_NAME + "> ... exiting program.");
             System.exit(-1);
         }
-        customDS.printCustomDS();
+//        customDS.printCustomDS(); // TURN OFF COMMENT FOR NOT PRINTING CUSTOM DATASTRUCTURE ... 
+
+        List<String> list_taxa = new ArrayList<>(customDS.map_taxa_relevant_quartet_indices.keySet()); // obtain initial list of taxa
+        //Call recursive divide and conquer approach.
+        int level = 0;
+        runner.recursiveDivideAndConquer(customDS, level,
+                list_taxa, customDS.table4_quartetes_indices_list); //call the recursive DNC function
+
     }
 
+    // ------>>>> Main RECURSIVE function ....
+    private String recursiveDivideAndConquer(CustomDS customDS,
+            int level, List<String> list_taxa_string,
+            List<Pair<Integer, Integer>> list_quartets_indices) {
+        System.out.println("-->>Inside recursiveDNC() function ... of Runner.java LINE 57");
 
+        /*  CustomDS.getDummyTaxonName(level) returns a dummy taxon with this level.
+            TO DO HERE .... recursive-DNC function
+            1. SET INTIIAL RETURN CONDITIONS ...
+            2. Initial bipartition should return a logical bipartition i.e. list_integer -1:left, 0:unassigned, +1:right
+            3. FM-iteration algorithm ->    should return a logical bipartition i.e. the above list AND
+                                            a map of LEFT_OR_RIGHT_INTEGER[0/1]: list< pair<int,int> >
+                                            i.e. key: 0/1 [left/right] AND value: list of <r,c> i.e. list<quartets> 
+                                            i.e. for each pair in map[0] will be list<(r,c)> for left_bipartition_quartets 
+                                                and map[1] will have list<(r,c)> for right_bipartition_quartets
+        ***** In FM-iteration algorithm, dummy taxa WILL be added before returning the quartets by passing the level parameter
+        eg. FM-iteration(customDS, List<Integer> initial_bipartition_logical, List<Pair<int,int>>list_quartets, int level); can be the signature    
+            4. Use P_left, Q_left and P_right, Q_right to recursively call the function be adjusting params eg. level++, etc.
+            level++;
+            tree_left = recursiveDivideAndConquer(customDS, level, taxa_left_partition, list_quartetes_left_partition)
+            tree_right = recursiveDivideAndConquer(customDS, level, taxa_right_partition, list_quartetes_right_partition)
+            String dummy_Taxon_this_level = CustomDS.getDummyTaxon(level - 1); //one-step before since we have incremented level
+            tree_left_rooted = Reroot.rerootTree_python(tree_left, dummy_Taxon_this_level); // left tree will be just as is
+            tree_right_rooted = Reroot.rerootTree_python(tree_right.reverse(), dummy_Taxon_this_level); //right tree should be reversed
+            merged_tree = merge_by_removing_dummy_and_bracket_balance(tree_left_rooted, tree_right_rooted);
+            return merged_tree;
+        */
+        return null;
+    }
+    //Function to read input from file and populate initial tables [map is a treemap so, by default sorting done]
     private CustomDS readFileAndpopulateCustomTables(String inputFileName) throws Exception {
         CustomDS customDS = new CustomDS();
         Scanner sc = new Scanner(new FileInputStream(inputFileName));
@@ -68,9 +103,10 @@ public class Runner {
                 row_idx_table_1 = customDS.table2_map_weight_indexQuartet.get(quartet.weight);
             }
             List<Quartet> col_list_for_table1_this_weight = customDS.table1_quartets_double_list.get(row_idx_table_1); // obtain the list.
-            col_list_for_table1_this_weight.add(quartet);
+            col_list_for_table1_this_weight.add(quartet); // ADD THE QUARTET to Table 1.
             col_idx_table_1 = customDS.table1_quartets_double_list.get(row_idx_table_1).size() - 1; // Current row's --> columns_list.size - 1 
 
+            customDS.table4_quartetes_indices_list.add(new Pair(row_idx_table_1, col_idx_table_1)); // Also put in the <row,col> list of quartets ...
             //Put in hashMap(relevant_quartetes_per_taxa) for each taxa in the quartet.
             //For left sisters
             for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
@@ -95,9 +131,16 @@ public class Runner {
 
         return customDS;
     }
-    
+
 // --------------------------------------- TEST METHODS ----------------------------------
-    // READ and populate tables at the same function ABOVE...
+    private static void test_TriplePair() {
+        Pair<Pair<Integer, Integer>, Integer> outerPair1, outerPair2;
+        outerPair1 = new Pair(new Pair(3, 2), 0);
+        outerPair2 = new Pair(new Pair(5, 4), 1);
+        System.out.println(outerPair1 + "\n" + outerPair2);
+    }
+
+    // READ and populate tables using the same function ABOVE... SO don't use this
     private static List<String> readFile(String inputFileName) {
         List<String> lines = new ArrayList<>();
         try {
@@ -169,40 +212,39 @@ public class Runner {
         customDS.printCustomDS();
 
     }
-    
-    
+
     //https://www.baeldung.com/java-hashmap-sort
     //https://stackoverflow.com/questions/30842966/how-to-sort-a-hash-map-using-key-descending-order
-    private TreeMap<Double,Integer> sortMap(Map<Double, Integer> map){
+    private TreeMap<Double, Integer> sortMap(Map<Double, Integer> map) {
 //        TreeMap<Double, Integer> sorted = new TreeMap<>(map);
         TreeMap<Double, Integer> sorted = new TreeMap<>(Collections.reverseOrder());
         sorted.putAll(map);
         return sorted;
     }
-    
+
     private static void testSortHashMap() {
         Map<Double, Integer> map_to_test = new HashMap<>();
-        
+
         map_to_test.put(22.0, 1);
         map_to_test.put(31.0, 2);
         map_to_test.put(7.0, 3);
         map_to_test.put(100.0, 4);
         map_to_test.put(15.0, 5);
-        
+
         System.out.println("-------- Before Sorting ---------");
-        for(double key: map_to_test.keySet()){
+        for (double key : map_to_test.keySet()) {
             int val = map_to_test.get(key);
             System.out.println("Key = " + key + " , val = " + val);
         }
         Runner runner = new Runner();
         TreeMap<Double, Integer> sortMap = runner.sortMap(map_to_test);
-        
+
         System.out.println("=========== AFTER SORTING ==============");
-        for(double key: sortMap.keySet()){
+        for (double key : sortMap.keySet()) {
             int val = sortMap.get(key);
             System.out.println("Key = " + key + " , val = " + val);
         }
-        
+
     }
 
 }
