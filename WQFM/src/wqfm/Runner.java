@@ -61,7 +61,7 @@ public class Runner {
              if(partition_list.get(i)==1) System.out.print(list_taxa_string.get(i)+"-->");
         }
     }
-    private void Initial_Bipartition(CustomDS customDS,
+    private List<Integer> Initial_Bipartition(CustomDS customDS,
             int level, List<String> list_taxa_string,
             List<Pair<Integer, Integer>> list_quartets_indices){
        // partition_list is the list which will the partitions of each taxa
@@ -181,7 +181,8 @@ public class Runner {
                 
            }
        }
-       print_initial_bipartition(list_taxa_string,partition_list);
+       return partition_list;
+      
     }
 
     // ------>>>> Main RECURSIVE function ....
@@ -190,7 +191,8 @@ public class Runner {
             List<Pair<Integer, Integer>> list_quartets_indices)
     {
         System.out.println("-->>Inside recursiveDNC() function ... of Runner.java LINE 57");
-        Initial_Bipartition( customDS,level, list_taxa_string,list_quartets_indices);
+        List<Integer>  partition_list = Initial_Bipartition( customDS,level, list_taxa_string,list_quartets_indices);
+        print_initial_bipartition(list_taxa_string,partition_list);
         /*  CustomDS.getDummyTaxonName(level) returns a dummy taxon with this level.
             TO DO HERE .... recursive-DNC function
             1. SET INTIIAL RETURN CONDITIONS ...
