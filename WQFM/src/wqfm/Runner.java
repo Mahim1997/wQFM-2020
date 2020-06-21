@@ -3,10 +3,13 @@ package wqfm;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 import javafx.util.Pair;
 import wqfm.ds.CustomDS;
 import wqfm.ds.Quartet;
@@ -71,7 +74,7 @@ public class Runner {
             for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
                 String taxa = quartet.taxa_sisters_left[i];
                 if (customDS.map_taxa_relevant_quartet_indices.containsKey(taxa) == false) { // doesn't contain THIS taxa in map, so initialize list and put this taxa as key to map.
-                    customDS.map_taxa_relevant_quartet_indices.put(taxa, new ArrayList<>());
+                    customDS.map_taxa_relevant_quartet_indices.put(taxa, new ArrayList<>()); // initialize the list
                 }
                 List<Pair<Integer, Integer>> list_indices_of_quartets = customDS.map_taxa_relevant_quartet_indices.get(taxa); // now will exist [since we have initialized previously]
                 list_indices_of_quartets.add(new Pair(row_idx_table_1, col_idx_table_1));
@@ -81,7 +84,7 @@ public class Runner {
             for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
                 String taxa = quartet.taxa_sisters_right[i];
                 if (customDS.map_taxa_relevant_quartet_indices.containsKey(taxa) == false) { // doesn't contain THIS taxa in map, so initialize list and put this taxa as key to map.
-                    customDS.map_taxa_relevant_quartet_indices.put(taxa, new ArrayList<>());
+                    customDS.map_taxa_relevant_quartet_indices.put(taxa, new ArrayList<>()); // initialize the list
                 }
                 List<Pair<Integer, Integer>> list_indices_of_quartets = customDS.map_taxa_relevant_quartet_indices.get(taxa); // now will exist [since we have initialized previously]
                 list_indices_of_quartets.add(new Pair(row_idx_table_1, col_idx_table_1));
@@ -90,7 +93,8 @@ public class Runner {
 
         return customDS;
     }
-
+    
+// --------------------------------------- TEST METHODS ----------------------------------
     // READ and populate tables at the same function ABOVE...
     private static List<String> readFile(String inputFileName) {
         List<String> lines = new ArrayList<>();
@@ -163,10 +167,40 @@ public class Runner {
         customDS.printCustomDS();
 
     }
-
-
+    
+    
+    //https://www.baeldung.com/java-hashmap-sort
+    //https://stackoverflow.com/questions/30842966/how-to-sort-a-hash-map-using-key-descending-order
+    private TreeMap<Double,Integer> sortMap(Map<Double, Integer> map){
+//        TreeMap<Double, Integer> sorted = new TreeMap<>(map);
+        TreeMap<Double, Integer> sorted = new TreeMap<>(Collections.reverseOrder());
+        sorted.putAll(map);
+        return sorted;
+    }
+    
     private static void testSortHashMap() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Map<Double, Integer> map_to_test = new HashMap<>();
+        
+        map_to_test.put(22.0, 1);
+        map_to_test.put(31.0, 2);
+        map_to_test.put(7.0, 3);
+        map_to_test.put(100.0, 4);
+        map_to_test.put(15.0, 5);
+        
+        System.out.println("-------- Before Sorting ---------");
+        for(double key: map_to_test.keySet()){
+            int val = map_to_test.get(key);
+            System.out.println("Key = " + key + " , val = " + val);
+        }
+        Runner runner = new Runner();
+        TreeMap<Double, Integer> sortMap = runner.sortMap(map_to_test);
+        
+        System.out.println("=========== AFTER SORTING ==============");
+        for(double key: sortMap.keySet()){
+            int val = sortMap.get(key);
+            System.out.println("Key = " + key + " , val = " + val);
+        }
+        
     }
 
 }

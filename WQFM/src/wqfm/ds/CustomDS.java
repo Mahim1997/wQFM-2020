@@ -25,8 +25,10 @@ public class CustomDS {
 
     public List<List<Quartet>> table1_quartets_double_list;
     public HashMap<Double, Integer> table2_map_weight_indexQuartet;
+    
     public HashMap<String, List<Pair<Integer, Integer>>> map_taxa_relevant_quartet_indices;
-
+    
+    
 //    public List<Pair<Double, Integer>> table2_weight_indexOfQrt; // Use map as above
     
     public CustomDS() {
