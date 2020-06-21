@@ -1,8 +1,10 @@
 package wqfm.ds;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 import javafx.util.Pair;
 
 /**
@@ -24,7 +26,7 @@ BUT FOR NOW, use HashMap [EXACTLY same method signatures for both data-structure
 public class CustomDS {
 
     public List<List<Quartet>> table1_quartets_double_list;
-    public HashMap<Double, Integer> table2_map_weight_indexQuartet;
+    public TreeMap<Double, Integer> table2_map_weight_indexQuartet;
     
     public HashMap<String, List<Pair<Integer, Integer>>> map_taxa_relevant_quartet_indices;
     
@@ -35,7 +37,7 @@ public class CustomDS {
         this.table1_quartets_double_list = new ArrayList<>();
 //        this.table2_weight_indexOfQrt = new ArrayList<>();
         this.map_taxa_relevant_quartet_indices = new HashMap<>();
-        this.table2_map_weight_indexQuartet = new HashMap<>();
+        this.table2_map_weight_indexQuartet = new TreeMap<>(Collections.reverseOrder());
     }
 
     private void printTable1() {
@@ -57,7 +59,7 @@ public class CustomDS {
         }*/
         for(Double key_weight: table2_map_weight_indexQuartet.keySet()){
             int val_rowIDX_tab2 = table2_map_weight_indexQuartet.get(key_weight);
-            System.out.println("Key_WEIGHT: <" + key_weight + ">: Value_rowTable2IDX: " + val_rowIDX_tab2);
+            System.out.println("Key_WEIGHT: <" + key_weight + ">: Value_rowTable2_IDX: " + val_rowIDX_tab2);
         }
     }
 
@@ -76,9 +78,9 @@ public class CustomDS {
     }
 
     public void printCustomDS() {
-        printTable1();
+//        printTable1();
         printTable2();
-        printMap_RelevantQuartetsPerTaxa();
+//        printMap_RelevantQuartetsPerTaxa();
     }
 
 }

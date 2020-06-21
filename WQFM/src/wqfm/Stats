@@ -1,0 +1,4 @@
+Avian 2X/R1 takes Time (ms) = 6968 ms on poulating initial datastructure tables.
+Avian 2X/R1 (checked with C++ code) calls reroot.pl 89 times.
+89 times python3 reroot will take 11.176 s
+So, we have already wasted ~18s.

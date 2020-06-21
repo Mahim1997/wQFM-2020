@@ -22,9 +22,11 @@ public class Runner {
 
     //Main method to run all functions ... [ABSTRACT everything from Main class]
     public static void runFunctions() {
-        testSortHashMap();
-//        mainMethod();
+//        testSortHashMap();
 //        testCustomDS();
+
+        mainMethod();
+
 
     }
 
