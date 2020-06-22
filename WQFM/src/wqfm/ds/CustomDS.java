@@ -89,10 +89,10 @@ public class CustomDS {
     }
     
     public void printCustomDS() {
-        printTable1_onlyWeights();
-//        printTable1();
-//        printTable2();
-//        printMap_RelevantQuartetsPerTaxa();
+//        printTable1_onlyWeights();
+        printTable1();
+        printTable2();
+        printMap_RelevantQuartetsPerTaxa();
     }
 
     public static String getDummyTaxonName(int level) {
@@ -128,6 +128,14 @@ public class CustomDS {
                     this.map_taxa_relevant_quartet_indices.get(taxon).add(new Pair(row_iter, col_iter));
                 }
             }
+        }
+    }
+
+    public void updateTable2Map() {
+        int idx = 0;
+        for(Double wt: this.table2_map_weight_indexQuartet.keySet()){
+            this.table2_map_weight_indexQuartet.put(wt, idx);
+            idx++;
         }
     }
 

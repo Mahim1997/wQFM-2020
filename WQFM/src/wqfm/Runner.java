@@ -31,9 +31,11 @@ public class Runner {
     private static void main2() {
         Runner runner = new Runner();
         CustomDS customDS = runner.readFileAndPopulateInitialTables(Main.INPUT_FILE_NAME);
+        System.out.println("Reading from file <" + Main.INPUT_FILE_NAME + "> done.\nDone populating & sorting initial tables.");
         customDS.sortTable1();
         customDS.fillRelevantQuartetsMap();
-        customDS.printCustomDS();
+        customDS.updateTable2Map(); // IS IT actually NEEDED ??
+//        customDS.printCustomDS();
     }
 
     private static void mainMethod() {
@@ -41,7 +43,7 @@ public class Runner {
         CustomDS customDS = null;
         try {
             customDS = runner.readFileAndPopulateInitialTables(Main.INPUT_FILE_NAME); // Initial population of custom-datastructure-tables 
-            System.out.println("Reading from file <" + Main.INPUT_FILE_NAME + "> done.\nDone populating initial tables");
+            System.out.println("Reading from file <" + Main.INPUT_FILE_NAME + "> done.\nDone populating & sorting initial tables.");
         } catch (Exception e) {
             System.out.println("Error reading input from file <" + Main.INPUT_FILE_NAME + "> ... exiting program.");
             e.printStackTrace();
