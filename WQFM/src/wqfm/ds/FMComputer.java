@@ -38,7 +38,7 @@ public class FMComputer {
         for (int i = 0; i < this.taxa_list.size(); i++) {
             this.mapOfInitialBipartition.put(this.taxa_list.get(i), this.initial_bipartition_logical_list.get(i));
         }
-        System.out.println(this.mapOfInitialBipartition);
+//        System.out.println(this.mapOfInitialBipartition);
     }
 
     private boolean isSingletonBipartition(List<Integer> logical_bipartition) { //true if this bipartition is a singleton bipartition
