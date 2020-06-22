@@ -28,7 +28,7 @@ public class CustomDS {
     public List<List<Quartet>> table1_quartets_double_list;
     public TreeMap<Double, Integer> table2_map_weight_indexQuartet;
     public HashMap<String, List<Pair<Integer, Integer>>> map_taxa_relevant_quartet_indices;
-    public List<Pair<Integer, Integer>> table4_quartetes_indices_list;
+//    public List<Pair<Integer, Integer>> table4_quartetes_indices_list;
 
 //    public List<Pair<Double, Integer>> table2_weight_indexOfQrt; // Use map as above
     public CustomDS() {
@@ -36,7 +36,7 @@ public class CustomDS {
 //        this.table2_weight_indexOfQrt = new ArrayList<>();
         this.map_taxa_relevant_quartet_indices = new HashMap<>();
         this.table2_map_weight_indexQuartet = new TreeMap<>(Collections.reverseOrder());
-        this.table4_quartetes_indices_list = new ArrayList<>();
+//        this.table4_quartetes_indices_list = new ArrayList<>();
     }
 
     private void printTable1() {

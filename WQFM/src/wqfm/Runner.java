@@ -23,12 +23,11 @@ public class Runner {
     public static void runFunctions() {
 //        TestNormalFunctions.testDoubleListSort();
 
-//        mainMethod();
-        main2();
+        mainMethod();
 
     }
 
-    private static void main2() {
+    private static void mainMethod() {
         Runner runner = new Runner();
         CustomDS customDS = runner.readFileAndPopulateInitialTables(Main.INPUT_FILE_NAME);
         System.out.println("Reading from file <" + Main.INPUT_FILE_NAME + "> done.\nDone populating & sorting initial tables.");
@@ -36,35 +35,26 @@ public class Runner {
         customDS.fillRelevantQuartetsMap();
         customDS.updateTable2Map(); // IS IT actually NEEDED ??
 //        customDS.printCustomDS();
-    }
-
-    private static void mainMethod() {
-        Runner runner = new Runner(); //Create object and handle [IF THREAD used later on]
-        CustomDS customDS = null;
-        try {
-            customDS = runner.readFileAndPopulateInitialTables(Main.INPUT_FILE_NAME); // Initial population of custom-datastructure-tables 
-            System.out.println("Reading from file <" + Main.INPUT_FILE_NAME + "> done.\nDone populating & sorting initial tables.");
-        } catch (Exception e) {
-            System.out.println("Error reading input from file <" + Main.INPUT_FILE_NAME + "> ... exiting program.");
-            e.printStackTrace();
-            System.exit(-1);
-        }
-//        customDS.printCustomDS(); // TURN OFF COMMENT FOR NOT PRINTING CUSTOM DATASTRUCTURE ... 
-
+        ///// Now pass to recursive divide and conquer function.
         List<String> list_taxa = new ArrayList<>(customDS.map_taxa_relevant_quartet_indices.keySet()); // obtain initial list of taxa
-        //Call recursive divide and conquer approach.
         int level = 0;
+        List<Pair<Integer, Integer>> list_quartets_as_pair = new ArrayList<>();
+        for (int rowIdx = 0; rowIdx < customDS.table1_quartets_double_list.size(); rowIdx++) {
+            List<Quartet> quartets_cols = customDS.table1_quartets_double_list.get(rowIdx);
+            for (int colIdx = 0; colIdx < quartets_cols.size(); colIdx++) {
+                list_quartets_as_pair.add(new Pair(rowIdx, colIdx));
+            }
+        }
         runner.recursiveDivideAndConquer(customDS, level,
-                list_taxa, customDS.table4_quartetes_indices_list); //call the recursive DNC function
-
+                list_taxa, list_quartets_as_pair); //call the recursive DNC function
     }
 
     // ------>>>> Main RECURSIVE function ....
     private String recursiveDivideAndConquer(CustomDS customDS,
             int level, List<String> list_taxa_string,
             List<Pair<Integer, Integer>> list_quartets_indices) {
-        System.out.println("-->>Inside recursiveDNC() function ... of Runner.java LINE 57");
-
+//        System.out.println("-->>Inside recursiveDNC() function ... of Runner.java LINE 57");
+        
         List<Integer> initial_logical_partition_list = getInitialBipartition(customDS, level, list_taxa_string, list_quartets_indices);
         System.out.println("Printing Initial Bipartition");
         printBipartition(list_taxa_string, initial_logical_partition_list);
@@ -121,31 +111,20 @@ public class Runner {
         int count_taxa_right_partition = 0;
 
         //Need to create a TreeMap for Pair of list_quartetes_indices...
-        Map<Integer, List<Integer>> mapOfRowAndColumns = new TreeMap<>(Collections.reverseOrder()); //implicit sorting of List<row,col> wrt row [remember, unique row <-> unique weight] via TreeMap
+        Map<Integer, List<Integer>> mapOfRowAndColumns = new TreeMap<>(); //implicit sorting of List<row,col> wrt row [remember, unique row <-> unique weight] via TreeMap
         for (int i = 0; i < list_quartets_indices.size(); i++) {
-            Pair<Integer, Integer> pair = list_quartets_indices.get(i);
+            Pair<Integer, Integer> pair = list_quartets_indices.get(i); // obtain this pair (i.e. quartet)
             if (mapOfRowAndColumns.containsKey(pair.getKey()) == false) { // map DOESN'T CONTAIN THIS ROW ... intiialize the array list
                 mapOfRowAndColumns.put(pair.getKey(), new ArrayList<>());
             }
             mapOfRowAndColumns.get(pair.getKey()).add(pair.getValue()); //now append to the array list of map[row]. THIS column
         }
 
-//        for (Double key_weight : customDS.table2_map_weight_indexQuartet.keySet()) {
-        for (int rowIDX : mapOfRowAndColumns.keySet()) {
-            /*Mahim*/
-//            int rowIDX = customDS.table2_map_weight_indexQuartet.get(key_weight);
-//            System.out.println("Key_WEIGHT: <" + key_weight + ">: Value_rowTable2_IDX: " + rowIDX);
-//            for (int j = 0; j < customDS.table1_quartets_double_list.get(rowIDX).size(); j++) {
-            List<Integer> columns_list_quartets_this_row = mapOfRowAndColumns.get(rowIDX);
-            /*Mahim*/
-            for (int j = 0; j < columns_list_quartets_this_row.size(); j++) {
-                /*Mahim*/
-                int columnIDX = columns_list_quartets_this_row.get(j);/*Mahim*/
-//                System.out.println("Considering quartet <" + rowIDX + "," + j + ">");
-//                System.out.print(customDS.table1_quartets_double_list.get(rowIDX).get(j) + "  ");
-//                Quartet quartet_under_consideration = customDS.table1_quartets_double_list.get(rowIDX).get(j);
-                /*Mahim*/
-                Quartet quartet_under_consideration = customDS.table1_quartets_double_list.get(rowIDX).get(columnIDX);
+        for (int rowIDX : mapOfRowAndColumns.keySet()) { //Mahim
+            List<Integer> columns_list_quartets_this_row = mapOfRowAndColumns.get(rowIDX); //Mahim
+            for (int j = 0; j < columns_list_quartets_this_row.size(); j++) { //Mahim
+                int columnIDX = columns_list_quartets_this_row.get(j);//Mahim
+                Quartet quartet_under_consideration = customDS.table1_quartets_double_list.get(rowIDX).get(columnIDX);//Mahim
                 String q1 = quartet_under_consideration.taxa_sisters_left[0];
                 String q2 = quartet_under_consideration.taxa_sisters_left[1];
                 String q3 = quartet_under_consideration.taxa_sisters_right[0];
@@ -159,7 +138,7 @@ public class Runner {
 //                System.out.println(idx_q2);
 //                System.out.println(idx_q3);
 //                System.out.println(idx_q4);
-                //check status of q1,q2,q3,q4
+                //check status of q1,q2,q3,q4 [the four taxa of THIS quartet]
                 int status_q1, status_q2, status_q3, status_q4; //status of q1,q2,q3,q4 respectively
                 status_q1 = partition_list.get(idx_q1);
                 status_q2 = partition_list.get(idx_q2);
@@ -319,9 +298,9 @@ public class Runner {
         col_list_for_table1_this_weight.add(quartet); // ADD THE QUARTET to Table 1.
     }
 
+    //BufferedReader is used here since BufferedReader is faster than Scanner.readLine
     public CustomDS readFileAndPopulateInitialTables(String inputFileName) {
         // https://stackoverflow.com/questions/5868369/how-can-i-read-a-large-text-file-line-by-line-using-java
-        // BufferedReader is faster than Scanner.readLine
         CustomDS customDS = new CustomDS();
         FileInputStream fileInputStream = null;
         try {
