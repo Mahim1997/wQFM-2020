@@ -11,8 +11,8 @@ public class Helper {
 
     public static int sumArray(int[] arr) {
         int sum = 0;
-        for (int x : arr) {
-            sum += x;
+        for(int i=0; i<arr.length; i++){
+            sum += arr[i];
         }
         return sum;
     }
