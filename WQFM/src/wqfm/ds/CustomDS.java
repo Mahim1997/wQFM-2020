@@ -29,10 +29,8 @@ public class CustomDS {
     public TreeMap<Double, Integer> table2_map_weight_indexQuartet;
     public HashMap<String, List<Pair<Integer, Integer>>> map_taxa_relevant_quartet_indices;
     public List<Pair<Integer, Integer>> table4_quartetes_indices_list;
-    
-    
+
 //    public List<Pair<Double, Integer>> table2_weight_indexOfQrt; // Use map as above
-    
     public CustomDS() {
         this.table1_quartets_double_list = new ArrayList<>();
 //        this.table2_weight_indexOfQrt = new ArrayList<>();
@@ -44,7 +42,7 @@ public class CustomDS {
     private void printTable1() {
         System.out.println("----------- Table1 [Double list of quartets] ------------------");
         for (int i = 0; i < table1_quartets_double_list.size(); i++) {
-            System.out.print("Row: " + i + ", size = " +  table1_quartets_double_list.get(i).size() + " ---> ");
+            System.out.print("Row: " + i + ", size = " + table1_quartets_double_list.get(i).size() + " ---> ");
             for (int j = 0; j < table1_quartets_double_list.get(i).size(); j++) {
                 System.out.print(table1_quartets_double_list.get(i).get(j) + "  ");
             }
@@ -58,7 +56,7 @@ public class CustomDS {
             Pair pair = table2_weight_indexOfQrt.get(i);
             System.out.println("i = " + i + " , weight = " + pair.getKey() + " , idx_table_1_ROW_IDX = " + pair.getValue());
         }*/
-        for(Double key_weight: table2_map_weight_indexQuartet.keySet()){
+        for (Double key_weight : table2_map_weight_indexQuartet.keySet()) {
             int val_rowIDX_tab2 = table2_map_weight_indexQuartet.get(key_weight);
             System.out.println("Key_WEIGHT: <" + key_weight + ">: Value_rowTable2_IDX: " + val_rowIDX_tab2);
         }
@@ -78,15 +76,59 @@ public class CustomDS {
 
     }
 
+    private void printTable1_onlyWeights()
+    {
+        for(int i=0; i<this.table1_quartets_double_list.size(); i++){
+            System.out.print("RowIdx = " + i + " -> Weights = ");
+            List<Quartet> qrts_col = this.table1_quartets_double_list.get(i);
+            for(Quartet q: qrts_col){
+                System.out.print(q.weight + " ");
+            }
+            System.out.println("");
+        }
+    }
+    
     public void printCustomDS() {
+        printTable1_onlyWeights();
 //        printTable1();
-        printTable2();
+//        printTable2();
 //        printMap_RelevantQuartetsPerTaxa();
     }
 
-    public static String getDummyTaxonName(int level){
+    public static String getDummyTaxonName(int level) {
         String dummyTax = "DUMMY_MZCR_" + String.valueOf(level); //arbitrary names so as to not get mixed up with actual names
         return dummyTax;
     }
-    
+
+    public void sortTable1() { //DO IT JUST ONCE [right after reading input file]
+        //Built-in sort.
+        this.table1_quartets_double_list.sort((List<Quartet> list1, List<Quartet> list2) -> {
+            return (int) (list2.get(0).weight - list1.get(0).weight); //To change body of generated lambdas, choose Tools | Templates.
+        });
+    }
+
+    public void fillRelevantQuartetsMap() {
+        //For each quartet
+        for (int row_iter = 0; row_iter < this.table1_quartets_double_list.size(); row_iter++) {
+            List<Quartet> columns_quartets = this.table1_quartets_double_list.get(row_iter);
+            for (int col_iter = 0; col_iter < columns_quartets.size(); col_iter++) {
+                Quartet q = columns_quartets.get(col_iter); //retrieve the quartet
+                for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) { // Do for left-sisters ... push to map THIS quartet's row,col
+                    String taxon = q.taxa_sisters_left[i];
+                    if (this.map_taxa_relevant_quartet_indices.containsKey(taxon) == false) { //map doesn't have an entry yet for THIS taxon
+                        this.map_taxa_relevant_quartet_indices.put(taxon, new ArrayList<>()); // initialize for THIS taxon
+                    }
+                    this.map_taxa_relevant_quartet_indices.get(taxon).add(new Pair(row_iter, col_iter));
+                }
+                for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) { // Repeat the same for right-sisters
+                    String taxon = q.taxa_sisters_right[i];
+                    if (this.map_taxa_relevant_quartet_indices.containsKey(taxon) == false) { //map doesn't have an entry yet for THIS taxon
+                        this.map_taxa_relevant_quartet_indices.put(taxon, new ArrayList<>()); // initialize for THIS taxon
+                    }
+                    this.map_taxa_relevant_quartet_indices.get(taxon).add(new Pair(row_iter, col_iter));
+                }
+            }
+        }
+    }
+
 }

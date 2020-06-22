@@ -22,3 +22,9 @@ Reading from file <wqrts_avian_2X_R1> done
 -->>Inside recursiveDNC() function ... of Runner.java LINE 57
 LEFT: FULGL-->ANAPL-->COLLI-->MESUN-->PHALE-->TAUER-->GALGA-->BUCRH-->TINMA-->TYTAL-->MELGA-->COLST-->CALAN-->STRCA-->GAVST-->APAVI-->MERNU-->CAPCA-->FALPE-->BALRE-->CHAPE-->PTEGU-->CORBR-->CATAU-->CHAVO-->PICPU-->EURHE-->CARCR-->PHACA-->OPHHO-->CHLUN-->LEPDI-->MANVI-->ACACH-->CUCCA-->
 RIGHT: HALAL-->MELUN-->PYGAD-->PHORU-->NESNO-->PODCR-->TAEGU-->NIPNI-->PELCR-->EGRGA-->GEOFO-->APTFO-->HALLE-->
+
+
+AVIAN
+Time (ms) = 785 using Scanner
+Time (ms) = 107 using BufferedReader [USE THIS]
+Time (ms) = 228 using StreamFiles.files

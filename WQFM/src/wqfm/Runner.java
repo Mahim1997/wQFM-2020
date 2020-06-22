@@ -1,16 +1,17 @@
 package wqfm;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.TreeMap;
 import javafx.util.Pair;
 import wqfm.ds.CustomDS;
 import wqfm.ds.Quartet;
-import wqfm.testFunctions.TestNormalFunctions;
 
 /**
  *
@@ -20,20 +21,30 @@ public class Runner {
 
     //Main method to run all functions ... [ABSTRACT everything from Main class]
     public static void runFunctions() {
-//        TestNormalFunctions.testTreeMapFromPairIntegers();
-//        TestNormalFunctions.testSortPair();
+//        TestNormalFunctions.testDoubleListSort();
 
-        mainMethod();
+//        mainMethod();
+        main2();
+
+    }
+
+    private static void main2() {
+        Runner runner = new Runner();
+        CustomDS customDS = runner.readFileAndPopulateInitialTables(Main.INPUT_FILE_NAME);
+        customDS.sortTable1();
+        customDS.fillRelevantQuartetsMap();
+        customDS.printCustomDS();
     }
 
     private static void mainMethod() {
         Runner runner = new Runner(); //Create object and handle [IF THREAD used later on]
         CustomDS customDS = null;
         try {
-            customDS = runner.readFileAndpopulateCustomTables(Main.INPUT_FILE_NAME); // Initial population of custom-datastructure-tables 
+            customDS = runner.readFileAndPopulateInitialTables(Main.INPUT_FILE_NAME); // Initial population of custom-datastructure-tables 
             System.out.println("Reading from file <" + Main.INPUT_FILE_NAME + "> done.\nDone populating initial tables");
         } catch (Exception e) {
             System.out.println("Error reading input from file <" + Main.INPUT_FILE_NAME + "> ... exiting program.");
+            e.printStackTrace();
             System.exit(-1);
         }
 //        customDS.printCustomDS(); // TURN OFF COMMENT FOR NOT PRINTING CUSTOM DATASTRUCTURE ... 
@@ -118,17 +129,20 @@ public class Runner {
         }
 
 //        for (Double key_weight : customDS.table2_map_weight_indexQuartet.keySet()) {
-        for (int rowIDX : mapOfRowAndColumns.keySet()) { /*Mahim*/
+        for (int rowIDX : mapOfRowAndColumns.keySet()) {
+            /*Mahim*/
 //            int rowIDX = customDS.table2_map_weight_indexQuartet.get(key_weight);
 //            System.out.println("Key_WEIGHT: <" + key_weight + ">: Value_rowTable2_IDX: " + rowIDX);
 //            for (int j = 0; j < customDS.table1_quartets_double_list.get(rowIDX).size(); j++) {
-            List<Integer> columns_list_quartets_this_row = mapOfRowAndColumns.get(rowIDX); /*Mahim*/
-            for (int j = 0; j < columns_list_quartets_this_row.size(); j++) { /*Mahim*/
+            List<Integer> columns_list_quartets_this_row = mapOfRowAndColumns.get(rowIDX);
+            /*Mahim*/
+            for (int j = 0; j < columns_list_quartets_this_row.size(); j++) {
+                /*Mahim*/
                 int columnIDX = columns_list_quartets_this_row.get(j);/*Mahim*/
 //                System.out.println("Considering quartet <" + rowIDX + "," + j + ">");
 //                System.out.print(customDS.table1_quartets_double_list.get(rowIDX).get(j) + "  ");
 //                Quartet quartet_under_consideration = customDS.table1_quartets_double_list.get(rowIDX).get(j);
-                /*Mahim*/                
+                /*Mahim*/
                 Quartet quartet_under_consideration = customDS.table1_quartets_double_list.get(rowIDX).get(columnIDX);
                 String q1 = quartet_under_consideration.taxa_sisters_left[0];
                 String q2 = quartet_under_consideration.taxa_sisters_left[1];
@@ -284,57 +298,57 @@ public class Runner {
 
     }
 
-    //Function to read input from file and populate initial tables [map is a treemap so, by default sorting done]
-    private CustomDS readFileAndpopulateCustomTables(String inputFileName) throws Exception {
+    private void populatePerInputLine(CustomDS customDS, String line) {
+        // Only populate table 1 [WILL SORT IT LATER]
+//        System.out.println("-->>Populating for line = " + line + " customDS = " + customDS.toString());
+        Quartet quartet = new Quartet(line);
+        int row_idx_table_1; //Use this as marker to represent current quartet ... put in map for <taxa, list(r,c)> of relevant_quartets_per_taxa_table3
+        //Populate table 2 <USE MAP> [ weight,index_of_table_1_weight ]
+        if (customDS.table2_map_weight_indexQuartet.containsKey(quartet.weight) == false) { //First time, THIS weight value is found ...
+            row_idx_table_1 = customDS.table1_quartets_double_list.size(); // AT THIS moment, no need to subtract 1, since this is BEFORE putting new array_list for columns
+            customDS.table2_map_weight_indexQuartet.put(quartet.weight, row_idx_table_1); //Key doesn't exist, so, THIS ROW (i.e. weight) in table 1 DOES NOT exist, insert in map
+            //Also, initialize table 1's columns' list for THIS weight value (this row)
+            customDS.table1_quartets_double_list.add(new ArrayList<>()); // initialize this [since this is the first time THIS weight is found]
+
+        } else { //NOT the first time for THIS weight, THIS weight EXISTS ...  // No need to initalize column's list of table 1.
+            row_idx_table_1 = customDS.table2_map_weight_indexQuartet.get(quartet.weight);
+        }
+        List<Quartet> col_list_for_table1_this_weight = customDS.table1_quartets_double_list.get(row_idx_table_1); // obtain the list.
+        col_list_for_table1_this_weight.add(quartet); // ADD THE QUARTET to Table 1.
+    }
+
+    public CustomDS readFileAndPopulateInitialTables(String inputFileName) {
+        // https://stackoverflow.com/questions/5868369/how-can-i-read-a-large-text-file-line-by-line-using-java
+        // BufferedReader is faster than Scanner.readLine
         CustomDS customDS = new CustomDS();
-        Scanner sc = new Scanner(new FileInputStream(inputFileName));
-
-        String line;
-        while (sc.hasNextLine()) {
-            line = sc.nextLine();
-            Quartet quartet = new Quartet(line);
-//            System.out.print(i + ":" + line + "  ");
-//            quartet.printQuartet();
-
-            int row_idx_table_1, col_idx_table_1; //Use this as marker to represent current quartet ... put in map for <taxa, list(r,c)> of relevant_quartets_per_taxa_table3
-            //Populate table 2 <USE MAP> [ weight,index_of_table_1_weight ]
-            if (customDS.table2_map_weight_indexQuartet.containsKey(quartet.weight) == false) { //First time, THIS weight value is found ...
-                row_idx_table_1 = customDS.table1_quartets_double_list.size(); // AT THIS moment, no need to subtract 1, since this is BEFORE putting new array_list for columns
-                customDS.table2_map_weight_indexQuartet.put(quartet.weight, row_idx_table_1); //Key doesn't exist, so, THIS ROW (i.e. weight) in table 1 DOES NOT exist, insert in map
-                //Also, initialize table 1's columns' list for THIS weight value (this row)
-                customDS.table1_quartets_double_list.add(new ArrayList<>()); // initialize this [since this is the first time THIS weight is found]
-
-            } else { //NOT the first time for THIS weight, THIS weight EXISTS ...  // No need to initalize column's list of table 1.
-                row_idx_table_1 = customDS.table2_map_weight_indexQuartet.get(quartet.weight);
-            }
-            List<Quartet> col_list_for_table1_this_weight = customDS.table1_quartets_double_list.get(row_idx_table_1); // obtain the list.
-            col_list_for_table1_this_weight.add(quartet); // ADD THE QUARTET to Table 1.
-            col_idx_table_1 = customDS.table1_quartets_double_list.get(row_idx_table_1).size() - 1; // Current row's --> columns_list.size - 1 
-
-            customDS.table4_quartetes_indices_list.add(new Pair(row_idx_table_1, col_idx_table_1)); // Also put in the <row,col> list of quartets ...
-            //Put in hashMap(relevant_quartetes_per_taxa) for each taxa in the quartet.
-            //For left sisters
-            for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
-                String taxa = quartet.taxa_sisters_left[i];
-                if (customDS.map_taxa_relevant_quartet_indices.containsKey(taxa) == false) { // doesn't contain THIS taxa in map, so initialize list and put this taxa as key to map.
-                    customDS.map_taxa_relevant_quartet_indices.put(taxa, new ArrayList<>()); // initialize the list
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(inputFileName);
+            //specify UTF-8 encoding explicitly
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            try (BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+                String line;
+                while ((line = bufferedReader.readLine()) != null && !line.isEmpty()) {
+//                    System.out.println(line);
+                    populatePerInputLine(customDS, line);
                 }
-                List<Pair<Integer, Integer>> list_indices_of_quartets = customDS.map_taxa_relevant_quartet_indices.get(taxa); // now will exist [since we have initialized previously]
-                list_indices_of_quartets.add(new Pair(row_idx_table_1, col_idx_table_1));
             }
 
-            //For right sisters
-            for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
-                String taxa = quartet.taxa_sisters_right[i];
-                if (customDS.map_taxa_relevant_quartet_indices.containsKey(taxa) == false) { // doesn't contain THIS taxa in map, so initialize list and put this taxa as key to map.
-                    customDS.map_taxa_relevant_quartet_indices.put(taxa, new ArrayList<>()); // initialize the list
-                }
-                List<Pair<Integer, Integer>> list_indices_of_quartets = customDS.map_taxa_relevant_quartet_indices.get(taxa); // now will exist [since we have initialized previously]
-                list_indices_of_quartets.add(new Pair(row_idx_table_1, col_idx_table_1));
+        } catch (Exception ex) {
+            System.out.println("ERROR READING FILE <" + inputFileName + ">. EXITING SYSTEM");
+            System.exit(-1);
+
+        } finally {
+            try {
+                fileInputStream.close();
+            } catch (IOException ex) {
+                System.out.println("ERROR IN CLOSING fileInputStream while reading file. Exiting");
+                System.exit(-1);
             }
         }
 
         return customDS;
     }
 
+    //-------------------------------------------------------------------------------------------------------------
 }

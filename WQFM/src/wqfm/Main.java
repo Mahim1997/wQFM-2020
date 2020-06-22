@@ -17,9 +17,7 @@ public class Main {
 //        for(int i=0; i<89; i++){
 //            Runner.testRerootFunction();
 //        }
-
         Runner.runFunctions();
-        
 
         long time_del = System.currentTimeMillis() - time_1;
         System.out.println("Time (ms) = " + time_del);

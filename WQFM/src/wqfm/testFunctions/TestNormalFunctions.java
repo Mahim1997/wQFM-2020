@@ -8,6 +8,7 @@ package wqfm.testFunctions;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -28,13 +29,6 @@ import wqfm.ds.Quartet;
 public class TestNormalFunctions {
 
 // --------------------------------------- TEST METHODS ----------------------------------
-    private static void test_TriplePair() {
-        Pair<Pair<Integer, Integer>, Integer> outerPair1, outerPair2;
-        outerPair1 = new Pair(new Pair(3, 2), 0);
-        outerPair2 = new Pair(new Pair(5, 4), 1);
-        System.out.println(outerPair1 + "\n" + outerPair2);
-    }
-
     // READ and populate tables using the same function ABOVE... SO don't use this
     private static List<String> readFile(String inputFileName) {
         List<String> lines = new ArrayList<>();
@@ -130,6 +124,15 @@ public class TestNormalFunctions {
             System.out.println(key + "," + val);
         }
     }
+    //https://www.baeldung.com/java-hashmap-sort
+    //https://stackoverflow.com/questions/30842966/how-to-sort-a-hash-map-using-key-descending-order
+
+    private TreeMap<Double, Integer> sortMap(Map<Double, Integer> map) {
+//        TreeMap<Double, Integer> sorted = new TreeMap<>(map);
+        TreeMap<Double, Integer> sorted = new TreeMap<>(Collections.reverseOrder());
+        sorted.putAll(map);
+        return sorted;
+    }
 
     public static void testSortPair() { //takes more time than map putting...
         List<Pair<Integer, Integer>> list_pairs = new ArrayList<>();
@@ -152,13 +155,41 @@ public class TestNormalFunctions {
         }
     }
 
-    //https://www.baeldung.com/java-hashmap-sort
-    //https://stackoverflow.com/questions/30842966/how-to-sort-a-hash-map-using-key-descending-order
-    private TreeMap<Double, Integer> sortMap(Map<Double, Integer> map) {
-//        TreeMap<Double, Integer> sorted = new TreeMap<>(map);
-        TreeMap<Double, Integer> sorted = new TreeMap<>(Collections.reverseOrder());
-        sorted.putAll(map);
-        return sorted;
+    public static void testDoubleListSort() {
+        List<List<Quartet>> double_list = new ArrayList<>();
+
+        // List<Integer> list_1 = new ArrayList<>(Arrays.asList(22,5,31));
+        List<Quartet> list_1 = new ArrayList<>(Arrays.asList(new Quartet("((a,b),(c,d));31"), new Quartet("((a,f),(g,h));31"), new Quartet("((g,z),(m,n));31")));
+        List<Quartet> list_2 = new ArrayList<>(Arrays.asList(new Quartet("((a,c),(f,l));200"), new Quartet("((p,q),(r,s));200")));
+        List<Quartet> list_3 = new ArrayList<>(Arrays.asList(new Quartet("((i,j),(a,k));22")));
+
+        double_list.add(list_1);
+        double_list.add(list_2);
+        double_list.add(list_3);
+
+        for (int i = 0; i < double_list.size(); i++) {
+            List<Quartet> list = double_list.get(i);
+            System.out.print("Row " + i + " : ");
+            for (Quartet q : list) {
+                System.out.print(q.toString() + "  ");
+            }
+            System.out.println("");
+        }
+
+        double_list.sort((List<Quartet> list1, List<Quartet> list2) -> {
+            return (int) (list2.get(0).weight - list1.get(0).weight); //To change body of generated lambdas, choose Tools | Templates.
+        });
+
+        System.out.println("-----------------------------------------");
+
+        for (int i = 0; i < double_list.size(); i++) {
+            List<Quartet> list = double_list.get(i);
+            System.out.print("Row " + i + " : ");
+            for (Quartet q : list) {
+                System.out.print(q.toString() + "  ");
+            }
+            System.out.println("");
+        }
     }
 
 }
