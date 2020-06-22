@@ -132,9 +132,28 @@ public class TestNormalFunctions {
         List<String> list2 = new ArrayList<>(list);
 //        List<String> list2 = list;
         list2.add("Zahin");
-        
+
         System.out.println(list);
         System.out.println(list2);
+    }
+
+    public static void testListIsInFunction() {
+        /*for (int i = 0; i < 1000; i++) {
+            List<String> list = new ArrayList<>(Arrays.asList("Mahim", "CR7", "RONALDO", "Zahin", "Alvi", "Papan", "Hridoy"));
+            int indexOf = list.indexOf("Mahim");
+            System.out.println(indexOf);
+        }*/
+        List<String> list = new ArrayList<>(Arrays.asList("Mahim", "CR7", "RONALDO", "Zahin", "Alvi", "Papan", "Hridoy"));
+        Map<String, Integer> map = new HashMap<>();
+        for(int i=0; i<list.size(); i++){
+            map.put(list.get(i), i);
+        }
+        List<Integer> list_values = new ArrayList<>(map.values());
+        System.out.println(list_values);
+//            System.out.println(map.get("Mahim"));
+//            System.out.println(list.indexOf("Mahim"));
+        
+        
     }
 
     private TreeMap<Double, Integer> sortMap(Map<Double, Integer> map) {

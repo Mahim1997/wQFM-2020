@@ -2,7 +2,9 @@ package wqfm.ds;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javafx.util.Pair;
 import wqfm.Status;
 
@@ -16,9 +18,11 @@ public class FMComputer {
     public List<String> taxa_list;
     public List<Pair<Integer, Integer>> quartets_list_indices;
     private final CustomDS customDS;
-    
-    private List<Integer> bipartition_logic_list_per_pass;
+
+    private List<Integer> bipartition_logical_list_per_pass;
     private List<Boolean> lockedTaxaBooleanList; //true: LOCKED, false: FREE
+
+    private final Map<String, Integer> mapOfInitialBipartition;
 
     public FMComputer(CustomDS cDS, List<String> list, List<Pair<Integer, Integer>> qrts, List<Integer> initial_bip) {
 //        this.taxa_list = new ArrayList<>(list); //Copy OR direct assignment ?
@@ -28,7 +32,40 @@ public class FMComputer {
         this.initial_bipartition_logical_list = initial_bip;
         //Initially all the taxa will be FREE
         this.lockedTaxaBooleanList = new ArrayList<>(Collections.nCopies(this.taxa_list.size(), false));
-        this.bipartition_logic_list_per_pass = new ArrayList<>(this.initial_bipartition_logical_list);
+        this.bipartition_logical_list_per_pass = new ArrayList<>(this.initial_bipartition_logical_list);
+        this.mapOfInitialBipartition = new HashMap<>();
+
+        for (int i = 0; i < this.taxa_list.size(); i++) {
+            this.mapOfInitialBipartition.put(this.taxa_list.get(i), this.initial_bipartition_logical_list.get(i));
+        }
+        System.out.println(this.mapOfInitialBipartition);
+    }
+
+    private int checkQuartetStatusBeforeAndAfter(int[] left_sisters_bip, int[] right_sisters_bip) {
+
+        int[] four_bipartitions = {left_sisters_bip[0], left_sisters_bip[1], right_sisters_bip[0], right_sisters_bip[1]};
+
+        int sum_four_bipartitions = Helper.sumArray(four_bipartitions);
+
+        //Blank check: Easier to check if blank quartet (all four are same) [priority wise first]
+//        if ((left_sisters_bip[0] == left_sisters_bip[1]) && (right_sisters_bip[0] == right_sisters_bip[1]) && (left_sisters_bip[0] == right_sisters_bip[0])) {
+        if (Math.abs(sum_four_bipartitions) == 4) { // -1,-1,-1,-1 or +1,+1,+1,+1 all will lead to sum == 4
+            return Status.BLANK;
+        }
+
+        //Deferred Check: sum == 3 check [otherwise, permutations will be huge]
+        if (Math.abs(sum_four_bipartitions) == 3) {
+            return Status.DEFERRED;
+        }
+
+        //Satisfied check: left are equal, right are equal AND left(any one) != right(any one)
+        if ((left_sisters_bip[0] == left_sisters_bip[1]) && (right_sisters_bip[0] == right_sisters_bip[1]) && (left_sisters_bip[0] != right_sisters_bip[0])) {
+            return Status.SATISFIED;
+        }
+        
+        //All check fails, Deferred quartet
+
+        return Status.DEFERRED;
     }
 
     public void run_FM_single_pass() {
@@ -36,28 +73,32 @@ public class FMComputer {
         //Test hypothetically ...
         double max_hypothetical_gain_of_this_pass = Integer.MIN_VALUE;
         String taxa_with_max_hypothetical_gain = "NONE_CHECK_NONE";
-        
-//        String 
-        
-        for(int i=0; i<this.lockedTaxaBooleanList.size(); i++){
-            if(this.lockedTaxaBooleanList.get(i) == false){ // this is a free taxon, hypothetically test it ....
+
+        for (int free_taxa_iter = 0; free_taxa_iter < this.lockedTaxaBooleanList.size(); free_taxa_iter++) {
+            if (this.lockedTaxaBooleanList.get(free_taxa_iter) == false) { // this is a free taxon, hypothetically test it ....
                 //First check IF moving this will lead to a singleton bipartition ....
-                String taxaToConsider = this.taxa_list.get(i);
-                int currentPartitionSide = this.initial_bipartition_logical_list.get(i);
-                this.bipartition_logic_list_per_pass.set(i, Helper.getOppositePartition(currentPartitionSide));  //reverse the bipartition
+                String taxaToConsider = this.taxa_list.get(free_taxa_iter);
+                int currentPartitionSide = this.initial_bipartition_logical_list.get(free_taxa_iter);
+                this.bipartition_logical_list_per_pass.set(free_taxa_iter, Helper.getOppositePartition(currentPartitionSide));  //reverse the bipartition
                 /*System.out.println("For Taxa i = " + i + " , name = " + this.taxa_list.get(i));
                 System.out.println("String taxa = " + this.taxa_list);
                 System.out.println("Before bipartition = " + this.initial_bipartition_logical_list);
                 System.out.println("After bipartition = " + this.bipartition_logic_list_per_pass + "\n");*/
                 //Calculate hypothetical Gain ... [using discussed short-cut]
-                
+
                 List<Pair<Integer, Integer>> relevantQuartetsBeforeMoving = customDS.map_taxa_relevant_quartet_indices.get(taxaToConsider);
-                for(int quartets_itr=0; quartets_itr<relevantQuartetsBeforeMoving.size(); quartets_itr++){
-                    Pair<Integer, Integer> pair = relevantQuartetsBeforeMoving.get(i);
+                for (int quartets_itr = 0; quartets_itr < relevantQuartetsBeforeMoving.size(); quartets_itr++) {
+                    Pair<Integer, Integer> pair = relevantQuartetsBeforeMoving.get(quartets_itr);
                     Quartet quartet = customDS.table1_quartets_double_list.get(pair.getKey()).get(pair.getValue());
+
+                    int[] left_sisters_before_bipartition = {this.mapOfInitialBipartition.get(quartet.taxa_sisters_left[0]), this.mapOfInitialBipartition.get(quartet.taxa_sisters_left[1])};
+                    int[] right_sistere_before_bipartition = {this.mapOfInitialBipartition.get(quartet.taxa_sisters_right[0]), this.mapOfInitialBipartition.get(quartet.taxa_sisters_right[1])};
+                    int status_quartet_before_hypothetical_swap = checkQuartetStatusBeforeAndAfter(left_sisters_before_bipartition, right_sistere_before_bipartition);
+                    
+                    System.out.println("Taxa_to_consider = " + taxaToConsider + " , Qrt = " + quartet.toString() + " , Status = " + Status.PRINT_STATUS_QUARTET(status_quartet_before_hypothetical_swap));
                     
                 }
-                
+
 //                if(Helper.isSingletonBipartition(this.bipartition_logic_list_per_pass)){ // Singleton TO DO
 //                    
 //                }
@@ -78,7 +119,7 @@ public class FMComputer {
 //        System.out.println("-->>Inside FMComputer.run_FM_Algorithm_Whole()");
         System.out.println("TESTING runFMSinglePass()");
         run_FM_single_pass();
-        
+
         return object;
     }
 }

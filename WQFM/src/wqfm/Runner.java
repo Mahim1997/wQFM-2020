@@ -25,6 +25,7 @@ public class Runner {
     public static void runFunctions() {
 //        TestNormalFunctions.testDoubleListSort();
 //        TestNormalFunctions.testListCopy();
+//        TestNormalFunctions.testListIsInFunction();
 
         mainMethod();
 
@@ -57,19 +58,15 @@ public class Runner {
             int level, List<String> list_taxa_string,
             List<Pair<Integer, Integer>> list_quartets_indices) {
 //        System.out.println("-->>Inside recursiveDNC() function ... of Runner.java LINE 57");
-        
+
         List<Integer> initial_logical_partition_list = getInitialBipartition(customDS, level, list_taxa_string, list_quartets_indices);
         System.out.println("Printing Initial Bipartition");
         printBipartition(list_taxa_string, initial_logical_partition_list);
-        
 
         //Debugging ... for singleton bipartition list ... [TO DO]
-        
         FMComputer fmComputerObject = new FMComputer(customDS, list_taxa_string, list_quartets_indices, initial_logical_partition_list);
         fmComputerObject.run_FM_Algorithm_Whole();
-        
-        
-        
+
         /*  CustomDS.getDummyTaxonName(level) returns a dummy taxon with this level.
             TO DO HERE .... recursive-DNC function
             1. SET INTIIAL RETURN CONDITIONS ...
@@ -99,13 +96,13 @@ public class Runner {
         System.out.print("LEFT: ");
         for (int i = 0; i < partition_list.size(); i++) {
             if (partition_list.get(i) == Status.LEFT_PARTITION) {
-                System.out.print(list_taxa_string.get(i) + "-->");
+                System.out.print(list_taxa_string.get(i) + ",");
             }
         }
         System.out.print("\nRIGHT: ");
         for (int i = 0; i < partition_list.size(); i++) {
             if (partition_list.get(i) == Status.RIGHT_PARTITION) {
-                System.out.print(list_taxa_string.get(i) + "-->");
+                System.out.print(list_taxa_string.get(i) + ",");
             }
         }
         System.out.println("");
