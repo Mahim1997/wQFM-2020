@@ -41,10 +41,16 @@ public class FMComputer {
         System.out.println(this.mapOfInitialBipartition);
     }
 
+    private boolean isSingletonBipartition(List<Integer> logical_bipartition) { //true if this bipartition is a singleton bipartition
+        int len = logical_bipartition.size();
+        int sum = Helper.sumList(logical_bipartition);
+
+        return Math.abs(sum)== (len - 2); //eg. -1,+1, +1,+1,+1,+1  --> so, two terms will lead to 0, rest sum will be length - 2
+    }
+
     private int checkQuartetStatusBeforeAndAfter(int[] left_sisters_bip, int[] right_sisters_bip) {
         int[] four_bipartitions = {left_sisters_bip[0], left_sisters_bip[1], right_sisters_bip[0], right_sisters_bip[1]};
-        
-        
+
         int sum_four_bipartitions = Helper.sumArray(four_bipartitions);
         //Blank check: Easier to check if blank quartet (all four are same) [priority wise first]
 //        if ((left_sisters_bip[0] == left_sisters_bip[1]) && (right_sisters_bip[0] == right_sisters_bip[1]) && (left_sisters_bip[0] == right_sisters_bip[0])) {
@@ -89,7 +95,7 @@ public class FMComputer {
 
                     int[] left_sisters_before_bipartition = {this.mapOfInitialBipartition.get(quartet.taxa_sisters_left[0]), this.mapOfInitialBipartition.get(quartet.taxa_sisters_left[1])};
                     int[] right_sisters_before_bipartition = {this.mapOfInitialBipartition.get(quartet.taxa_sisters_right[0]), this.mapOfInitialBipartition.get(quartet.taxa_sisters_right[1])};
-                    
+
 //                    System.out.println("Taxa_to_consider = " + taxaToConsider + " , Qrt = " + quartet.toString());
                     int status_quartet_before_hypothetical_swap = checkQuartetStatusBeforeAndAfter(left_sisters_before_bipartition, right_sisters_before_bipartition);
                     System.out.println("++>> AFTERWARDS, TAXA-Cons = " + taxaToConsider + " , Qrt = " + quartet.toString() + " , Status = " + Status.PRINT_STATUS_QUARTET(status_quartet_before_hypothetical_swap));

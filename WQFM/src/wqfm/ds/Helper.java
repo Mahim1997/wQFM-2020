@@ -34,10 +34,5 @@ public class Helper {
         }
     }
 
-    public static boolean isSingletonBipartition(List<Integer> bipartition_logic_list_per_pass) {
-        int sum = sumList(bipartition_logic_list_per_pass);
-        int len = bipartition_logic_list_per_pass.size();
-
-        return Math.abs(sum) == (len - 1); //if ALL (except one of 'em) are -1 or ALL (except one of 'em) are +1 then this bipartition is a singleton bipartition
-    }
+    
 }
