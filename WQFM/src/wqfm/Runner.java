@@ -1,5 +1,6 @@
 package wqfm;
 
+import wqfm.ds.FMComputer;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,6 +13,7 @@ import java.util.TreeMap;
 import javafx.util.Pair;
 import wqfm.ds.CustomDS;
 import wqfm.ds.Quartet;
+import wqfm.testFunctions.TestNormalFunctions;
 
 /**
  *
@@ -22,6 +24,7 @@ public class Runner {
     //Main method to run all functions ... [ABSTRACT everything from Main class]
     public static void runFunctions() {
 //        TestNormalFunctions.testDoubleListSort();
+//        TestNormalFunctions.testListCopy();
 
         mainMethod();
 
@@ -58,6 +61,15 @@ public class Runner {
         List<Integer> initial_logical_partition_list = getInitialBipartition(customDS, level, list_taxa_string, list_quartets_indices);
         System.out.println("Printing Initial Bipartition");
         printBipartition(list_taxa_string, initial_logical_partition_list);
+        
+
+        //Debugging ... for singleton bipartition list ... [TO DO]
+        
+        FMComputer fmComputerObject = new FMComputer(customDS, list_taxa_string, list_quartets_indices, initial_logical_partition_list);
+        fmComputerObject.run_FM_Algorithm_Whole();
+        
+        
+        
         /*  CustomDS.getDummyTaxonName(level) returns a dummy taxon with this level.
             TO DO HERE .... recursive-DNC function
             1. SET INTIIAL RETURN CONDITIONS ...

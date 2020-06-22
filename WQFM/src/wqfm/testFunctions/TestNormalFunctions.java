@@ -127,6 +127,16 @@ public class TestNormalFunctions {
     //https://www.baeldung.com/java-hashmap-sort
     //https://stackoverflow.com/questions/30842966/how-to-sort-a-hash-map-using-key-descending-order
 
+    public static void testListCopy() {
+        List<String> list = new ArrayList<>(Arrays.asList("Mahim", "CR7", "RONALDO"));
+        List<String> list2 = new ArrayList<>(list);
+//        List<String> list2 = list;
+        list2.add("Zahin");
+        
+        System.out.println(list);
+        System.out.println(list2);
+    }
+
     private TreeMap<Double, Integer> sortMap(Map<Double, Integer> map) {
 //        TreeMap<Double, Integer> sorted = new TreeMap<>(map);
         TreeMap<Double, Integer> sorted = new TreeMap<>(Collections.reverseOrder());

@@ -15,13 +15,17 @@ public interface Status {
     public static int VIOLATED = 5;
     public static int DEFERRED = 3;
     
+    //Free or locked [arbitrary values]
+    public static int FREE = 22;
+    public static int LOCKED = 31;
+    
     // FOR NOW NOT NEEDED ...
-    public static int SATISFIED_LEFT_BIPARTITION = 1;
-    public static int SATISFIED_RIGHT_BIPARTITION = 2;
+    public static int SATISFIED_LEFT_BIPARTITION = 11;
+    public static int SATISFIED_RIGHT_BIPARTITION = 12;
 
-    public static int VIOLATED_LEFT_BIPARTITION = 3;
-    public static int VIOLATED_RIGHT_BIPARTITION = 4;
+    public static int VIOLATED_LEFT_BIPARTITION = 13;
+    public static int VIOLATED_RIGHT_BIPARTITION = 14;
 
-    public static int DEFERRED_LEFT_BIPARTITION = 5;
-    public static int DEFERRED_RIGHT_BIPARTITION = 6;
+    public static int DEFERRED_LEFT_BIPARTITION = 15;
+    public static int DEFERRED_RIGHT_BIPARTITION = 16;
 }
