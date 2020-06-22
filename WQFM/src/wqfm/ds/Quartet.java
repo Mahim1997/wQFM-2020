@@ -24,10 +24,10 @@ public class Quartet {
         Keep a,b|c,d as the quartet.
         Keep the minimum of (a,b) in taxa_sisters_left i.e. taxa_sisters_left[0] = min, taxa_sisters_left[1] = max
         Same with (c,d) for taxa_sisters_right.
-     */
-
+        FOR NOW, NOT DOING ABOVE THING
+    */
     public void initialiseQuartet(String a, String b, String c, String d, double w) {
-        if (a.compareTo(b) < 0) {
+        /*if (a.compareTo(b) < 0) {
             this.taxa_sisters_left[0] = a;
             this.taxa_sisters_left[1] = b;
         } else {
@@ -42,6 +42,11 @@ public class Quartet {
             this.taxa_sisters_right[0] = d;
             this.taxa_sisters_right[1] = c;
         }
+         */
+        this.taxa_sisters_left[0] = a;
+        this.taxa_sisters_left[1] = b;
+        this.taxa_sisters_right[0] = c;
+        this.taxa_sisters_right[1] = d;
         this.weight = w;
     }
 

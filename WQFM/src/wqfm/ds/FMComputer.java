@@ -46,7 +46,7 @@ public class FMComputer {
         int[] four_bipartitions = {left_sisters_bip[0], left_sisters_bip[1], right_sisters_bip[0], right_sisters_bip[1]};
 
         int sum_four_bipartitions = Helper.sumArray(four_bipartitions);
-
+        System.out.println("Sum of four bipartitions = " + sum_four_bipartitions);
         //Blank check: Easier to check if blank quartet (all four are same) [priority wise first]
 //        if ((left_sisters_bip[0] == left_sisters_bip[1]) && (right_sisters_bip[0] == right_sisters_bip[1]) && (left_sisters_bip[0] == right_sisters_bip[0])) {
         if (Math.abs(sum_four_bipartitions) == 4) { // -1,-1,-1,-1 or +1,+1,+1,+1 all will lead to sum == 4
@@ -62,10 +62,9 @@ public class FMComputer {
         if ((left_sisters_bip[0] == left_sisters_bip[1]) && (right_sisters_bip[0] == right_sisters_bip[1]) && (left_sisters_bip[0] != right_sisters_bip[0])) {
             return Status.SATISFIED;
         }
-        
-        //All check fails, Deferred quartet
 
-        return Status.DEFERRED;
+        //All check fails, Violated quartet
+        return Status.VIOLATED;
     }
 
     public void run_FM_single_pass() {
@@ -92,12 +91,19 @@ public class FMComputer {
                     Quartet quartet = customDS.table1_quartets_double_list.get(pair.getKey()).get(pair.getValue());
 
                     int[] left_sisters_before_bipartition = {this.mapOfInitialBipartition.get(quartet.taxa_sisters_left[0]), this.mapOfInitialBipartition.get(quartet.taxa_sisters_left[1])};
-                    int[] right_sistere_before_bipartition = {this.mapOfInitialBipartition.get(quartet.taxa_sisters_right[0]), this.mapOfInitialBipartition.get(quartet.taxa_sisters_right[1])};
-                    int status_quartet_before_hypothetical_swap = checkQuartetStatusBeforeAndAfter(left_sisters_before_bipartition, right_sistere_before_bipartition);
+                    int[] right_sisters_before_bipartition = {this.mapOfInitialBipartition.get(quartet.taxa_sisters_right[0]), this.mapOfInitialBipartition.get(quartet.taxa_sisters_right[1])};
+//                    System.out.println("Qrt = " + quartet.toString() + " , taxa_right[0] == 3 IS " + (quartet.taxa_sisters_right[0].equals("3")) 
+//                            + "  map.get(taxaright[0]) = " + this.mapOfInitialBipartition.get(quartet.taxa_sisters_right[0]));
                     
+                    System.out.println("Qrt = " + quartet.toString() + ", " + left_sisters_before_bipartition[0] + " " + left_sisters_before_bipartition[1] + " " + 
+                            right_sisters_before_bipartition[0] + " " + right_sisters_before_bipartition[1]);
+                     
+                    int status_quartet_before_hypothetical_swap = checkQuartetStatusBeforeAndAfter(left_sisters_before_bipartition, right_sisters_before_bipartition);
+
                     System.out.println("Taxa_to_consider = " + taxaToConsider + " , Qrt = " + quartet.toString() + " , Status = " + Status.PRINT_STATUS_QUARTET(status_quartet_before_hypothetical_swap));
-                    
+
                 }
+                System.out.println("");
 
 //                if(Helper.isSingletonBipartition(this.bipartition_logic_list_per_pass)){ // Singleton TO DO
 //                    
