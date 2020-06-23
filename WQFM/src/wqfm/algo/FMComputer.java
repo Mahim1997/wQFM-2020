@@ -13,6 +13,7 @@ import wqfm.bip.Bipartition_8_values;
 import wqfm.ds.CustomInitTables;
 import wqfm.ds.FMResultObject;
 import wqfm.ds.Quartet;
+import wqfm.main.Main;
 import wqfm.utils.Helper;
 import wqfm.utils.WeightedPartitionScores;
 
@@ -160,10 +161,10 @@ public class FMComputer {
             this.lockedTaxaBooleanMap.put(taxonWithTheHighestGainInThisPass, Boolean.TRUE);
             //create new map
             Map<String, Integer> mapAfterMovement = new HashMap<>(this.initialBipartitionMap);
-            
+
             //reverse the bipartition for THIS taxon
             mapAfterMovement.put(taxonWithTheHighestGainInThisPass, Utils.getOppositePartition(mapAfterMovement.get(taxonWithTheHighestGainInThisPass)));
-            
+
             StatsPerPass statsForThisPass = new StatsPerPass(taxonWithTheHighestGainInThisPass, highest_gain_value,
                     this.mapCandidateTax_vs_8vals.get(taxonWithTheHighestGainInThisPass), mapAfterMovement);
 
@@ -201,8 +202,7 @@ public class FMComputer {
             changeParameterValuesForNextPass();//Change parameters to maintain consistency wrt next step/box/pass.
             areAllTaxaLocked = Helper.checkAllValuesIFSame(this.lockedTaxaBooleanMap, true); //if ALL are true, then stop.
         }
-       
-        
+
     }
 
     public boolean changeAndCheckAfterFMSingleIteration() {
@@ -227,28 +227,31 @@ public class FMComputer {
         //Retrieve the stat's bipartition.
         StatsPerPass statOfMaxCumulativeGainBox = this.listOfPerPassStatistics.get(pass_index_with_max_cumulative_gain);
 
-        System.out.println("PRINTING listOfPerPassStatistics ... ");
-        for(int i=0; i<listOfPerPassStatistics.size(); i++){
-            StatsPerPass st = listOfPerPassStatistics.get(i);
-            System.out.println(i + ": " + st);
-        }
-        
+//        System.out.println("PRINTING listOfPerPassStatistics ... ");
+//        for(int i=0; i<listOfPerPassStatistics.size(); i++){
+//            StatsPerPass st = listOfPerPassStatistics.get(i);
+//            System.out.println(i + ": " + st);
+//        }
         System.out.println("Cumulative gain (max) = " + max_cumulative_gain_of_current_iteration
                 + " , for pass = " + (pass_index_with_max_cumulative_gain + 1)
                 + "  tax = " + statOfMaxCumulativeGainBox.whichTaxaWasPassed
                 + " map_final_bipartition = " + statOfMaxCumulativeGainBox.map_final_bipartition);
 
         //Initial bipartitions and ALL maps //Now change parameters accordingly for next FM iteration.
-        this.initialBipartitionMap = new HashMap<>(statOfMaxCumulativeGainBox.map_final_bipartition);
-        this.initialBipartition_8_values = statOfMaxCumulativeGainBox._8_values_chosen_for_this_pass;
-        this.listOfPerPassStatistics.clear();
-        this.mapCandidateGainsPerListTax = new TreeMap<>(Collections.reverseOrder());
-        this.mapCandidateTax_vs_8vals = new HashMap<>();
-        for (int i = 0; i < this.taxa_list.size(); i++) { //make all as FREE once again for next-iteration
-            this.lockedTaxaBooleanMap.put(this.taxa_list.get(i), Boolean.FALSE);
+        
+        //only when max-cumulative-gain is GREATER than zero, we will change, otherwise return the initial bipartition of this iteration
+        if (max_cumulative_gain_of_current_iteration > Main.SMALLEPSILON) { 
+            this.initialBipartitionMap = new HashMap<>(statOfMaxCumulativeGainBox.map_final_bipartition);
+            this.initialBipartition_8_values = statOfMaxCumulativeGainBox._8_values_chosen_for_this_pass;
+            this.listOfPerPassStatistics.clear();
+            this.mapCandidateGainsPerListTax = new TreeMap<>(Collections.reverseOrder());
+            this.mapCandidateTax_vs_8vals = new HashMap<>();
+            for (int i = 0; i < this.taxa_list.size(); i++) { //make all as FREE once again for next-iteration
+                this.lockedTaxaBooleanMap.put(this.taxa_list.get(i), Boolean.FALSE);
+            }
+            return true;
         }
-        //If max-cumulative-gain of current-iteration is NOT > 0, no more iterations are needed.
-        return max_cumulative_gain_of_current_iteration >= 0;  //>=0 true: YES more iterations needed.
+        return false;
     }
 
     //Whole FM ALGORITHm
@@ -257,7 +260,8 @@ public class FMComputer {
         FMResultObject object = new FMResultObject(null, null, null);
         boolean willIterateMore = true;
         int iterationsFM = 1; //can have stopping criterion for 10k iterations ?
-        while (iterationsFM <= 1) { //stopping condition
+        int max_iterations_limit = 10;
+        while (iterationsFM <= max_iterations_limit) { //stopping condition
 
             System.out.println("---------------- Iteration " + iterationsFM + " ----------------");
             run_FM_single_iteration();
