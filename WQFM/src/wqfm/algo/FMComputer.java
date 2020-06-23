@@ -175,7 +175,7 @@ public class FMComputer {
         //Previous step's chosen-bipartition is THIS step's intiail-bipartition.
         this.initialBipartitionMap.clear();
         StatsPerPass previousPassStats = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
-        this.initialBipartitionMap = previousPassStats.map_final_bipartition;
+        this.initialBipartitionMap = new HashMap<>(previousPassStats.map_final_bipartition); //NEED TO COPY here.
         //Previous step's chosen-8Values will be THIS step's chosen-8Values
         this.initialBipartition_8_values = new Bipartition_8_values(previousPassStats._8_values_chosen_for_this_pass);
         //Clear all the per-pass maps
@@ -201,7 +201,7 @@ public class FMComputer {
             changeParameterValuesForNextPass();//Change parameters to maintain consistency wrt next step/box/pass.
             areAllTaxaLocked = Helper.checkAllValuesIFSame(this.lockedTaxaBooleanMap, true); //if ALL are true, then stop.
         }
-        System.out.println("-->>AFTER runFMSingleIteration() .. printing listStats ...");
+       
         
     }
 
@@ -261,7 +261,7 @@ public class FMComputer {
 
             System.out.println("---------------- Iteration " + iterationsFM + " ----------------");
             run_FM_single_iteration();
-//            boolean willIterateMore = changeAndCheckAfterFMSingleIteration();
+            willIterateMore = changeAndCheckAfterFMSingleIteration();
             System.out.println("End of Iteration " + iterationsFM + " new bipartition = " + this.initialBipartitionMap);
             System.out.println("================================================================");
             if (willIterateMore == false) {

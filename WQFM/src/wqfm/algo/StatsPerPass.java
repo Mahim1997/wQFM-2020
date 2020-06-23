@@ -1,6 +1,5 @@
 package wqfm.algo;
 
-import java.util.HashMap;
 import java.util.Map;
 import wqfm.bip.Bipartition_8_values;
 
@@ -21,10 +20,9 @@ public class StatsPerPass {
         this.whichTaxaWasPassed = whichTaxaWasPassed;
         this.maxGainOfThisPass = maxGainOfThisPass;
         this._8_values_chosen_for_this_pass = new Bipartition_8_values(_8_vals);
-//        this.map_final_bipartition = map;
-        this.map_final_bipartition = new HashMap<>(map);
+        this.map_final_bipartition = map; // this also works.
+//        this.map_final_bipartition = new HashMap<>(map);
 
-        System.out.println("-->>While initializing ... In StatsPerPass ... printng map " + map + " this.mapFinal =  " + this.map_final_bipartition);
     }
 
     @Override
