@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import javafx.util.Pair;
+import wqfm.bip.Bipartition_8_values;
 import wqfm.ds.CustomDS;
 import wqfm.ds.Quartet;
 import wqfm.testFunctions.TestNormalFunctions;
@@ -64,7 +65,12 @@ public class Runner {
         printBipartition(list_taxa_string, initial_logical_partition_list);
 
         //Debugging ... for singleton bipartition list ... [TO DO]
-        FMComputer fmComputerObject = new FMComputer(customDS, list_taxa_string, list_quartets_indices, initial_logical_partition_list);
+        Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
+        initialBip_8_vals.computeValues(customDS, list_taxa_string, list_quartets_indices, initial_logical_partition_list);
+//        System.out.println("Printing initial_bipartitions_8values:\n" + initialBip_8_vals.toString());
+        
+        FMComputer fmComputerObject = new FMComputer(customDS, list_taxa_string, list_quartets_indices,
+                initial_logical_partition_list, initialBip_8_vals);
         fmComputerObject.run_FM_Algorithm_Whole();
 
         /*  CustomDS.getDummyTaxonName(level) returns a dummy taxon with this level.

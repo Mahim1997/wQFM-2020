@@ -1,8 +1,10 @@
 package wqfm;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 import phylonet.tree.io.ParseException;
 import phylonet.tree.model.sti.STITree;
 
@@ -18,6 +20,8 @@ public class TreeHandler {
                 return TreeHandler.rerootTree_JAR(newickTree, outGroupNode);
             case Status.REROOT_USING_PYTHON:
                 return TreeHandler.rerootTree_python(newickTree, outGroupNode);
+            case Status.REROOT_USING_PERL:
+                return TreeHandler.rerootTree_Perl(newickTree, outGroupNode);
             default:
                 System.out.println("-->>FOR NOW Reroot only support using jar and python dendropy [to add perl later].");
                 return "NULL";
@@ -38,36 +42,6 @@ public class TreeHandler {
         }
 
         return tree.toNewick();
-    }
-
-    //For now, use python3 and dendropy
-    // Command is: python3 reroot_tree_new.py <tree-newick> <outgroup> DON'T FORGET SEMI-COLON
-    // External commands using java => http://alvinalexander.com/java/edu/pj/pj010016/
-    private static String rerootTree_python(String newickTree, String outGroupNode) {
-        try {
-            String s;
-            // String cmd = "python3 reroot_tree_new.py '" + newickTree + "' '" + outGroupNode + "'";
-            String cmd = "python3 reroot_tree_new.py " + newickTree + " " + outGroupNode + "";
-//            System.out.println(cmd);
-            Process p = Runtime.getRuntime().exec(cmd);
-            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-
-//            System.out.println("Here is the standard output of the command:\n");
-            while ((s = stdInput.readLine()) != null) {
-                System.out.println(s);
-                return s;
-            }
-//            System.out.println("Here is the standard error of the command (if any):\n");
-//            while ((s = stdError.readLine()) != null) {
-//                System.out.println(s);
-//            }
-        } catch (IOException ex) {
-        }
-        System.out.println("--->>ERROR IN RerootTree.java ... check python package ... check if dendropy is installed "
-                + " ... use pip3 install dendropy ... use python3 ... EXITING JAVA PROGRAM !!! ");
-        System.exit(-1);
-        return "ERROR_IN_TREE";
     }
 
     //Eg; (X, ((1,2),3)); to give ( ((1,2),3), X) i.e. outgroup is shifted to the right.
@@ -131,5 +105,69 @@ public class TreeHandler {
 //        String rootedTreeLeft_rightShifted = TreeHandler.shiftOutgroupToRight(rootedTreeLeft);
         String mergedTree = mergeTwoRootedTrees(rootedTreeLeft, rootedTreeRight, outGroup);
         return mergedTree;
+    }
+
+    // Command is: python3 reroot_tree_new.py <tree-newick> <outgroup> DON'T FORGET SEMI-COLON [DENDROPY]
+    // External commands using java => http://alvinalexander.com/java/edu/pj/pj010016/
+    private static String rerootTree_python(String newickTree, String outGroupNode) {
+        try {
+            String s;
+            // String cmd = "python3 reroot_tree_new.py '" + newickTree + "' '" + outGroupNode + "'";
+            String cmd = "python3 reroot_tree_new.py " + newickTree + " " + outGroupNode + "";
+//            System.out.println(cmd);
+            Process p = Runtime.getRuntime().exec(cmd);
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+
+//            System.out.println("Here is the standard output of the command:\n");
+            while ((s = stdInput.readLine()) != null) {
+                System.out.println(s);
+                return s;
+            }
+//            System.out.println("Here is the standard error of the command (if any):\n");
+//            while ((s = stdError.readLine()) != null) {
+//                System.out.println(s);
+//            }
+        } catch (IOException ex) {
+        }
+        System.out.println("--->>ERROR IN RerootTree.java ... check python package ... check if dendropy is installed "
+                + " ... use pip3 install dendropy ... use python3 ... EXITING JAVA PROGRAM !!! ");
+        System.exit(-1);
+        return "ERROR_IN_TREE";
+    }
+
+    // reroot_tree_new.pl [Using perl reroot ... just to test] {BIOPERL}
+    private static String rerootTree_Perl(String newickTree, String outGroupNode) {
+        try {
+            String s;
+            // String cmd = "python3 reroot_tree_new.py '" + newickTree + "' '" + outGroupNode + "'";
+            String cmd = "perl reroot_tree_new.pl -t \"" + newickTree + "\" -r \"" + outGroupNode + "\" -o output_file";
+            System.out.println(cmd);
+
+            Process p = Runtime.getRuntime().exec(cmd);
+
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+//
+//            System.out.println("Here is the standard output of the command:\n");
+            while ((s = stdInput.readLine()) != null) {
+                System.out.println(s);
+                return s;
+            }
+            System.out.println("Here is the standard error of the command (if any):\n");
+            while ((s = stdError.readLine()) != null) {
+                System.out.println(s);
+            }
+
+            Scanner sc = new Scanner(new FileInputStream("output_file"));
+            if (sc.hasNextLine()) {
+                System.out.println(sc.nextLine());
+                return sc.nextLine();
+            }
+
+        } catch (Exception ex) {
+        }
+        
+        return "ERROR_IN_TREE";
     }
 }

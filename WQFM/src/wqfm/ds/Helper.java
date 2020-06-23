@@ -1,7 +1,6 @@
 package wqfm.ds;
 
 import java.util.List;
-import wqfm.Status;
 
 /**
  *
@@ -23,16 +22,6 @@ public class Helper {
         return sum;
     }
 
-    public static int getOppositePartition(int partition) {
-        switch (partition) {
-            case Status.LEFT_PARTITION:
-                return Status.RIGHT_PARTITION;
-            case Status.RIGHT_PARTITION:
-                return Status.LEFT_PARTITION;
-            default:
-                return Status.UNASSIGNED;
-        }
-    }
 
     
 }

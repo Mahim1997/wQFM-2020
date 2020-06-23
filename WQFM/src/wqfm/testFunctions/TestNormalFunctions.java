@@ -19,7 +19,6 @@ import java.util.TreeMap;
 import javafx.util.Pair;
 import wqfm.Main;
 import wqfm.TreeHandler;
-import wqfm.Runner;
 import wqfm.Status;
 import wqfm.ds.CustomDS;
 import wqfm.ds.Quartet;
@@ -29,6 +28,21 @@ import wqfm.ds.Quartet;
  * @author mahim
  */
 public class TestNormalFunctions {
+
+    //Fail khay somehow ??? [PERL use korle fail khay]
+    public static void testPerlReroot(int num) {
+        String newickTree = "((3,(1,2)),((6,5),4));";
+        String outGroupNode = "5";
+        int i = 0;
+//            System.out.print(i + ": ");
+        Main.REROOT_MODE = Status.REROOT_USING_PERL;
+        String rerootTree = TreeHandler.rerootTree(newickTree, outGroupNode);
+        System.out.println(i + ": ->" + rerootTree);
+//        for (int i = 0; i < num; i++) {
+//            String rerootTree = TreeHandler.rerootTree(newickTree, outGroupNode);
+//            System.out.println(i + ": ->" + rerootTree);
+//        }
+    }
 
 // --------------------------------------- TEST METHODS ----------------------------------
     // READ and populate tables using the same function ABOVE... SO don't use this
@@ -228,12 +242,13 @@ public class TestNormalFunctions {
 //        String outGroupNode = "HRIDOY";
 //        String rootedTree = TreeHandler.rerootTree_JAR(newickTree, outGroupNode);
 
-//        String leftTree = "((1,X),(2,3));";
-//        String rightTree = "((),());";
-        String leftTree = "(1,2,X);";
-        String rightTree = "(3,4,X);";
-        String outgroup = "X";
+        String leftTree = "((1,2),(3,Y));";
+        String rightTree = "((5,6),(4,Y));";
+        String outgroup = "Y";
 
+//        String leftTree = "(1,2,X);";
+//        String rightTree = "(3,4,X);";
+//        String outgroup = "X";
         for (int i = 0; i < num; i++) {
 //            System.out.println(i + "::::::: Rooted Tree" + "->> " + rootedTree);
             System.out.println("Left tree =-> " + leftTree + "\nRight Tree => " + rightTree);
