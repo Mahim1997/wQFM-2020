@@ -135,7 +135,7 @@ public class Bipartition_8_values {
 
     @Override
     public String toString() {
-        return "Bipartition_8_values{" + "numSatisfied=" + numSatisfied + ", numViolated=" + numViolated + ", numDeferred=" + numDeferred + ", numBlank=" + numBlank + ", wtSatisfied=" + wtSatisfied + ", wtViolated=" + wtViolated + ", wtDeferred=" + wtDeferred + ", wtBlank=" + wtBlank + '}';
+        return "_8Vals{" + "ns=" + numSatisfied + ", nv=" + numViolated + ", nd=" + numDeferred + ", nb=" + numBlank + ", ws=" + wtSatisfied + ", wv=" + wtViolated + ", wd=" + wtDeferred + ", wb=" + wtBlank + '}';
     }
 
     public void addObject(Bipartition_8_values obj) {

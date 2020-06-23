@@ -125,12 +125,17 @@ public class FMComputer {
         3.  LOCK the bestTaxaToMove
          */
         System.out.println("-->>After runFMSinglePass() is done ... inside find-best-taxa-of-single-pass()");
-        for (double gain : this.mapCandidateGainsPerListTax.keySet()) {
-            List<String> list_tax_with_this_gain = this.mapCandidateGainsPerListTax.get(gain);
-            for (String tax : list_tax_with_this_gain) {
-                System.out.println("-->>Gain(" + tax + ") = " + gain);
-            }
+        for(String tax: this.mapCandidateTax_vs_8vals.keySet()){
+            Bipartition_8_values _8_vals = this.mapCandidateTax_vs_8vals.get(tax);
+            System.out.println(tax + ": " + _8_vals.toString());
         }
+
+//        for (double gain : this.mapCandidateGainsPerListTax.keySet()) {
+//            List<String> list_tax_with_this_gain = this.mapCandidateGainsPerListTax.get(gain);
+//            for (String tax : list_tax_with_this_gain) {
+//                System.out.println("-->>Gain(" + tax + ") = " + gain);
+//            }
+//        }
     }
 
     public void run_FM_single_iteration() {
