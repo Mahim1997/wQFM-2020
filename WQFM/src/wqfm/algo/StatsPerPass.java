@@ -1,6 +1,7 @@
 package wqfm.algo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -10,19 +11,22 @@ public class StatsPerPass {
     public String whichTaxaWasPassed;
     public double maxGainOfThisPass;
     public int numSatisfiedQuartetsOfThisPass;
-    public List<Integer> list_bipartition_final;
+    public Map<String, Integer> map_final_bipartition;
 
-    public StatsPerPass(String whichTaxaWasPassed, double maxGainOfThisPass, int numSatisfiedQuartetsOfThisPass, List<Integer> list_bipartition_final) {
+    public StatsPerPass(String whichTaxaWasPassed, double maxGainOfThisPass, int numSatisfiedQuartetsOfThisPass, 
+            Map<String, Integer> map) {
         this.whichTaxaWasPassed = whichTaxaWasPassed;
         this.maxGainOfThisPass = maxGainOfThisPass;
         this.numSatisfiedQuartetsOfThisPass = numSatisfiedQuartetsOfThisPass;
-        this.list_bipartition_final = list_bipartition_final;
+        this.map_final_bipartition = map;
     }
 
     @Override
     public String toString() {
-        return "PerPassValue{" + "whichTaxaWasPassed=" + whichTaxaWasPassed + ", maxGainOfThisPass=" + maxGainOfThisPass + ", numSatisfiedQuartetsOfThisPass=" + numSatisfiedQuartetsOfThisPass + ", list_bipartition_final=" + list_bipartition_final + '}';
+        return "StatsPerPass{" + "taxPassed=" + whichTaxaWasPassed + ", maxG=" + maxGainOfThisPass + ", ns=" + numSatisfiedQuartetsOfThisPass + ", bipartition_final=" + map_final_bipartition + '}';
     }
+
+    
     
     
 }

@@ -33,4 +33,8 @@ public class Helper {
         return list.stream().noneMatch((x) -> (x != val)); //if at least one is different wrt val, then return false
     }
 
+    public static boolean checkAllValuesIFSame(Map<String, Boolean> map, boolean val) {
+        return map.keySet().stream().noneMatch((key) -> (map.get(key) != val));
+    }
+
 }
