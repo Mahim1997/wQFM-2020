@@ -251,21 +251,27 @@ public class FMComputer {
             }
             return true;
         }
+        //Set initial map to list's 1st item's map.
         return false;
     }
 
     //Whole FM ALGORITHm
     public FMResultObject run_FM_Algorithm_Whole() {
+        Map<String, Integer> map_previous_iteration;//= new HashMap<>();
         //Constructor FMResultObject(List<Integer> logical_bipartition, List<String> taxa_list_initial, List<Pair<Integer, Integer>> quartets_list_initial)
         FMResultObject object = new FMResultObject(null, null, null);
         boolean willIterateMore = true;
         int iterationsFM = 1; //can have stopping criterion for 10k iterations ?
-        int max_iterations_limit = 1;
+        int max_iterations_limit = 10000000;
         while (iterationsFM <= max_iterations_limit) { //stopping condition
 
             System.out.println("---------------- Iteration " + iterationsFM + " ----------------");
+            map_previous_iteration = new HashMap<>(this.initialBipartitionMap); // always store this
             run_FM_single_iteration();
             willIterateMore = changeAndCheckAfterFMSingleIteration();
+            if(willIterateMore == false){
+                this.initialBipartitionMap = map_previous_iteration; // just change as previous map
+            }
             System.out.println("End of Iteration " + iterationsFM + " new bipartition = " + this.initialBipartitionMap);
             System.out.println("================================================================");
             if (willIterateMore == false) {
