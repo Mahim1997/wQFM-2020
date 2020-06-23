@@ -18,7 +18,7 @@ public class StatsPerPass {
             Map<String, Integer> map) {
         this.whichTaxaWasPassed = whichTaxaWasPassed;
         this.maxGainOfThisPass = maxGainOfThisPass;
-        this._8_values_chosen_for_this_pass.assign(_8_vals);
+        this._8_values_chosen_for_this_pass = new Bipartition_8_values(_8_vals);
         this.map_final_bipartition = map;
     }
 

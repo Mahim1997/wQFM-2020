@@ -64,7 +64,7 @@ public class FMComputer {
         //Test hypothetically ...
         for (int taxa_iter = 0; taxa_iter < this.taxa_list.size(); taxa_iter++) { // iterate over whole set of taxa
             String taxToConsider = this.taxa_list.get(taxa_iter); // WHICH taxa to consider for hypothetical move.
-            if (this.lockedTaxaBooleanMap.get(taxToConsider)) { // this is a free taxon, hypothetically test it ....
+            if (this.lockedTaxaBooleanMap.get(taxToConsider) == false) { // this is a free taxon, hypothetically test it ....
                 int taxPartValBeforeHypoSwap = this.initialBipartitionMap.get(taxToConsider);
                 //First check IF moving this will lead to a singleton bipartition ....
                 Map<String, Integer> newMap = new HashMap<>(this.initialBipartitionMap);
@@ -106,6 +106,7 @@ public class FMComputer {
                 double ps_before_reduced = WeightedPartitionScores.calculatePartitionScoreReduced(_8_vals_THIS_TAX_before_hypo_swap);
                 double ps_after_reduced = WeightedPartitionScores.calculatePartitionScoreReduced(_8_vals_THIS_TAX_AFTER_hypo_swap);
                 double gainOfThisTax = ps_after_reduced - ps_before_reduced; //correct calculation
+
                 if (this.mapCandidateGainsPerListTax.containsKey(gainOfThisTax) == false) { // this gain was not contained
                     //initialize the taxon(for this gain-val) list.
                     this.mapCandidateGainsPerListTax.put(gainOfThisTax, new ArrayList<>());
@@ -124,26 +125,13 @@ public class FMComputer {
 
     }
 
-    private void printTwoMaps() {
-        for (String tax : this.mapCandidateTax_vs_8vals.keySet()) {
-            Bipartition_8_values _8_vals = this.mapCandidateTax_vs_8vals.get(tax);
-            System.out.println(tax + ": " + _8_vals.toString());
-        }
-
-        for (double gain : this.mapCandidateGainsPerListTax.keySet()) {
-            List<String> list_tax_with_this_gain = this.mapCandidateGainsPerListTax.get(gain);
-            for (String tax : list_tax_with_this_gain) {
-                System.out.println("-->>Gain(" + tax + ") = " + gain);
-            }
-        }
-    }
-
     public void find_best_taxa_of_single_pass() {
         /*
         1.  Check if mapCandidateGainsPerListTax.size == 0 (any of the two maps) THEN all are singleton ... LOCK all taxaToMove
         2.  OTHERWISE, Use the two maps to find bestTaxaToMove [maxGain OR highestGain_with_max_num_satisfied_qrts]
         3.  LOCK the bestTaxaToMove and put corresponding stats in map
          */
+        System.out.println("-->Inside find_best_taxa_of_single_pass() ... printing mapCandidateTax_vs_8vals: " + mapCandidateTax_vs_8vals);
         if (this.mapCandidateGainsPerListTax.isEmpty() == true) {
             //ALL LEAD TO SINGLETON BIPARTITION .... [LOCK ALL THE TAXA]
             for (String key : this.lockedTaxaBooleanMap.keySet()) {
@@ -171,7 +159,7 @@ public class FMComputer {
                 Map.Entry<Integer, String> highestNumSatTaxEntry = treeMap.entrySet().iterator().next();
                 taxonWithTheHighestGainInThisPass = highestNumSatTaxEntry.getValue();
             }
-
+            
             //lock and put stats values for this taxon in corresponding maps
             this.lockedTaxaBooleanMap.put(taxonWithTheHighestGainInThisPass, Boolean.TRUE);
             //create new map
@@ -205,16 +193,16 @@ public class FMComputer {
         boolean areAllTaxaLocked = false;
         while (areAllTaxaLocked == false) {
             pass++; //for debug printing....
-            
+
             areAllTaxaLocked = Helper.checkAllValuesIFSame(this.lockedTaxaBooleanMap, true); //if ALL are true, then stop.
             run_FM_singlepass_hypothetical_swap(); //FM hypothetical single swap run
             find_best_taxa_of_single_pass(); //Find the best-taxon for THIS swap
-            
+
             //Debug printing.
             StatsPerPass last_pass_stat = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
-            System.out.println("FM-pass = " + pass + " , choosing taxon: " + last_pass_stat.whichTaxaWasPassed + " , Gain = " +
-                last_pass_stat.maxGainOfThisPass);
-            
+            System.out.println("FM-pass = " + pass + " , choosing taxon: " + last_pass_stat.whichTaxaWasPassed + " , Gain = "
+                    + last_pass_stat.maxGainOfThisPass);
+
             changeParameterValuesForNextPass();//Change parameters to maintain consistency wrt next step/box/pass.
         }
 
@@ -238,4 +226,19 @@ public class FMComputer {
         return object;
     }
 
+    //--------------------------------------- For debugging -------------------------------
+    
+    private void printTwoMaps() {
+        for (String tax : this.mapCandidateTax_vs_8vals.keySet()) {
+            Bipartition_8_values _8_vals = this.mapCandidateTax_vs_8vals.get(tax);
+            System.out.println(tax + ": " + _8_vals.toString());
+        }
+
+        for (double gain : this.mapCandidateGainsPerListTax.keySet()) {
+            List<String> list_tax_with_this_gain = this.mapCandidateGainsPerListTax.get(gain);
+            for (String tax : list_tax_with_this_gain) {
+                System.out.println("-->>Gain(" + tax + ") = " + gain);
+            }
+        }
+    }
 }
