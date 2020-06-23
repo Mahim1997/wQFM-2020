@@ -1,5 +1,6 @@
 package wqfm.algo;
 
+import java.util.HashMap;
 import java.util.Map;
 import wqfm.bip.Bipartition_8_values;
 
@@ -8,26 +9,27 @@ import wqfm.bip.Bipartition_8_values;
  * @author mahim
  */
 public class StatsPerPass {
+
     public String whichTaxaWasPassed;
     public double maxGainOfThisPass;
     public Bipartition_8_values _8_values_chosen_for_this_pass;
-    public Map<String, Integer> map_final_bipartition;
+    public final Map<String, Integer> map_final_bipartition;
 
-    public StatsPerPass(String whichTaxaWasPassed, double maxGainOfThisPass, 
-            Bipartition_8_values _8_vals, 
+    public StatsPerPass(String whichTaxaWasPassed, double maxGainOfThisPass,
+            Bipartition_8_values _8_vals,
             Map<String, Integer> map) {
         this.whichTaxaWasPassed = whichTaxaWasPassed;
         this.maxGainOfThisPass = maxGainOfThisPass;
         this._8_values_chosen_for_this_pass = new Bipartition_8_values(_8_vals);
-        this.map_final_bipartition = map;
+//        this.map_final_bipartition = map;
+        this.map_final_bipartition = new HashMap<>(map);
+
+        System.out.println("-->>While initializing ... In StatsPerPass ... printng map " + map + " this.mapFinal =  " + this.map_final_bipartition);
     }
 
     @Override
     public String toString() {
-        return "StatsPerPass{" + "taxPassed=" + whichTaxaWasPassed + ", maxG=" + maxGainOfThisPass + ", ns=" + this._8_values_chosen_for_this_pass.numSatisfied + ", bipartition_final=" + map_final_bipartition + '}';
+        return "StatsPerPass{" + "whichTaxaWasPassed=" + whichTaxaWasPassed + ", maxGainOfThisPass=" + maxGainOfThisPass + ", _8_values_chosen_for_this_pass=" + _8_values_chosen_for_this_pass + ", map_final_bipartition=" + map_final_bipartition + '}';
     }
 
-    
-    
-    
 }

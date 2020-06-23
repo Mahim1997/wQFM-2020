@@ -160,10 +160,13 @@ public class FMComputer {
             this.lockedTaxaBooleanMap.put(taxonWithTheHighestGainInThisPass, Boolean.TRUE);
             //create new map
             Map<String, Integer> mapAfterMovement = new HashMap<>(this.initialBipartitionMap);
+            
             //reverse the bipartition for THIS taxon
             mapAfterMovement.put(taxonWithTheHighestGainInThisPass, Utils.getOppositePartition(mapAfterMovement.get(taxonWithTheHighestGainInThisPass)));
+            
             StatsPerPass statsForThisPass = new StatsPerPass(taxonWithTheHighestGainInThisPass, highest_gain_value,
                     this.mapCandidateTax_vs_8vals.get(taxonWithTheHighestGainInThisPass), mapAfterMovement);
+
             this.listOfPerPassStatistics.add(statsForThisPass);
         }
     }
@@ -198,7 +201,8 @@ public class FMComputer {
             changeParameterValuesForNextPass();//Change parameters to maintain consistency wrt next step/box/pass.
             areAllTaxaLocked = Helper.checkAllValuesIFSame(this.lockedTaxaBooleanMap, true); //if ALL are true, then stop.
         }
-
+        System.out.println("-->>AFTER runFMSingleIteration() .. printing listStats ...");
+        
     }
 
     public boolean changeAndCheckAfterFMSingleIteration() {
@@ -251,13 +255,13 @@ public class FMComputer {
     public FMResultObject run_FM_Algorithm_Whole() {
         //Constructor FMResultObject(List<Integer> logical_bipartition, List<String> taxa_list_initial, List<Pair<Integer, Integer>> quartets_list_initial)
         FMResultObject object = new FMResultObject(null, null, null);
-
+        boolean willIterateMore = true;
         int iterationsFM = 1; //can have stopping criterion for 10k iterations ?
         while (iterationsFM <= 1) { //stopping condition
 
             System.out.println("---------------- Iteration " + iterationsFM + " ----------------");
             run_FM_single_iteration();
-            boolean willIterateMore = changeAndCheckAfterFMSingleIteration();
+//            boolean willIterateMore = changeAndCheckAfterFMSingleIteration();
             System.out.println("End of Iteration " + iterationsFM + " new bipartition = " + this.initialBipartitionMap);
             System.out.println("================================================================");
             if (willIterateMore == false) {
