@@ -92,11 +92,11 @@ public class Bipartition_8_values {
     }
 
     public void compute8ValuesUsingAllQuartets(CustomInitTables customDS, List<String> list_taxa_string,
-            List<Pair<Integer, Integer>> list_quartets_indices, Map<String, Integer> map_bipartitions) {
+            Map<Pair<Integer, Integer>, Boolean> map_quartet_indices, Map<String, Integer> map_bipartitions) {
 
 //        Map<String, Integer> map_bipartitions = Utils.obtainBipartitionMap(list_taxa_string, bipartitions_list);
-        for (int i = 0; i < list_quartets_indices.size(); i++) {
-            Pair<Integer, Integer> pair = list_quartets_indices.get(i);
+//        for (int i = 0; i < list_quartets_indices.size(); i++) {
+        for (Pair<Integer, Integer> pair : map_quartet_indices.keySet()) {
             int row = pair.getKey(); //obtain row idx
             int col = pair.getValue(); //obtian col idx
             Quartet quartet = customDS.table1_quartets_double_list.get(row).get(col); //obtain actual quartet

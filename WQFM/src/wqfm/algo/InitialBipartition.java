@@ -40,7 +40,7 @@ public class InitialBipartition {
 
     public Map<String, Integer> getInitialBipartitionMap(CustomInitTables customDS,
             List<String> list_taxa_string,
-            List<Pair<Integer, Integer>> list_quartets_indices) {
+            Map<Pair<Integer, Integer>, Boolean> map_quartets_indices) {
         // partition_list is the list which will the partitions of each taxa
         // Status.LEFT_PARTITION : left , 0 : unassigned , +1 : right
 //        initiazing partition_list with 0 (all are unassigned)
@@ -53,17 +53,20 @@ public class InitialBipartition {
         int count_taxa_right_partition = 0;
 
         //Need to create a TreeMap for Pair of list_quartetes_indices...
-        Map<Integer, List<Integer>> mapOfRowAndColumns = new TreeMap<>(); //implicit sorting of List<row,col> wrt row [remember, unique row <-> unique weight] via TreeMap
-        for (int i = 0; i < list_quartets_indices.size(); i++) {
-            Pair<Integer, Integer> pair = list_quartets_indices.get(i); // obtain this pair (i.e. quartet)
-            if (mapOfRowAndColumns.containsKey(pair.getKey()) == false) { // map DOESN'T CONTAIN THIS ROW ... intiialize the array list
-                mapOfRowAndColumns.put(pair.getKey(), new ArrayList<>());
+        Map<Integer, List<Integer>> mapOfOneRowMultipleColumns = new TreeMap<>(); //implicit sorting of List<row,col> wrt row [remember, unique row <-> unique weight] via TreeMap
+        //for (int i = 0; i < list_quartets_indices.size(); i++) {
+        for (Pair<Integer, Integer> pair : map_quartets_indices.keySet()) {
+            //Pair<Integer, Integer> pair = list_quartets_indices.get(i); // obtain this pair (i.e. quartet)
+            if (mapOfOneRowMultipleColumns.containsKey(pair.getKey()) == false) { // map DOESN'T CONTAIN THIS ROW ... intiialize the array list
+                mapOfOneRowMultipleColumns.put(pair.getKey(), new ArrayList<>());
             }
-            mapOfRowAndColumns.get(pair.getKey()).add(pair.getValue()); //now append to the array list of map[row]. THIS column
+            mapOfOneRowMultipleColumns.get(pair.getKey()).add(pair.getValue()); //now append to the array list of map[row]. THIS column
         }
+        
+        
 
-        for (int rowIDX : mapOfRowAndColumns.keySet()) { //Mahim
-            List<Integer> columns_list_quartets_this_row = mapOfRowAndColumns.get(rowIDX); //Mahim
+        for (int rowIDX : mapOfOneRowMultipleColumns.keySet()) { //Mahim
+            List<Integer> columns_list_quartets_this_row = mapOfOneRowMultipleColumns.get(rowIDX); //Mahim
             for (int j = 0; j < columns_list_quartets_this_row.size(); j++) { //Mahim
                 int columnIDX = columns_list_quartets_this_row.get(j);//Mahim
                 Quartet quartet_under_consideration = customDS.table1_quartets_double_list.get(rowIDX).get(columnIDX);//Mahim

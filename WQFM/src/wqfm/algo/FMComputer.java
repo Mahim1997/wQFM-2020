@@ -22,10 +22,12 @@ import wqfm.utils.WeightedPartitionScores;
  * @author mahim
  */
 public class FMComputer {
+
     public int level;
     private Bipartition_8_values initialBipartition_8_values;
     public List<String> taxa_list;
 //    public List<Pair<Integer, Integer>> quartets_list_indices;
+    public Map<Pair<Integer, Integer>, Boolean> map_quartets_indices;
     private final CustomInitTables customDS;
 
     private Map<String, Integer> initialBipartitionMap;
@@ -36,7 +38,8 @@ public class FMComputer {
 
     private List<StatsPerPass> listOfPerPassStatistics;
 
-    public FMComputer(CustomInitTables customDS, List<String> list, List<Pair<Integer, Integer>> qrts,
+    public FMComputer(CustomInitTables customDS, List<String> list,
+            Map<Pair<Integer, Integer>, Boolean> map_qrts,
             Map<String, Integer> mapInitialBipartition, Bipartition_8_values initialBip_8_vals,
             int level) {
         this.level = level;
@@ -59,6 +62,8 @@ public class FMComputer {
         for (int i = 0; i < this.taxa_list.size(); i++) {
             this.lockedTaxaBooleanMap.put(this.taxa_list.get(i), Boolean.FALSE);
         }
+
+        this.map_quartets_indices = map_qrts;
     }
 
     public void run_FM_singlepass_hypothetical_swap() {//per pass or step [per num taxa of steps].
@@ -84,16 +89,19 @@ public class FMComputer {
                 List<Pair<Integer, Integer>> deferredQuartetsBeforeHypoMoving = new ArrayList<>(); //keep deferred quartets for later checking ...
                 for (int quartets_itr = 0; quartets_itr < relevantQuartetsBeforeHypoMoving.size(); quartets_itr++) {
                     Pair<Integer, Integer> pair = relevantQuartetsBeforeHypoMoving.get(quartets_itr);
-                    Quartet quartet = customDS.table1_quartets_double_list.get(pair.getKey()).get(pair.getValue());
-                    int status_quartet_before_hyp_swap = Utils.findQuartetStatus(initialBipartitionMap.get(quartet.taxa_sisters_left[0]),
-                            initialBipartitionMap.get(quartet.taxa_sisters_left[1]), initialBipartitionMap.get(quartet.taxa_sisters_right[0]), initialBipartitionMap.get(quartet.taxa_sisters_right[1]));
-//                    System.out.println("Before hypo swap, tax considered = " + taxToConsider + " , Qrt = " + quartet.toString() + " , Status = " + Status.PRINT_STATUS_QUARTET(status_quartet_before_hyp_swap));
-                    int status_quartet_after_hyp_swap = Utils.findQuartetStatusUsingShortcut(status_quartet_before_hyp_swap);
-                    _8_vals_THIS_TAX_before_hypo_swap.addRespectiveValue(quartet.weight, status_quartet_before_hyp_swap);
-                    _8_vals_THIS_TAX_AFTER_hypo_swap.addRespectiveValue(quartet.weight, status_quartet_after_hyp_swap); //If status.UNKNOWN, then don't add anything.
+                    boolean condition = (level == 0) || (this.map_quartets_indices.containsKey(pair)); //short-circuit connection so, level 0 will be skipped.
+                    if (condition) { //i.e. OVERLAP between CURRENT set of quartets and thisTaxon's relevant quartets
+                        Quartet quartet = customDS.table1_quartets_double_list.get(pair.getKey()).get(pair.getValue());
+                        int status_quartet_before_hyp_swap = Utils.findQuartetStatus(initialBipartitionMap.get(quartet.taxa_sisters_left[0]),
+                                initialBipartitionMap.get(quartet.taxa_sisters_left[1]), initialBipartitionMap.get(quartet.taxa_sisters_right[0]), initialBipartitionMap.get(quartet.taxa_sisters_right[1]));
+                        //                    System.out.println("Before hypo swap, tax considered = " + taxToConsider + " , Qrt = " + quartet.toString() + " , Status = " + Status.PRINT_STATUS_QUARTET(status_quartet_before_hyp_swap));
+                        int status_quartet_after_hyp_swap = Utils.findQuartetStatusUsingShortcut(status_quartet_before_hyp_swap);
+                        _8_vals_THIS_TAX_before_hypo_swap.addRespectiveValue(quartet.weight, status_quartet_before_hyp_swap);
+                        _8_vals_THIS_TAX_AFTER_hypo_swap.addRespectiveValue(quartet.weight, status_quartet_after_hyp_swap); //If status.UNKNOWN, then don't add anything.
 
-                    if (status_quartet_before_hyp_swap == Status.DEFERRED) {
-                        deferredQuartetsBeforeHypoMoving.add(pair);
+                        if (status_quartet_before_hyp_swap == Status.DEFERRED) {
+                            deferredQuartetsBeforeHypoMoving.add(pair);
+                        }
                     }
                 } // end for [relevant-quartets-iteration]
                 for (int itr_deferred_qrts = 0; itr_deferred_qrts < deferredQuartetsBeforeHypoMoving.size(); itr_deferred_qrts++) {
@@ -198,9 +206,9 @@ public class FMComputer {
 
             //Debug printing.
             StatsPerPass last_pass_stat = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
-            
-//            System.out.println("[Line 200]. FM-pass(box) = " + pass + " , best-taxon: " + last_pass_stat.whichTaxaWasPassed + " , MaxGain = "
-//                    + last_pass_stat.maxGainOfThisPass);
+
+            System.out.println("[Line 200]. FM-pass(box) = " + pass + " , best-taxon: " + last_pass_stat.whichTaxaWasPassed + " , MaxGain = "
+                    + last_pass_stat.maxGainOfThisPass);
 
             changeParameterValuesForNextPass();//Change parameters to maintain consistency wrt next step/box/pass.
             areAllTaxaLocked = Helper.checkAllValuesIFSame(this.lockedTaxaBooleanMap, true); //if ALL are true, then stop.
@@ -234,11 +242,9 @@ public class FMComputer {
 //                + " , for pass = " + (pass_index_with_max_cumulative_gain + 1)
 //                + " , Tax = " + statOfMaxCumulativeGainBox.whichTaxaWasPassed);
 //                + " map_final_bipartition = \n" + Helper.getGoodMap(statOfMaxCumulativeGainBox.map_final_bipartition));
-
         //Initial bipartitions and ALL maps //Now change parameters accordingly for next FM iteration.
-        
         //only when max-cumulative-gain is GREATER than zero, we will change, otherwise return the initial bipartition of this iteration
-        if (max_cumulative_gain_of_current_iteration > Main.SMALLEPSILON) { 
+        if (max_cumulative_gain_of_current_iteration > Main.SMALLEPSILON) {
             this.initialBipartitionMap = new HashMap<>(statOfMaxCumulativeGainBox.map_final_bipartition);
             this.initialBipartition_8_values = statOfMaxCumulativeGainBox._8_values_chosen_for_this_pass;
             this.listOfPerPassStatistics.clear();
@@ -263,25 +269,26 @@ public class FMComputer {
         int max_iterations_limit = 10000000;
         while (iterationsFM <= max_iterations_limit) { //stopping condition
 
-//            System.out.println("---------------- Iteration " + iterationsFM + " ----------------");
+            System.out.println("---------------- Iteration " + iterationsFM + " ----------------");
             map_previous_iteration = new HashMap<>(this.initialBipartitionMap); // always store this
             run_FM_single_iteration();
             willIterateMore = changeAndCheckAfterFMSingleIteration();
-            if(willIterateMore == false){
+            if (willIterateMore == false) {
                 this.initialBipartitionMap = map_previous_iteration; // just change as previous map
             }
-//            System.out.println("End of Iteration " + iterationsFM + 
-//                    " new bipartition =>> \n" + 
-//                    Helper.getGoodMap(initialBipartitionMap));
-//            System.out.println("================================================================");
+            System.out.println("End of Iteration " + iterationsFM
+                    + " new bipartition =>> \n"
+                    + Helper.getGoodMap(initialBipartitionMap));
+            System.out.println("================================================================");
             if (willIterateMore == false) {
                 break;
             }
             iterationsFM++;
         }
 
-        System.out.println("-->>Returning from one fm-iteration ... ");
-//        object.createFMResultObject(this.customDS, initialBipartitionMap, quartets_list_indices, taxa_list);
+        System.out.println("-->>Returning from one fm-iteration level = " + level);
+        object.createFMResultObject(this.customDS, initialBipartitionMap,
+                this.map_quartets_indices, taxa_list);
         //Form object using current FM-stats ... ?
         return object;
     }

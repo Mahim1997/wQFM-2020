@@ -36,7 +36,7 @@ public class FMResultObject {
     public List<Pair<Integer, Integer>> quartets_list_indices_left_partition;
     public List<Pair<Integer, Integer>> quartets_list_indices_right_partition;
     private final int level;
-    public CustomInitTables customDS_New;
+//    public CustomInitTables customDS_New;
     //dummy maps
     private final Map<String, Integer> map_left_taxa;
     private final Map<String, Integer> map_right_taxa;
@@ -53,9 +53,12 @@ public class FMResultObject {
 
     public void createFMResultObject(CustomInitTables customDS,
             Map<String, Integer> mapOfBipartition,
-            List<Pair<Integer, Integer>> quartetsListFromBefore,
+            Map<Pair<Integer, Integer>, Boolean> quartetsMapFromBefore,
             List<String> taxaListFromBefore) {
-
+        
+        System.out.println("-->In createFMResultObject.... bipartition is " + mapOfBipartition);
+        
+        
         //First partition taxa lists
         for (int i = 0; i < taxaListFromBefore.size(); i++) {
             String taxa = taxaListFromBefore.get(i);
@@ -72,14 +75,13 @@ public class FMResultObject {
         String dummyNode = Utils.getDummyTaxonName(level);
         System.out.println("--->In FMResultObject.. dummyNode = " + dummyNode);
         
-        //Now partition quartet lists ... only send deferred quartets...
-        for(int i=0; i<quartetsListFromBefore.size(); i++){
-            Pair<Integer, Integer> pair = quartetsListFromBefore.get(i);
-            Quartet q = customDS.table1_quartets_double_list.get(pair.getKey()).get(pair.getValue());
-            
-            //any three must be in EITHER leftMap or rightMap
-            
-        }
+//        //Now partition quartet lists ... only send deferred quartets...
+//        for(Pair<Integer, Integer> pair: quartetsMapFromBefore.keySet()){
+//            Quartet q = customDS.table1_quartets_double_list.get(pair.getKey()).get(pair.getValue());
+//            System.out.println(q.toString());
+//            //any three must be in EITHER leftMap or rightMap
+//            
+//        }
     
         
     }

@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.util.Pair;
@@ -41,36 +42,46 @@ public class Runner {
         ///// Now pass to recursive divide and conquer function.
         List<String> list_taxa = new ArrayList<>(customDS.map_taxa_relevant_quartet_indices.keySet()); // obtain initial list of taxa
         int level = 0;
-        List<Pair<Integer, Integer>> list_quartets_as_pair = new ArrayList<>();
+        
+        Map<Pair<Integer, Integer>, Boolean> map_quartets_indices = new HashMap<>();
+        for(int row=0; row<customDS.table1_quartets_double_list.size(); row++){
+            for(int col=0; col<customDS.table1_quartets_double_list.get(row).size(); col++){
+                map_quartets_indices.put(new Pair(row, col), Boolean.FALSE); //dummy boolean value
+            }
+        }
+        
+        /*List<Pair<Integer, Integer>> list_quartets_as_pair = new ArrayList<>();
         for (int rowIdx = 0; rowIdx < customDS.table1_quartets_double_list.size(); rowIdx++) {
             List<Quartet> quartets_cols = customDS.table1_quartets_double_list.get(rowIdx);
             for (int colIdx = 0; colIdx < quartets_cols.size(); colIdx++) {
                 list_quartets_as_pair.add(new Pair(rowIdx, colIdx));
             }
-        }
+        }*/
+        
         runner.recursiveDivideAndConquer(customDS, level,
-                list_taxa, list_quartets_as_pair); //call the recursive DNC function
+                list_taxa, map_quartets_indices); //call the recursive DNC function
     }
 
     // ------>>>> Main RECURSIVE function ....
     private String recursiveDivideAndConquer(CustomInitTables customDS,
             int level, List<String> list_taxa_string,
-            List<Pair<Integer, Integer>> list_quartets_indices) {
+            Map<Pair<Integer, Integer>, Boolean> map_quartet_indices) {
 //        System.out.println("-->>Inside recursiveDNC() function ... of Runner.java LINE 57");
 //
 //        List<Integer> initial_logical_partition_list = getInitialBipartitionMap(customDS, level, list_taxa_string, list_quartets_indices);
         InitialBipartition initialBip = new InitialBipartition();
-        Map<String, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS, list_taxa_string, list_quartets_indices);
+        Map<String, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS, 
+                list_taxa_string, map_quartet_indices);
 
         System.out.println("Printing Initial Bipartition");
         InitialBipartition.printBipartition(list_taxa_string, mapInitialBipartition);
 
         //Debugging ... for singleton bipartition list ... [TO DO]
         Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
-        initialBip_8_vals.compute8ValuesUsingAllQuartets(customDS, list_taxa_string, list_quartets_indices, mapInitialBipartition);
+        initialBip_8_vals.compute8ValuesUsingAllQuartets(customDS, list_taxa_string, map_quartet_indices, mapInitialBipartition);
 //        System.out.println("Printing initial_bipartitions_8values:\n" + initialBip_8_vals.toString());
 
-        FMComputer fmComputerObject = new FMComputer(customDS, list_taxa_string, list_quartets_indices,
+        FMComputer fmComputerObject = new FMComputer(customDS, list_taxa_string, map_quartet_indices,
                 mapInitialBipartition, initialBip_8_vals, level);
         fmComputerObject.run_FM_Algorithm_Whole();
         level++; // ????
