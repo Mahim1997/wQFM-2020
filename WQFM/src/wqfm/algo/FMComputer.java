@@ -45,11 +45,14 @@ public class FMComputer {
         this.quartets_list_indices = qrts;
         this.customDS = customDS;
         this.initialBipartitionMap = mapInitialBipartition;
+        this.initialBipartition_8_values = initialBip_8_vals;
         //Initially all the taxa will be FREE
+
+        //for one-box/one-pass
         this.mapCandidateGainsPerListTax = new TreeMap<>(Collections.reverseOrder());
         this.mapCandidateTax_vs_8vals = new HashMap<>();
-        this.initialBipartition_8_values = initialBip_8_vals;
 
+        //for one-iteration/all boxes
         this.listOfPerPassStatistics = new ArrayList<>();
 
         //initialise the lockMap
@@ -64,7 +67,9 @@ public class FMComputer {
         //Test hypothetically ...
         for (int taxa_iter = 0; taxa_iter < this.taxa_list.size(); taxa_iter++) { // iterate over whole set of taxa
             String taxToConsider = this.taxa_list.get(taxa_iter); // WHICH taxa to consider for hypothetical move.
+
             if (this.lockedTaxaBooleanMap.get(taxToConsider) == false) { // this is a free taxon, hypothetically test it ....
+                System.out.println("Considring taxa => " + taxToConsider);
                 int taxPartValBeforeHypoSwap = this.initialBipartitionMap.get(taxToConsider);
                 //First check IF moving this will lead to a singleton bipartition ....
                 Map<String, Integer> newMap = new HashMap<>(this.initialBipartitionMap);
@@ -131,7 +136,7 @@ public class FMComputer {
         2.  OTHERWISE, Use the two maps to find bestTaxaToMove [maxGain OR highestGain_with_max_num_satisfied_qrts]
         3.  LOCK the bestTaxaToMove and put corresponding stats in map
          */
-        System.out.println("-->Inside find_best_taxa_of_single_pass() ... printing mapCandidateTax_vs_8vals: " + mapCandidateTax_vs_8vals);
+//        System.out.println("-->Inside find_best_taxa_of_single_pass() ... printing mapCandidateTax_vs_8vals: " + mapCandidateTax_vs_8vals);
         if (this.mapCandidateGainsPerListTax.isEmpty() == true) {
             //ALL LEAD TO SINGLETON BIPARTITION .... [LOCK ALL THE TAXA]
             for (String key : this.lockedTaxaBooleanMap.keySet()) {
@@ -159,9 +164,10 @@ public class FMComputer {
                 Map.Entry<Integer, String> highestNumSatTaxEntry = treeMap.entrySet().iterator().next();
                 taxonWithTheHighestGainInThisPass = highestNumSatTaxEntry.getValue();
             }
-            
+
             //lock and put stats values for this taxon in corresponding maps
             this.lockedTaxaBooleanMap.put(taxonWithTheHighestGainInThisPass, Boolean.TRUE);
+            System.out.println("AFTER choosing highest-taxon, printing lockedMap " + this.lockedTaxaBooleanMap);
             //create new map
             Map<String, Integer> mapAfterMovement = new HashMap<>(this.initialBipartitionMap);
             //reverse the bipartition for THIS taxon
@@ -179,6 +185,11 @@ public class FMComputer {
         this.initialBipartitionMap = previousPassStats.map_final_bipartition;
         //Previous step's chosen-8Values will be THIS step's chosen-8Values
         this.initialBipartition_8_values.assign(previousPassStats._8_values_chosen_for_this_pass);
+
+        //Clear all the per-pass maps
+//        this.mapCandidateGainsPerListTax.clear();
+        this.mapCandidateGainsPerListTax = new TreeMap<>(Collections.reverseOrder());
+        this.mapCandidateTax_vs_8vals = new HashMap<>();
     }
 
     public void run_FM_single_iteration() {
@@ -191,7 +202,7 @@ public class FMComputer {
 
         int pass = 0;
         boolean areAllTaxaLocked = false;
-        while (areAllTaxaLocked == false) {
+        while (areAllTaxaLocked == false && pass < 10) {
             pass++; //for debug printing....
 
             areAllTaxaLocked = Helper.checkAllValuesIFSame(this.lockedTaxaBooleanMap, true); //if ALL are true, then stop.
@@ -205,10 +216,6 @@ public class FMComputer {
 
             changeParameterValuesForNextPass();//Change parameters to maintain consistency wrt next step/box/pass.
         }
-
-    }
-
-    public void find_best_pass_of_single_iteration() {
 
     }
 
@@ -227,7 +234,6 @@ public class FMComputer {
     }
 
     //--------------------------------------- For debugging -------------------------------
-    
     private void printTwoMaps() {
         for (String tax : this.mapCandidateTax_vs_8vals.keySet()) {
             Bipartition_8_values _8_vals = this.mapCandidateTax_vs_8vals.get(tax);

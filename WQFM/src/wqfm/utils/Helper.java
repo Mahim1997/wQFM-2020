@@ -34,6 +34,8 @@ public class Helper {
     }
 
     public static boolean checkAllValuesIFSame(Map<String, Boolean> map, boolean val) {
+        if (map.isEmpty())
+            return true;
         return map.keySet().stream().noneMatch((key) -> (map.get(key) != val));
     }
 
