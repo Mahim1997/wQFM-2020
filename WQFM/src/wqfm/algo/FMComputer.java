@@ -196,7 +196,7 @@ public class FMComputer {
 
             //Debug printing.
             StatsPerPass last_pass_stat = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
-            System.out.println("FM-pass = " + pass + " , choosing taxon: " + last_pass_stat.whichTaxaWasPassed + " , Gain = "
+            System.out.println("FM-pass(box-ID) = " + pass + " , choosing best-taxon: " + last_pass_stat.whichTaxaWasPassed + " , MaxGain = "
                     + last_pass_stat.maxGainOfThisPass);
 
             changeParameterValuesForNextPass();//Change parameters to maintain consistency wrt next step/box/pass.
@@ -260,7 +260,7 @@ public class FMComputer {
         FMResultObject object = new FMResultObject(null, null, null);
         boolean willIterateMore = true;
         int iterationsFM = 1; //can have stopping criterion for 10k iterations ?
-        int max_iterations_limit = 10;
+        int max_iterations_limit = 1;
         while (iterationsFM <= max_iterations_limit) { //stopping condition
 
             System.out.println("---------------- Iteration " + iterationsFM + " ----------------");

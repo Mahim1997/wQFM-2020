@@ -15,8 +15,8 @@ public class Main {
     
 //    public static String INPUT_FILE_NAME = "wqrts_avian_2X_R1";
 //    public static String INPUT_FILE_NAME = "wqrts_15G_100g100b_R1";
-//    public static String INPUT_FILE_NAME = "wqrts_11Tax_est_5G_R1";
-    public static String INPUT_FILE_NAME = "wqrts_toy_dataset_QFM_paper";
+    public static String INPUT_FILE_NAME = "wqrts_11Tax_est_5G_R1";
+//    public static String INPUT_FILE_NAME = "wqrts_toy_dataset_QFM_paper";
 //    public static String INPUT_FILE_NAME = "wqrts_toy_dataset_QFM_paper_dummy_weights";
     public static double SMALLEPSILON = 0; //very small number to take the place of 0
 
