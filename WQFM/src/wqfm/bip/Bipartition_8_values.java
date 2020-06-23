@@ -159,4 +159,15 @@ public class Bipartition_8_values {
         this.wtDeferred -= obj.wtDeferred;
         this.wtBlank -= obj.wtBlank;
     }
+
+    public void assign(Bipartition_8_values obj) {
+        this.numSatisfied = obj.numSatisfied;
+        this.numViolated = obj.numViolated;
+        this.numDeferred = obj.numDeferred;
+        this.numBlank = obj.numBlank;
+        this.wtSatisfied = obj.wtSatisfied;
+        this.wtViolated = obj.wtViolated;
+        this.wtDeferred = obj.wtDeferred;
+        this.wtBlank = obj.wtBlank;
+    }
 }
