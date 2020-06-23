@@ -22,7 +22,7 @@ import wqfm.utils.WeightedPartitionScores;
  */
 public class FMComputer {
 
-    private final Bipartition_8_values initialBipartition_8_values;
+    private Bipartition_8_values initialBipartition_8_values;
 //    private final List<Integer> initial_bipartition_logical_list; //USE MAP from 23 June, 2020: Tuesday
     public List<String> taxa_list;
     public List<Pair<Integer, Integer>> quartets_list_indices;
@@ -184,7 +184,7 @@ public class FMComputer {
         StatsPerPass previousPassStats = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
         this.initialBipartitionMap = previousPassStats.map_final_bipartition;
         //Previous step's chosen-8Values will be THIS step's chosen-8Values
-        this.initialBipartition_8_values.assign(previousPassStats._8_values_chosen_for_this_pass);
+        this.initialBipartition_8_values = new Bipartition_8_values(previousPassStats._8_values_chosen_for_this_pass);
 
         //Clear all the per-pass maps
 //        this.mapCandidateGainsPerListTax.clear();
@@ -205,7 +205,6 @@ public class FMComputer {
         while (areAllTaxaLocked == false && pass < 10) {
             pass++; //for debug printing....
 
-            areAllTaxaLocked = Helper.checkAllValuesIFSame(this.lockedTaxaBooleanMap, true); //if ALL are true, then stop.
             run_FM_singlepass_hypothetical_swap(); //FM hypothetical single swap run
             find_best_taxa_of_single_pass(); //Find the best-taxon for THIS swap
 
@@ -215,6 +214,7 @@ public class FMComputer {
                     + last_pass_stat.maxGainOfThisPass);
 
             changeParameterValuesForNextPass();//Change parameters to maintain consistency wrt next step/box/pass.
+            areAllTaxaLocked = Helper.checkAllValuesIFSame(this.lockedTaxaBooleanMap, true); //if ALL are true, then stop.
         }
 
     }
