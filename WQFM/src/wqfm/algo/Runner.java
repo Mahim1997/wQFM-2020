@@ -73,7 +73,7 @@ public class Runner {
 
         //Debugging ... for singleton bipartition list ... [TO DO]
         Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
-        initialBip_8_vals.computeValues(customDS, list_taxa_string, list_quartets_indices, mapInitialBipartition);
+        initialBip_8_vals.compute8ValuesUsingAllQuartets(customDS, list_taxa_string, list_quartets_indices, mapInitialBipartition);
 //        System.out.println("Printing initial_bipartitions_8values:\n" + initialBip_8_vals.toString());
         
         FMComputer fmComputerObject = new FMComputer(customDS, list_taxa_string, list_quartets_indices,

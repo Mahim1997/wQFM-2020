@@ -12,6 +12,7 @@ public interface Status {
     public static int RIGHT_PARTITION = +1;
 
     // ALL ARE ARBITRARY VALUES FOR NOW ...
+    public static int UNKNOWN = 75;
     public static int SATISFIED = 73;
     public static int VIOLATED = 72;
     public static int DEFERRED = 71;
@@ -20,23 +21,17 @@ public interface Status {
     //Free or locked [arbitrary values]
     public static int FREE = 21;
     public static int LOCKED = 22;
-
-    // FOR NOW NOT NEEDED ...
-    public static int SATISFIED_LEFT_BIPARTITION = 11;
-    public static int SATISFIED_RIGHT_BIPARTITION = 12;
-
-    public static int VIOLATED_LEFT_BIPARTITION = 13;
-    public static int VIOLATED_RIGHT_BIPARTITION = 14;
-
-    public static int DEFERRED_LEFT_BIPARTITION = 15;
-    public static int DEFERRED_RIGHT_BIPARTITION = 16;
-
+    
     // reroot mode [jar, python, to add perl]
     public static int REROOT_USING_JAR = 41;
     public static int REROOT_USING_PYTHON = 42;
     public static int REROOT_USING_PERL = 43;
-    
-    
+
+    //Partition score modes ... 1->[s]-[v], 2->[s]-0.5[v], 3->[s]-[v]-[d]
+    public static int PARTITION_SCORE_MODE_1 = 51;
+    public static int PARTITION_SCORE_MODE_2 = 52;
+    public static int PARTITION_SCORE_MODE_3 = 53;
+
     public static String PRINT_STATUS_QUARTET(int status) {
         switch (status) {
             case SATISFIED:

@@ -62,23 +62,45 @@ public class Bipartition_8_values {
         this.wtBlank = obj.wtBlank;
     }
 
-    @Override
-    public String toString() {
-        return "Bipartition_8_values{" + "numSatisfied=" + numSatisfied + ", numViolated=" + numViolated + ", numDeferred=" + numDeferred + ", numBlank=" + numBlank + ", wtSatisfied=" + wtSatisfied + ", wtViolated=" + wtViolated + ", wtDeferred=" + wtDeferred + ", wtBlank=" + wtBlank + '}';
+    public void addRespectiveValue(double weight, int status) {
+        switch (status) {
+            case Status.SATISFIED:
+                this.numSatisfied++;
+                this.wtSatisfied += weight;
+                break;
+            case Status.VIOLATED:
+                this.numViolated++;
+                this.wtViolated += weight;
+                break;
+            case Status.DEFERRED:
+                this.numDeferred++;
+                this.wtDeferred += weight;
+                break;
+            case Status.BLANK:
+                this.numBlank++;
+                this.wtBlank += weight;
+                break;
+            case Status.UNKNOWN: // do nothing for this case
+                break;
+            default:
+                break;
+        }
     }
 
-  
+    private void addRespectiveValue(Quartet q, int status) { // not needed for now.
+        addRespectiveValue(q.weight, status);
+    }
 
-    public void computeValues(CustomInitTables customDS, List<String> list_taxa_string,
+    public void compute8ValuesUsingAllQuartets(CustomInitTables customDS, List<String> list_taxa_string,
             List<Pair<Integer, Integer>> list_quartets_indices, Map<String, Integer> map_bipartitions) {
-        
+
 //        Map<String, Integer> map_bipartitions = Utils.obtainBipartitionMap(list_taxa_string, bipartitions_list);
         for (int i = 0; i < list_quartets_indices.size(); i++) {
             Pair<Integer, Integer> pair = list_quartets_indices.get(i);
             int row = pair.getKey(); //obtain row idx
             int col = pair.getValue(); //obtian col idx
             Quartet quartet = customDS.table1_quartets_double_list.get(row).get(col); //obtain actual quartet
-            
+
             //obtain the quartet's taxa's bipartitions
             int left_sis_1_bip_val = map_bipartitions.get(quartet.taxa_sisters_left[0]);
             int left_sis_2_bip_val = map_bipartitions.get(quartet.taxa_sisters_left[1]);
@@ -111,4 +133,8 @@ public class Bipartition_8_values {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Bipartition_8_values{" + "numSatisfied=" + numSatisfied + ", numViolated=" + numViolated + ", numDeferred=" + numDeferred + ", numBlank=" + numBlank + ", wtSatisfied=" + wtSatisfied + ", wtViolated=" + wtViolated + ", wtDeferred=" + wtDeferred + ", wtBlank=" + wtBlank + '}';
+    }
 }

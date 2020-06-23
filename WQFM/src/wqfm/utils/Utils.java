@@ -69,11 +69,20 @@ public class Utils {
         return map_bipartitions_list;
     }
 
-    public static Bipartition_8_values obtain8ValsBeforeSwap(CustomInitTables customDS, 
-            List<Pair<Integer, Integer>> relevantQuartetsBeforeHypoMoving, List<String> taxa_list,
-            Map<String, Integer> mapInitialBipartition) {
-        return null;
+    /*public static Bipartition_8_values obtain8ValsOfTaxonBeforeSwap(CustomInitTables customDS, List<Pair<Integer, Integer>> relevantQuartetsBeforeHypoMoving, String taxToConsider, Map<String, Integer> mapInitialBip) {
+        //Consider each quartet. Using that set accordingly.
+        Bipartition_8_values _8_vals = new Bipartition_8_values();
+        return _8_vals;
+    }*/
+
+    public static int findQuartetStatusUsingShortcut(int status_quartet_before_hyp_swap) {
+        if(status_quartet_before_hyp_swap == Status.DEFERRED){
+            return Status.UNKNOWN; //only if deferred, next calculations are necessary
+        }
+        return Status.DEFERRED; //s->d, v->d, b->d
     }
+
+    
 
     
 

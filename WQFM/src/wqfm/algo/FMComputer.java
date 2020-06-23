@@ -14,6 +14,7 @@ import wqfm.bip.Bipartition_8_values;
 import wqfm.ds.CustomInitTables;
 import wqfm.ds.FMResultObject;
 import wqfm.ds.Quartet;
+import wqfm.utils.WeightedPartitionScores;
 
 /**
  *
@@ -35,7 +36,7 @@ public class FMComputer {
     private Map<Double, List<String>> mapCandidateGainsPerListTax; // Map of hypothetical gain vs list of taxa
     private Map<String, Bipartition_8_values> mapCandidateTax_vs_8vals; //after hypothetical swap [i.e. IF this is taken as snapshot, no need to recalculate]
     private Map<Integer, StatsPerPass> mapOfPerPassValues;
-    
+
     public FMComputer(CustomInitTables customDS, List<String> list, List<Pair<Integer, Integer>> qrts,
             Map<String, Integer> mapInitialBipartition, Bipartition_8_values initialBip_8_vals) {
 //        this.taxa_list = new ArrayList<>(list); //Copy OR direct assignment ?
@@ -55,7 +56,7 @@ public class FMComputer {
         //per pass or step [per num taxa of steps].
         //Test hypothetically ...
         for (int taxa_iter = 0; taxa_iter < this.taxa_list.size(); taxa_iter++) { // iterate over whole set of taxa
-            
+
             if (this.lockedTaxaBooleanList.get(taxa_iter) == false) { // this is a free taxon, hypothetically test it ....
                 String taxToConsider = this.taxa_list.get(taxa_iter); // WHICH taxa to consider for hypothetical move.
                 int taxPartValBeforeHypoSwap = this.mapInitialBip.get(taxToConsider);
@@ -66,25 +67,40 @@ public class FMComputer {
                     //THIS hypothetical movement of taxToConsider leads to singleton bipartition so, continue ...
                     continue;
                 }
-                //DOESN'T lead to singleton bipartition [add to map, and other datastructures]
+                //ELSE: DOESN'T lead to singleton bipartition [add to map, and other datastructures]
                 //Calculate hypothetical Gain ... [using discussed short-cut]
                 List<Pair<Integer, Integer>> relevantQuartetsBeforeHypoMoving = customDS.map_taxa_relevant_quartet_indices.get(taxToConsider);
-                Bipartition_8_values _8_vals_before_swap = Utils.obtain8ValsBeforeSwap(customDS, relevantQuartetsBeforeHypoMoving, 
-                        taxa_list, this.mapInitialBip);
-                
+//                Bipartition_8_values _8_vals_THIS_TAX_before_swap = Utils.obtain8ValsOfTaxonBeforeSwap(customDS, relevantQuartetsBeforeHypoMoving, 
+//                        taxToConsider, this.mapInitialBip);
+                Bipartition_8_values _8_vals_THIS_TAX_before_hypo_swap = new Bipartition_8_values(); // all initialized to 0
+                Bipartition_8_values _8_vals_THIS_TAX_after_hypo_swap = new Bipartition_8_values(); // all initialized to 0
+
                 List<Pair<Integer, Integer>> deferredQuartetsBeforeHypoMoving = new ArrayList<>(); //keep deferred quartets for later checking ...
                 for (int quartets_itr = 0; quartets_itr < relevantQuartetsBeforeHypoMoving.size(); quartets_itr++) {
                     Pair<Integer, Integer> pair = relevantQuartetsBeforeHypoMoving.get(quartets_itr);
                     Quartet quartet = customDS.table1_quartets_double_list.get(pair.getKey()).get(pair.getValue());
                     int status_quartet_before_hyp_swap = Utils.findQuartetStatus(mapInitialBip.get(quartet.taxa_sisters_left[0]),
                             mapInitialBip.get(quartet.taxa_sisters_left[1]), mapInitialBip.get(quartet.taxa_sisters_right[0]), mapInitialBip.get(quartet.taxa_sisters_right[1]));
-                    System.out.println("Before hypo swap, tax considered = " + taxToConsider + " , Qrt = " + quartet.toString() + " , Status = " + Status.PRINT_STATUS_QUARTET(status_quartet_before_hyp_swap));
+//                    System.out.println("Before hypo swap, tax considered = " + taxToConsider + " , Qrt = " + quartet.toString() + " , Status = " + Status.PRINT_STATUS_QUARTET(status_quartet_before_hyp_swap));
+                    int status_quartet_after_hyp_swap = Utils.findQuartetStatusUsingShortcut(status_quartet_before_hyp_swap);
+                    _8_vals_THIS_TAX_before_hypo_swap.addRespectiveValue(quartet.weight, status_quartet_before_hyp_swap);
+                    _8_vals_THIS_TAX_after_hypo_swap.addRespectiveValue(quartet.weight, status_quartet_after_hyp_swap); //If status.UNKNOWN, then don't add anything.
+
                     if (status_quartet_before_hyp_swap == Status.DEFERRED) {
                         deferredQuartetsBeforeHypoMoving.add(pair);
                     }
+                } // end for [relevant-quartets-iteration]
+                for (int itr_deferred_qrts = 0; itr_deferred_qrts < deferredQuartetsBeforeHypoMoving.size(); itr_deferred_qrts++) {
+                    Pair<Integer, Integer> pair = deferredQuartetsBeforeHypoMoving.get(itr_deferred_qrts);
+                    Quartet quartet = customDS.table1_quartets_double_list.get(pair.getKey()).get(pair.getValue());
+                    int status_after_hypothetical_swap = Utils.findQuartetStatus(newMap.get(quartet.taxa_sisters_left[0]),
+                            newMap.get(quartet.taxa_sisters_left[1]), newMap.get(quartet.taxa_sisters_right[0]), newMap.get(quartet.taxa_sisters_right[1]));
+                    _8_vals_THIS_TAX_after_hypo_swap.addRespectiveValue(quartet.weight, status_after_hypothetical_swap);
                 }
-
-                System.out.println("");
+                double ps_before_reduced = WeightedPartitionScores.calculatePartitionScoreReduced(_8_vals_THIS_TAX_before_hypo_swap);
+                double ps_after_reduced = WeightedPartitionScores.calculatePartitionScoreReduced(_8_vals_THIS_TAX_after_hypo_swap);
+                double gain = ps_after_reduced - ps_before_reduced;
+                System.out.println("Taxon considered = " + taxToConsider + ", HypoGain = " + gain);
             } //end if
         }//end outer for
 
@@ -102,26 +118,24 @@ public class FMComputer {
         //per iteration ... has many passes. [will have rollback]
         double max_hypothetical_gain_of_this_pass = Integer.MIN_VALUE;
         String taxa_with_max_hypothetical_gain = "NONE_CHECK_NONE";
-        
+
         System.out.println("INSIDE run_FM_single_iteration() ... calling runFMSinglePass()");
         run_FM_singlepass_hypothetical_swap();
         find_best_taxa_of_single_pass();
-        
 
-        
     }
 
     //Whole FM ALGORITHm
     public FMResultObject run_FM_Algorithm_Whole() {
         //Constructor FMResultObject(List<Integer> logical_bipartition, List<String> taxa_list_initial, List<Pair<Integer, Integer>> quartets_list_initial)
         FMResultObject object = new FMResultObject(null, null, null);
-        
+
         int iterationsFM = 0;
-        while(iterationsFM < 1){ //stopping condition
+        while (iterationsFM < 1) { //stopping condition
             run_FM_single_iteration();
             iterationsFM++;
         }
-        
+
         return object;
     }
 
