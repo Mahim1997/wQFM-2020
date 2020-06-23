@@ -5,13 +5,11 @@
  */
 package wqfm.bip;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.util.Pair;
 import wqfm.Status;
 import wqfm.ds.CustomInitTables;
-import wqfm.utils.Helper;
 import wqfm.ds.Quartet;
 import wqfm.utils.Utils;
 

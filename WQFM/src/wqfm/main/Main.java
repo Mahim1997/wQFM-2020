@@ -22,7 +22,7 @@ public class Main {
 
         long time_1 = System.currentTimeMillis();
 
-        
+//        TestNormalFunctions.testHashMapInitializer(89);
         Runner.runFunctions(); //main functions for wQFM
 
         long time_del = System.currentTimeMillis() - time_1;

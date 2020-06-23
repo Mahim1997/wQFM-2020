@@ -69,7 +69,9 @@ public class Utils {
         return map_bipartitions_list;
     }
 
-    public static Bipartition_8_values obtain8ValsBeforeSwap(CustomInitTables customDS, List<Pair<Integer, Integer>> relevantQuartetsBeforeHypoMoving, List<String> taxa_list, List<Integer> initial_bipartition_logical_list) {
+    public static Bipartition_8_values obtain8ValsBeforeSwap(CustomInitTables customDS, 
+            List<Pair<Integer, Integer>> relevantQuartetsBeforeHypoMoving, List<String> taxa_list,
+            Map<String, Integer> mapInitialBipartition) {
         return null;
     }
 

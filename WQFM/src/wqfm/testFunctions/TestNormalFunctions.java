@@ -213,6 +213,21 @@ public class TestNormalFunctions {
         System.out.println(map);
     }
 
+    public static void testHashMapInitializer(int num) {
+        List<String> list = new ArrayList<>(Arrays.asList("Mahim", "CR7", "RONALDO", "Zahin", "Alvi", "Papan", "Hridoy"));
+        Map<String, Integer> map = new HashMap<>();
+        for (int i = 0; i < list.size(); i++) {
+            map.put(list.get(i), i);
+        }
+        int i = 0;
+        Map<String, Integer> newMap = new HashMap<>(map);
+        newMap.put("Mahim", 22);
+        for (i = 0; i < num; i++) {
+            System.out.println(i + ": " + map);
+            System.out.println(i + ": " + newMap);
+        }
+    }
+
     private TreeMap<Double, Integer> sortMap(Map<Double, Integer> map) {
 //        TreeMap<Double, Integer> sorted = new TreeMap<>(map);
         TreeMap<Double, Integer> sorted = new TreeMap<>(Collections.reverseOrder());
