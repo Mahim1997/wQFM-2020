@@ -72,13 +72,13 @@ public class Runner {
         InitialBipartition.printBipartition(list_taxa_string, mapInitialBipartition);
 
         //Debugging ... for singleton bipartition list ... [TO DO]
-//        Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
-//        initialBip_8_vals.computeValues(customDS, list_taxa_string, list_quartets_indices, initial_logical_partition_list);
-////        System.out.println("Printing initial_bipartitions_8values:\n" + initialBip_8_vals.toString());
-//        
-//        FMComputer fmComputerObject = new FMComputer(customDS, list_taxa_string, list_quartets_indices,
-//                initial_logical_partition_list, initialBip_8_vals);
-//        fmComputerObject.run_FM_Algorithm_Whole();
+        Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
+        initialBip_8_vals.computeValues(customDS, list_taxa_string, list_quartets_indices, mapInitialBipartition);
+//        System.out.println("Printing initial_bipartitions_8values:\n" + initialBip_8_vals.toString());
+        
+        FMComputer fmComputerObject = new FMComputer(customDS, list_taxa_string, list_quartets_indices,
+                mapInitialBipartition, initialBip_8_vals);
+        fmComputerObject.run_FM_Algorithm_Whole();
 
         /*  CustomInitTables.getDummyTaxonName(level) returns a dummy taxon with this level.
             TO DO HERE .... recursive-DNC function

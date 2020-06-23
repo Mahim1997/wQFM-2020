@@ -22,7 +22,7 @@ import wqfm.ds.Quartet;
 public class FMComputer {
 
     private final Bipartition_8_values initialBipartition_8_values;
-    private final List<Integer> initial_bipartition_logical_list;
+//    private final List<Integer> initial_bipartition_logical_list; //USE MAP from 23 June, 2020: Tuesday
     public List<String> taxa_list;
     public List<Pair<Integer, Integer>> quartets_list_indices;
     private final CustomInitTables customDS;
@@ -37,20 +37,17 @@ public class FMComputer {
     private Map<Integer, StatsPerPass> mapOfPerPassValues;
     
     public FMComputer(CustomInitTables customDS, List<String> list, List<Pair<Integer, Integer>> qrts,
-            List<Integer> initial_bip, Bipartition_8_values initialBip_8_vals) {
+            Map<String, Integer> mapInitialBipartition, Bipartition_8_values initialBip_8_vals) {
 //        this.taxa_list = new ArrayList<>(list); //Copy OR direct assignment ?
         this.taxa_list = list;
         this.quartets_list_indices = qrts;
         this.customDS = customDS;
-        this.initial_bipartition_logical_list = initial_bip;
+        
+        this.mapInitialBip = mapInitialBipartition;
+        
         //Initially all the taxa will be FREE
         this.lockedTaxaBooleanList = new ArrayList<>(Collections.nCopies(this.taxa_list.size(), false));
 //        this.bipartition_logical_list_per_pass = new ArrayList<>(this.initial_bipartition_logical_list);
-        this.mapInitialBip = new HashMap<>();
-
-        for (int i = 0; i < this.taxa_list.size(); i++) {
-            this.mapInitialBip.put(this.taxa_list.get(i), this.initial_bipartition_logical_list.get(i));
-        }
 //        System.out.println(this.mapOfInitialBipartition);
         this.mapCandidateGainsPerListTax = new TreeMap<>(Collections.reverseOrder());
         this.mapCandidateTax_vs_8vals = new HashMap<>();
@@ -67,14 +64,15 @@ public class FMComputer {
                 String taxToConsider = this.taxa_list.get(taxa_iter); // WHICH taxa to consider for hypothetical move.
 
                 //First check IF moving this will lead to a singleton bipartition ....
-                if (Utils.isSingletonBipartition_doesReversal(initial_bipartition_logical_list, taxa_iter, true) == true) {
+                
+                if (Utils.isThisSingletonBipartition(this.mapInitialBip) == true) {
                     //THIS hypothetical movement of taxToConsider leads to singleton bipartition so, continue ...
                     continue;
                 }
                 //DOESN'T lead to singleton bipartition [add to map, and other datastructures]
                 //Calculate hypothetical Gain ... [using discussed short-cut]
                 List<Pair<Integer, Integer>> relevantQuartetsBeforeHypoMoving = customDS.map_taxa_relevant_quartet_indices.get(taxToConsider);
-                Bipartition_8_values _8_vals_before_swap = Utils.obtain8ValsBeforeSwap(customDS, relevantQuartetsBeforeHypoMoving, taxa_list, this.initial_bipartition_logical_list);
+//                Bipartition_8_values _8_vals_before_swap = Utils.obtain8ValsBeforeSwap(customDS, relevantQuartetsBeforeHypoMoving, taxa_list, this.initial_bipartition_logical_list);
                 
                 List<Pair<Integer, Integer>> deferredQuartetsBeforeHypoMoving = new ArrayList<>(); //keep deferred quartets for later checking ...
                 for (int quartets_itr = 0; quartets_itr < relevantQuartetsBeforeHypoMoving.size(); quartets_itr++) {

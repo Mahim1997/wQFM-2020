@@ -22,6 +22,7 @@ import wqfm.utils.TreeHandler;
 import wqfm.Status;
 import wqfm.ds.CustomInitTables;
 import wqfm.ds.Quartet;
+import wqfm.utils.Helper;
 
 /**
  *
@@ -85,6 +86,41 @@ public class TestNormalFunctions {
 //            System.out.print(i + ": ");
         Main.REROOT_MODE = Status.REROOT_USING_PYTHON;
         TreeHandler.rerootTree(newickTree, outGroupNode);
+
+    }
+
+    public static void testHashMapValuesSumTime(int num) {
+        HashMap<String, Integer> map = new HashMap<>();
+
+        map.put("A", 20);
+        map.put("B", 100);
+        map.put("Mahim", 22);
+        map.put("Zahin", 31);
+        map.put("Ronaldo", 7);
+
+        for (int i = 0; i < num; i++) {
+            List<Integer> list = new ArrayList<>(map.values());
+            int sum = Helper.sumList(list);
+//            int sum = 0;
+//            sum = map.keySet().stream().map((key) -> map.get(key)).reduce(sum, Integer::sum);
+            System.out.println(i + ": " + sum);
+        }
+    }
+
+    public static void testHashMapNormalSumTime(int num) {
+        HashMap<String, Integer> map = new HashMap<>();
+
+        map.put("A", 20);
+        map.put("B", 100);
+        map.put("Mahim", 22);
+        map.put("Zahin", 31);
+        map.put("Ronaldo", 7);
+
+        for (int i = 0; i < num; i++) {
+            int sum = 0;
+            sum = map.keySet().stream().map((key) -> map.get(key)).reduce(sum, Integer::sum);
+            System.out.println(i + ": " + sum);
+        }
 
     }
 
