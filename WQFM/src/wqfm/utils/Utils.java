@@ -14,6 +14,11 @@ import wqfm.ds.CustomInitTables;
  */
 public class Utils {
 
+    public static String getDummyTaxonName(int level) {
+        String dummyTax = "DUMMY_MZCR_" + String.valueOf(level); //arbitrary names so as to not get mixed up with actual names
+        return dummyTax;
+    }
+
     //Returns true if there is 1 taxa on either side, OR zero taxa on either side.[for pairwise swapping maybe needed]
     public static boolean isThisSingletonBipartition(List<Integer> logical_bipartition) { //true if this bipartition is a singleton bipartition
         int len = logical_bipartition.size();
@@ -21,10 +26,11 @@ public class Utils {
         return (Math.abs(sum) == (len - 2)) || (Math.abs(sum) == len);
         //eg. -1,+1, +1,+1,+1,+1  --> so, two terms will lead to 0, rest sum will be length - 2
     }
+
     public static boolean isThisSingletonBipartition(Map<String, Integer> mapInitialBip) {
         int len = mapInitialBip.keySet().size();
         int sum = Helper.sumMapValuesInteger(mapInitialBip);
-        
+
         return (Math.abs(sum) == (len - 2)) || (Math.abs(sum) == len);
     }
 
@@ -74,24 +80,17 @@ public class Utils {
         Bipartition_8_values _8_vals = new Bipartition_8_values();
         return _8_vals;
     }*/
-
     public static int findQuartetStatusUsingShortcut(int status_quartet_before_hyp_swap) {
-        if(status_quartet_before_hyp_swap == Status.DEFERRED){
+        if (status_quartet_before_hyp_swap == Status.DEFERRED) {
             return Status.UNKNOWN; //only if deferred, next calculations are necessary
         }
         return Status.DEFERRED; //s->d, v->d, b->d
     }
 
-    
-
-    
-
 }
 
 //----------------------------------------------------------- NOT USED FOR NOW ---------------------------------------------------------
-
-
-    /*public static int findQuartetStatus(int[] left_sisters_bip, int[] right_sisters_bip) {
+/*public static int findQuartetStatus(int[] left_sisters_bip, int[] right_sisters_bip) {
         int[] four_bipartitions = {left_sisters_bip[0], left_sisters_bip[1], right_sisters_bip[0], right_sisters_bip[1]};
 
         int sum_four_bipartitions = Helper.sumArray(four_bipartitions);

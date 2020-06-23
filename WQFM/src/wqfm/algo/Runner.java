@@ -1,24 +1,18 @@
 package wqfm.algo;
 
-import wqfm.main.Main;
 import wqfm.algo.FMComputer;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import javafx.util.Pair;
-import wqfm.Status;
 import wqfm.bip.Bipartition_8_values;
 import wqfm.ds.CustomInitTables;
 import wqfm.ds.Quartet;
 import wqfm.main.Main;
-import wqfm.testFunctions.TestNormalFunctions;
 
 /**
  *
@@ -67,7 +61,7 @@ public class Runner {
 //        List<Integer> initial_logical_partition_list = getInitialBipartitionMap(customDS, level, list_taxa_string, list_quartets_indices);
         InitialBipartition initialBip = new InitialBipartition();
         Map<String, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS, list_taxa_string, list_quartets_indices);
-        
+
         System.out.println("Printing Initial Bipartition");
         InitialBipartition.printBipartition(list_taxa_string, mapInitialBipartition);
 
@@ -75,10 +69,11 @@ public class Runner {
         Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
         initialBip_8_vals.compute8ValuesUsingAllQuartets(customDS, list_taxa_string, list_quartets_indices, mapInitialBipartition);
 //        System.out.println("Printing initial_bipartitions_8values:\n" + initialBip_8_vals.toString());
-        
+
         FMComputer fmComputerObject = new FMComputer(customDS, list_taxa_string, list_quartets_indices,
-                mapInitialBipartition, initialBip_8_vals);
+                mapInitialBipartition, initialBip_8_vals, level);
         fmComputerObject.run_FM_Algorithm_Whole();
+        level++; // ????
 
         /*  CustomInitTables.getDummyTaxonName(level) returns a dummy taxon with this level.
             TO DO HERE .... recursive-DNC function
@@ -105,10 +100,6 @@ public class Runner {
     }
 
     //------------------Initial Bipartition : ZAHIN----------------- [June 21, Morning]
-    
-
-
-
     private void populatePerInputLine(CustomInitTables customDS, String line) {
         // Only populate table 1 [WILL SORT IT LATER]
 //        System.out.println("-->>Populating for line = " + line + " customDS = " + customDS.toString());

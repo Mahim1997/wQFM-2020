@@ -95,10 +95,7 @@ public class CustomInitTables {
         printMap_RelevantQuartetsPerTaxa();
     }
 
-    public static String getDummyTaxonName(int level) {
-        String dummyTax = "DUMMY_MZCR_" + String.valueOf(level); //arbitrary names so as to not get mixed up with actual names
-        return dummyTax;
-    }
+
 
     public void sortTable1() { //DO IT JUST ONCE [right after reading input file]
         //Built-in sort.

@@ -22,10 +22,10 @@ import wqfm.utils.WeightedPartitionScores;
  * @author mahim
  */
 public class FMComputer {
-
+    public int level;
     private Bipartition_8_values initialBipartition_8_values;
     public List<String> taxa_list;
-    public List<Pair<Integer, Integer>> quartets_list_indices;
+//    public List<Pair<Integer, Integer>> quartets_list_indices;
     private final CustomInitTables customDS;
 
     private Map<String, Integer> initialBipartitionMap;
@@ -37,9 +37,11 @@ public class FMComputer {
     private List<StatsPerPass> listOfPerPassStatistics;
 
     public FMComputer(CustomInitTables customDS, List<String> list, List<Pair<Integer, Integer>> qrts,
-            Map<String, Integer> mapInitialBipartition, Bipartition_8_values initialBip_8_vals) {
+            Map<String, Integer> mapInitialBipartition, Bipartition_8_values initialBip_8_vals,
+            int level) {
+        this.level = level;
         this.taxa_list = list;
-        this.quartets_list_indices = qrts;
+//        this.quartets_list_indices = qrts;
         this.customDS = customDS;
 
         //Initially all the taxa will be FREE
@@ -197,8 +199,8 @@ public class FMComputer {
             //Debug printing.
             StatsPerPass last_pass_stat = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
             
-            System.out.println("[Line 200]. FM-pass(box) = " + pass + " , best-taxon: " + last_pass_stat.whichTaxaWasPassed + " , MaxGain = "
-                    + last_pass_stat.maxGainOfThisPass);
+//            System.out.println("[Line 200]. FM-pass(box) = " + pass + " , best-taxon: " + last_pass_stat.whichTaxaWasPassed + " , MaxGain = "
+//                    + last_pass_stat.maxGainOfThisPass);
 
             changeParameterValuesForNextPass();//Change parameters to maintain consistency wrt next step/box/pass.
             areAllTaxaLocked = Helper.checkAllValuesIFSame(this.lockedTaxaBooleanMap, true); //if ALL are true, then stop.
@@ -228,15 +230,10 @@ public class FMComputer {
         //Retrieve the stat's bipartition.
         StatsPerPass statOfMaxCumulativeGainBox = this.listOfPerPassStatistics.get(pass_index_with_max_cumulative_gain);
 
-//        System.out.println("PRINTING listOfPerPassStatistics ... ");
-//        for(int i=0; i<listOfPerPassStatistics.size(); i++){
-//            StatsPerPass st = listOfPerPassStatistics.get(i);
-//            System.out.println(i + ": " + st);
-//        }
-        System.out.println("Cumulative gain (max) = " + max_cumulative_gain_of_current_iteration
-                + " , for pass = " + (pass_index_with_max_cumulative_gain + 1)
-                + " , Tax = " + statOfMaxCumulativeGainBox.whichTaxaWasPassed);
-                //+ " map_final_bipartition = \n" + Helper.getGoodMap(statOfMaxCumulativeGainBox.map_final_bipartition));
+//        System.out.println("[L 236] Cumulative gain (max) = " + max_cumulative_gain_of_current_iteration
+//                + " , for pass = " + (pass_index_with_max_cumulative_gain + 1)
+//                + " , Tax = " + statOfMaxCumulativeGainBox.whichTaxaWasPassed);
+//                + " map_final_bipartition = \n" + Helper.getGoodMap(statOfMaxCumulativeGainBox.map_final_bipartition));
 
         //Initial bipartitions and ALL maps //Now change parameters accordingly for next FM iteration.
         
@@ -260,29 +257,31 @@ public class FMComputer {
     public FMResultObject run_FM_Algorithm_Whole() {
         Map<String, Integer> map_previous_iteration;//= new HashMap<>();
         //Constructor FMResultObject(List<Integer> logical_bipartition, List<String> taxa_list_initial, List<Pair<Integer, Integer>> quartets_list_initial)
-        FMResultObject object = new FMResultObject(null, null, null);
+        FMResultObject object = new FMResultObject(this.level);
         boolean willIterateMore = true;
         int iterationsFM = 1; //can have stopping criterion for 10k iterations ?
         int max_iterations_limit = 10000000;
         while (iterationsFM <= max_iterations_limit) { //stopping condition
 
-            System.out.println("---------------- Iteration " + iterationsFM + " ----------------");
+//            System.out.println("---------------- Iteration " + iterationsFM + " ----------------");
             map_previous_iteration = new HashMap<>(this.initialBipartitionMap); // always store this
             run_FM_single_iteration();
             willIterateMore = changeAndCheckAfterFMSingleIteration();
             if(willIterateMore == false){
                 this.initialBipartitionMap = map_previous_iteration; // just change as previous map
             }
-            System.out.println("End of Iteration " + iterationsFM + 
-                    " new bipartition =>> \n" + 
-                    Helper.getGoodMap(initialBipartitionMap));
-            System.out.println("================================================================");
+//            System.out.println("End of Iteration " + iterationsFM + 
+//                    " new bipartition =>> \n" + 
+//                    Helper.getGoodMap(initialBipartitionMap));
+//            System.out.println("================================================================");
             if (willIterateMore == false) {
                 break;
             }
             iterationsFM++;
         }
 
+        System.out.println("-->>Returning from one fm-iteration ... ");
+//        object.createFMResultObject(this.customDS, initialBipartitionMap, quartets_list_indices, taxa_list);
         //Form object using current FM-stats ... ?
         return object;
     }
