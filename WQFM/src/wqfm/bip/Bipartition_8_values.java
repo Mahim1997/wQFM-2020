@@ -137,4 +137,26 @@ public class Bipartition_8_values {
     public String toString() {
         return "Bipartition_8_values{" + "numSatisfied=" + numSatisfied + ", numViolated=" + numViolated + ", numDeferred=" + numDeferred + ", numBlank=" + numBlank + ", wtSatisfied=" + wtSatisfied + ", wtViolated=" + wtViolated + ", wtDeferred=" + wtDeferred + ", wtBlank=" + wtBlank + '}';
     }
+
+    public void addObject(Bipartition_8_values obj) {
+        this.numSatisfied += obj.numSatisfied;
+        this.numViolated += obj.numViolated;
+        this.numDeferred += obj.numDeferred;
+        this.numBlank += obj.numBlank;
+        this.wtSatisfied += obj.wtSatisfied;
+        this.wtViolated += obj.wtViolated;
+        this.wtDeferred += obj.wtDeferred;
+        this.wtBlank += obj.wtBlank;
+    }
+
+    public void subtractObject(Bipartition_8_values obj) {
+        this.numSatisfied -= obj.numSatisfied;
+        this.numViolated -= obj.numViolated;
+        this.numDeferred -= obj.numDeferred;
+        this.numBlank -= obj.numBlank;
+        this.wtSatisfied -= obj.wtSatisfied;
+        this.wtViolated -= obj.wtViolated;
+        this.wtDeferred -= obj.wtDeferred;
+        this.wtBlank -= obj.wtBlank;
+    }
 }
