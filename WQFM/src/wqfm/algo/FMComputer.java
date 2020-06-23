@@ -196,7 +196,8 @@ public class FMComputer {
 
             //Debug printing.
             StatsPerPass last_pass_stat = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
-            System.out.println("FM-pass(box-ID) = " + pass + " , choosing best-taxon: " + last_pass_stat.whichTaxaWasPassed + " , MaxGain = "
+            
+            System.out.println("[Line 200]. FM-pass(box) = " + pass + " , best-taxon: " + last_pass_stat.whichTaxaWasPassed + " , MaxGain = "
                     + last_pass_stat.maxGainOfThisPass);
 
             changeParameterValuesForNextPass();//Change parameters to maintain consistency wrt next step/box/pass.
@@ -234,8 +235,8 @@ public class FMComputer {
 //        }
         System.out.println("Cumulative gain (max) = " + max_cumulative_gain_of_current_iteration
                 + " , for pass = " + (pass_index_with_max_cumulative_gain + 1)
-                + "  tax = " + statOfMaxCumulativeGainBox.whichTaxaWasPassed
-                + " map_final_bipartition = " + statOfMaxCumulativeGainBox.map_final_bipartition);
+                + " , Tax = " + statOfMaxCumulativeGainBox.whichTaxaWasPassed);
+                //+ " map_final_bipartition = \n" + Helper.getGoodMap(statOfMaxCumulativeGainBox.map_final_bipartition));
 
         //Initial bipartitions and ALL maps //Now change parameters accordingly for next FM iteration.
         
@@ -272,7 +273,9 @@ public class FMComputer {
             if(willIterateMore == false){
                 this.initialBipartitionMap = map_previous_iteration; // just change as previous map
             }
-            System.out.println("End of Iteration " + iterationsFM + " new bipartition = " + this.initialBipartitionMap);
+            System.out.println("End of Iteration " + iterationsFM + 
+                    " new bipartition =>> \n" + 
+                    Helper.getGoodMap(initialBipartitionMap));
             System.out.println("================================================================");
             if (willIterateMore == false) {
                 break;

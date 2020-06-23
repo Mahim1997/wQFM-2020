@@ -2,6 +2,7 @@ package wqfm.utils;
 
 import java.util.List;
 import java.util.Map;
+import wqfm.Status;
 
 /**
  *
@@ -34,9 +35,28 @@ public class Helper {
     }
 
     public static boolean checkAllValuesIFSame(Map<String, Boolean> map, boolean val) {
-        if (map.isEmpty())
+        if (map.isEmpty()) {
             return true;
+        }
         return map.keySet().stream().noneMatch((key) -> (map.get(key) != val));
+    }
+
+    public static String getGoodMap(Map<String, Integer> map_bipartitions) {
+        String s = ("LEFT: ");
+        for (String key : map_bipartitions.keySet()) {
+            if (map_bipartitions.get(key) == Status.LEFT_PARTITION) {
+                s += (key + ", ");
+            }
+        }
+//        s += (" ||| ");
+        s += ("\nRIGHT: ");
+        for (String key : map_bipartitions.keySet()) {
+            if (map_bipartitions.get(key) == Status.RIGHT_PARTITION) {
+                s += (key + ", ");
+            }
+        }
+        s += "\n";
+        return s;
     }
 
 }
