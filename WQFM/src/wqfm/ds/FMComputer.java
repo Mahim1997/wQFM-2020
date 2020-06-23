@@ -98,7 +98,7 @@ public class FMComputer {
 
 //                    System.out.println("Taxa_to_consider = " + taxaToConsider + " , Qrt = " + quartet.toString());
                     int status_quartet_before_hypothetical_swap = checkQuartetStatusBeforeAndAfter(left_sisters_before_bipartition, right_sisters_before_bipartition);
-                    System.out.println("++>> AFTERWARDS, TAXA-Cons = " + taxaToConsider + " , Qrt = " + quartet.toString() + " , Status = " + Status.PRINT_STATUS_QUARTET(status_quartet_before_hypothetical_swap));
+                    System.out.println("Before hypothetical swap, TAXA-Cons = " + taxaToConsider + " , Qrt = " + quartet.toString() + " , Status = " + Status.PRINT_STATUS_QUARTET(status_quartet_before_hypothetical_swap));
 //                    System.out.println("");
                 }
                 System.out.println("");

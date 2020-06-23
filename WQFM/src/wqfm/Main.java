@@ -1,5 +1,13 @@
 package wqfm;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import phylonet.tree.io.ParseException;
+import phylonet.tree.util.Trees;
+import phylonet.tree.model.sti.STITree;
+import wqfm.testFunctions.TestNormalFunctions;
+
 /**
  *
  * @author mahim
@@ -15,10 +23,12 @@ public class Main {
 
         long time_1 = System.currentTimeMillis();
 
-//        for(int i=0; i<89; i++){
-//            Runner.testRerootFunction();
-//        }
-        Runner.runFunctions();
+        for (int i = 0; i < 89; i++) {
+            String newickTree = "((3,(1,2)),((6,5),4));";
+            String outGroupNode = "5";
+            System.out.println(i + "->> " + RerootTree.rerootTree_JAR(newickTree, outGroupNode));
+        }
+//        Runner.runFunctions();
 
         long time_del = System.currentTimeMillis() - time_1;
         System.out.println("\n\n\nTime (ms) = " + time_del);

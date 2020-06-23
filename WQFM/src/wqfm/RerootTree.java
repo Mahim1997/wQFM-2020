@@ -3,16 +3,36 @@ package wqfm;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import phylonet.tree.io.ParseException;
+import phylonet.tree.model.sti.STITree;
 
 /**
  *
  * @author mahim
  */
-// http://alvinalexander.com/java/edu/pj/pj010016/
-public class RerootTree {
 
+public class RerootTree {
+    
+    //This function uses phylonet's main.jar jar file ... STITree and Node are from 
+    public static String rerootTree_JAR(String newickTree, String outGroupNode)
+    {
+//        String newickTree = "((3,(1,2)),((6,5),4));";
+//        String outGroupNode = "5";
+        STITree tree = null;
+        try {
+            tree = new STITree(newickTree);
+            tree.rerootTreeAtNode(tree.getNode(outGroupNode));
+        } catch (IOException | ParseException ex) {
+            System.out.println("Error in rerootTree.JAR ... check if jar main.jar exists. Exiting.");
+            System.exit(-1);
+        }
+
+        return tree.toNewick();
+    }
+    
     //For now, use python3 and dendropy
     // Command is: python3 reroot_tree_new.py <tree-newick> <outgroup> DON'T FORGET SEMI-COLON
+    // External commands using java => http://alvinalexander.com/java/edu/pj/pj010016/
     public static String rerootTree_python(String newickTree, String outGroupNode) {
         try {
             String s;

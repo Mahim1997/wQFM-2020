@@ -66,10 +66,8 @@ public class TestNormalFunctions {
         String newickTree = "((3,(1,2)),((6,5),4));";
         String outGroupNode = "5";
 
-        for (int i = 0; i < 1; i++) {
-            System.out.print(i + ": ");
-            RerootTree.rerootTree_python(newickTree, outGroupNode);
-        }
+//            System.out.print(i + ": ");
+        RerootTree.rerootTree_python(newickTree, outGroupNode);
 
     }
 
@@ -145,15 +143,14 @@ public class TestNormalFunctions {
         }*/
         List<String> list = new ArrayList<>(Arrays.asList("Mahim", "CR7", "RONALDO", "Zahin", "Alvi", "Papan", "Hridoy"));
         Map<String, Integer> map = new HashMap<>();
-        for(int i=0; i<list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             map.put(list.get(i), i);
         }
         List<Integer> list_values = new ArrayList<>(map.values());
         System.out.println(list_values);
 //            System.out.println(map.get("Mahim"));
 //            System.out.println(list.indexOf("Mahim"));
-        
-        
+
     }
 
     private TreeMap<Double, Integer> sortMap(Map<Double, Integer> map) {
