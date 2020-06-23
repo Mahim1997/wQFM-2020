@@ -17,8 +17,10 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 import javafx.util.Pair;
-import wqfm.RerootTree;
+import wqfm.Main;
+import wqfm.TreeHandler;
 import wqfm.Runner;
+import wqfm.Status;
 import wqfm.ds.CustomDS;
 import wqfm.ds.Quartet;
 
@@ -67,7 +69,8 @@ public class TestNormalFunctions {
         String outGroupNode = "5";
 
 //            System.out.print(i + ": ");
-        RerootTree.rerootTree_python(newickTree, outGroupNode);
+        Main.REROOT_MODE = Status.REROOT_USING_PYTHON;
+        TreeHandler.rerootTree(newickTree, outGroupNode);
 
     }
 
@@ -216,6 +219,31 @@ public class TestNormalFunctions {
             }
             System.out.println("");
         }
+    }
+
+    public static void testRerootJarFunctions(int num) {
+//        String newickTree = "((3,(1,2)),((6,5),4));";
+//        String outGroupNode = "5";
+//        String newickTree = "((ALVI,(MAHIM,ZAHIN)),((PAPAN,HRIDOY),BRISTY));";
+//        String outGroupNode = "HRIDOY";
+//        String rootedTree = TreeHandler.rerootTree_JAR(newickTree, outGroupNode);
+
+//        String leftTree = "((1,X),(2,3));";
+//        String rightTree = "((),());";
+        String leftTree = "(1,2,X);";
+        String rightTree = "(3,4,X);";
+        String outgroup = "X";
+
+        for (int i = 0; i < num; i++) {
+//            System.out.println(i + "::::::: Rooted Tree" + "->> " + rootedTree);
+            System.out.println("Left tree =-> " + leftTree + "\nRight Tree => " + rightTree);
+//            String leftRTree = TreeHandler.rerootTree_JAR(leftTree, outgroup);
+//            String rightRTree = TreeHandler.rerootTree_JAR(rightTree, outgroup);
+//            System.out.println("Rerooted LTree: " + leftRTree + "\nRerooted RTree: " + rightRTree);
+            String mergedTree = TreeHandler.mergeUnrootedTrees(leftTree, rightTree, outgroup);
+            System.out.println("Merged Tree with dummy as " + outgroup + ":>> " + mergedTree);
+        }
+
     }
 
 }
