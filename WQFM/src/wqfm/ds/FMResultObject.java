@@ -1,6 +1,8 @@
 package wqfm.ds;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javafx.util.Pair;
 
 /**
@@ -23,7 +25,7 @@ public class FMResultObject {
     */
     
     // Inputs
-    private final List<Integer> logical_bipartition;
+    private final Map<String, Integer> logical_bipartition_map;
     private final List<String> taxa_list_initial;
     private final List<Pair<Integer, Integer>> quartets_list_initial;
 
@@ -34,8 +36,10 @@ public class FMResultObject {
     public List<Pair<Integer, Integer>> quartets_list_indices_right_partition;
     
     
-    public FMResultObject(List<Integer> logical_bipartition, List<String> taxa_list_initial, List<Pair<Integer, Integer>> quartets_list_initial) {
-        this.logical_bipartition = logical_bipartition;
+    
+    public FMResultObject(Map<String, Integer> logical_bipartition, List<String> taxa_list_initial, 
+            List<Pair<Integer, Integer>> quartets_list_initial) {
+        this.logical_bipartition_map = logical_bipartition;
         this.taxa_list_initial = taxa_list_initial;
         this.quartets_list_initial = quartets_list_initial;
     }
