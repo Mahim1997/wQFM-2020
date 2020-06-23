@@ -23,7 +23,9 @@ public class Main {
 
         long time_1 = System.currentTimeMillis();
 
-//        TestNormalFunctions.testHashMapInitializer(89);
+//        TestNormalFunctions.testMapFirstKeyValues();
+        
+        
         Runner.runFunctions(); //main functions for wQFM
 
         long time_del = System.currentTimeMillis() - time_1;

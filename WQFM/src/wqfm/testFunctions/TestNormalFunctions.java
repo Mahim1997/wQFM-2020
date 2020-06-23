@@ -30,6 +30,21 @@ import wqfm.utils.Helper;
  */
 public class TestNormalFunctions {
 
+    public static boolean checkAllValuesIFSame(List<Boolean> list, boolean val) {
+        return list.stream().noneMatch((x) -> (x != val)); //if at least one is different wrt val, then return false
+    }
+
+    public static void testCheckValuesFunction() {
+        List<Boolean> list1 = new ArrayList<>(Arrays.asList(true, true, true));
+        List<Boolean> list2 = new ArrayList<>(Arrays.asList(false, true, true));
+        List<Boolean> list3 = new ArrayList<>(Arrays.asList(false, false, false));
+        List<Boolean> list4 = new ArrayList<>(Arrays.asList());
+        System.out.println(checkAllValuesIFSame(list1, true));
+        System.out.println(checkAllValuesIFSame(list2, true));
+        System.out.println(checkAllValuesIFSame(list3, true));
+        System.out.println(checkAllValuesIFSame(list4, true));
+    }
+
     //Fail khay somehow ??? [PERL use korle fail khay]
     public static void testPerlReroot(int num) {
         String newickTree = "((3,(1,2)),((6,5),4));";
@@ -214,6 +229,9 @@ public class TestNormalFunctions {
     }
 
     public static void testHashMapInitializer(int num) {
+        Map<String, Integer> mapFirst = new HashMap<>();
+        System.out.println("Length of no entries map = " + mapFirst.size());
+
         List<String> list = new ArrayList<>(Arrays.asList("Mahim", "CR7", "RONALDO", "Zahin", "Alvi", "Papan", "Hridoy"));
         Map<String, Integer> map = new HashMap<>();
         for (int i = 0; i < list.size(); i++) {
@@ -226,6 +244,25 @@ public class TestNormalFunctions {
             System.out.println(i + ": " + map);
             System.out.println(i + ": " + newMap);
         }
+    }
+
+    public static void testIfAllFalse(int num) {
+        List<Boolean> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            list.add(Boolean.TRUE);
+        }
+        System.out.println(list);
+    }
+
+    public static void testMapFirstKeyValues() {
+        List<String> list = new ArrayList<>(Arrays.asList("Mahim", "CR7", "RONALDO", "Zahin", "Alvi", "Papan", "Hridoy"));
+        Map<Integer, String> map = new TreeMap<>(Collections.reverseOrder());
+        for (int i = 0; i < list.size(); i++) {
+            map.put(i, list.get(i));
+        }
+        System.out.println(map);
+        Map.Entry<Integer,String> entry = map.entrySet().iterator().next();
+        System.out.println(entry + " , " + entry.getKey() + " , " + entry.getValue());
     }
 
     private TreeMap<Double, Integer> sortMap(Map<Double, Integer> map) {

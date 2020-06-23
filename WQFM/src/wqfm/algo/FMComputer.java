@@ -14,6 +14,7 @@ import wqfm.bip.Bipartition_8_values;
 import wqfm.ds.CustomInitTables;
 import wqfm.ds.FMResultObject;
 import wqfm.ds.Quartet;
+import wqfm.utils.Helper;
 import wqfm.utils.WeightedPartitionScores;
 
 /**
@@ -118,34 +119,73 @@ public class FMComputer {
 
     }
 
-    public void find_best_taxa_of_single_pass() {
+    private void printTwoMaps() {
+        for (String tax : this.mapCandidateTax_vs_8vals.keySet()) {
+            Bipartition_8_values _8_vals = this.mapCandidateTax_vs_8vals.get(tax);
+            System.out.println(tax + ": " + _8_vals.toString());
+        }
+
+        for (double gain : this.mapCandidateGainsPerListTax.keySet()) {
+            List<String> list_tax_with_this_gain = this.mapCandidateGainsPerListTax.get(gain);
+            for (String tax : list_tax_with_this_gain) {
+                System.out.println("-->>Gain(" + tax + ") = " + gain);
+            }
+        }
+    }
+
+    public void find_best_taxa_of_single_pass(int pass_num) {
         /*
         1.  Check if mapCandidateGainsPerListTax.size == 0 (any of the two maps) THEN all are singleton ... LOCK all taxaToMove
         2.  OTHERWISE, Use the two maps to find bestTaxaToMove [maxGain OR highestGain_with_max_num_satisfied_qrts]
         3.  LOCK the bestTaxaToMove
          */
-        System.out.println("-->>After runFMSinglePass() is done ... inside find-best-taxa-of-single-pass()");
-        for(String tax: this.mapCandidateTax_vs_8vals.keySet()){
-            Bipartition_8_values _8_vals = this.mapCandidateTax_vs_8vals.get(tax);
-            System.out.println(tax + ": " + _8_vals.toString());
+        if (this.mapCandidateGainsPerListTax.isEmpty() == true) {
+            //ALL LEAD TO SINGLETON BIPARTITION .... [LOCK ALL THE TAXA]
+            for (int i = 0; i < this.lockedTaxaBooleanList.size(); i++) {
+                this.lockedTaxaBooleanList.set(i, Boolean.TRUE);
+            }
+        }//do not add the prospective steps thing.
+        else {
+            //Check if MULTIPLE taxa with same GAIN value. [guaranteed map.len > 1]
+//            Map.Entry<Integer,String> entry = this..entrySet().iterator().next();
+            Map.Entry<Double, List<String>> firstKeyEntry = this.mapCandidateGainsPerListTax.entrySet().iterator().next();
+            double highest_gain_value = firstKeyEntry.getKey();
+            List<String> taxaWithHighestGainValues = firstKeyEntry.getValue();
+            if(taxaWithHighestGainValues.size() == 1){ // exactly ONE taxon has the highest gain value... choose this
+                
+                
+                
+            }
+            
+//        StatsPerPass statsOfThisPass = new StatsPerPass(whichTaxaWasPassed, pass_num, pass_num, list_bipartition_final)
+//        this.mapOfPerPassValues.put(pass_num, statsOfThisPass);
         }
+    }
 
-//        for (double gain : this.mapCandidateGainsPerListTax.keySet()) {
-//            List<String> list_tax_with_this_gain = this.mapCandidateGainsPerListTax.get(gain);
-//            for (String tax : list_tax_with_this_gain) {
-//                System.out.println("-->>Gain(" + tax + ") = " + gain);
-//            }
-//        }
+    public void changeParameterValuesForNextPass() {
+
     }
 
     public void run_FM_single_iteration() {
         //per iteration ... has many passes. [will have rollback]
+        int pass_num = 0;
         double max_hypothetical_gain_of_this_pass = Integer.MIN_VALUE;
         String taxa_with_max_hypothetical_gain = "NONE_CHECK_NONE";
 
         System.out.println("INSIDE run_FM_single_iteration() ... calling runFMSinglePass()");
-        run_FM_singlepass_hypothetical_swap();
-        find_best_taxa_of_single_pass();
+
+        boolean areAllTaxaLocked = false;
+        while (areAllTaxaLocked == false) {
+            areAllTaxaLocked = Helper.checkAllValuesIFSame(this.lockedTaxaBooleanList, true); //if ALL are true, then stop.
+            run_FM_singlepass_hypothetical_swap();
+            find_best_taxa_of_single_pass(pass_num);
+            changeParameterValuesForNextPass();
+            pass_num++;
+        }
+
+    }
+
+    public void find_best_pass_of_single_iteration() {
 
     }
 

@@ -29,4 +29,8 @@ public class Helper {
         return sum;
     }
 
+    public static boolean checkAllValuesIFSame(List<Boolean> list, boolean val) {
+        return list.stream().noneMatch((x) -> (x != val)); //if at least one is different wrt val, then return false
+    }
+
 }
