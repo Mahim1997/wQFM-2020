@@ -1,4 +1,4 @@
-package wqfm.ds;
+package wqfm.utils;
 
 import java.util.List;
 

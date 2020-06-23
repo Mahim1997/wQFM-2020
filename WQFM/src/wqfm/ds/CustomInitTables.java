@@ -23,7 +23,7 @@ BUT FOR NOW, use HashMap [EXACTLY same method signatures for both data-structure
 
 
  */
-public class CustomDS {
+public class CustomInitTables {
 
     public List<List<Quartet>> table1_quartets_double_list;
     public TreeMap<Double, Integer> table2_map_weight_indexQuartet;
@@ -31,7 +31,7 @@ public class CustomDS {
 //    public List<Pair<Integer, Integer>> table4_quartetes_indices_list;
 
 //    public List<Pair<Double, Integer>> table2_weight_indexOfQrt; // Use map as above
-    public CustomDS() {
+    public CustomInitTables() {
         this.table1_quartets_double_list = new ArrayList<>();
 //        this.table2_weight_indexOfQrt = new ArrayList<>();
         this.map_taxa_relevant_quartet_indices = new HashMap<>();

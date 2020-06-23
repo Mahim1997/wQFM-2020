@@ -1,5 +1,6 @@
-package wqfm.ds;
+package wqfm.algo;
 
+import wqfm.utils.Utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,6 +11,9 @@ import javafx.util.Pair;
 import wqfm.Status;
 import wqfm.bip.AggValuesBothBipartitionPerTaxa;
 import wqfm.bip.Bipartition_8_values;
+import wqfm.ds.CustomInitTables;
+import wqfm.ds.FMResultObject;
+import wqfm.ds.Quartet;
 
 /**
  *
@@ -21,7 +25,7 @@ public class FMComputer {
     private final List<Integer> initial_bipartition_logical_list;
     public List<String> taxa_list;
     public List<Pair<Integer, Integer>> quartets_list_indices;
-    private final CustomDS customDS;
+    private final CustomInitTables customDS;
 
 //    private List<Integer> bipartition_logical_list_per_pass;
     private List<Boolean> lockedTaxaBooleanList; //true: LOCKED, false: FREE
@@ -30,9 +34,9 @@ public class FMComputer {
     //Updated on 23 June, 2020 (Mahim)
     private Map<Double, List<String>> mapCandidateGainsPerListTax; // Map of hypothetical gain vs list of taxa
     private Map<String, Bipartition_8_values> mapCandidateTax_vs_8vals; //after hypothetical swap [i.e. IF this is taken as snapshot, no need to recalculate]
-    private Map<Integer, PerPassValue> mapOfPerPassValues;
+    private Map<Integer, StatsPerPass> mapOfPerPassValues;
     
-    public FMComputer(CustomDS customDS, List<String> list, List<Pair<Integer, Integer>> qrts,
+    public FMComputer(CustomInitTables customDS, List<String> list, List<Pair<Integer, Integer>> qrts,
             List<Integer> initial_bip, Bipartition_8_values initialBip_8_vals) {
 //        this.taxa_list = new ArrayList<>(list); //Copy OR direct assignment ?
         this.taxa_list = list;

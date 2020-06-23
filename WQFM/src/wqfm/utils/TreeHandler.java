@@ -1,5 +1,6 @@
-package wqfm;
+package wqfm.utils;
 
+import wqfm.main.Main;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -7,6 +8,7 @@ import java.io.InputStreamReader;
 import java.util.Scanner;
 import phylonet.tree.io.ParseException;
 import phylonet.tree.model.sti.STITree;
+import wqfm.Status;
 
 /**
  *

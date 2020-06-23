@@ -17,10 +17,10 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 import javafx.util.Pair;
-import wqfm.Main;
-import wqfm.TreeHandler;
+import wqfm.main.Main;
+import wqfm.utils.TreeHandler;
 import wqfm.Status;
-import wqfm.ds.CustomDS;
+import wqfm.ds.CustomInitTables;
 import wqfm.ds.Quartet;
 
 /**
@@ -109,7 +109,7 @@ public class TestNormalFunctions {
     }
 
     private static void testCustomDS() {
-        CustomDS customDS = new CustomDS();
+        CustomInitTables customDS = new CustomInitTables();
         customDS.table1_quartets_double_list.add(new ArrayList<>());
         List<Quartet> get = customDS.table1_quartets_double_list.get(0);
         get.add(new Quartet("A", "B", "C", "D", 10));
@@ -168,6 +168,13 @@ public class TestNormalFunctions {
 //            System.out.println(map.get("Mahim"));
 //            System.out.println(list.indexOf("Mahim"));
 
+    }
+
+    public static void testDuplicateMapEntry() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("Mahim", 1);
+        map.put("Mahim", 22);
+        System.out.println(map);
     }
 
     private TreeMap<Double, Integer> sortMap(Map<Double, Integer> map) {
