@@ -1,16 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package wqfm.bip;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-import javafx.util.Pair;
 import wqfm.Status;
 import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.Quartet;
@@ -22,29 +14,26 @@ import wqfm.ds.Quartet;
 public class InitialBipartition {
     //Function to obtain initial (logical) bipartition 
 
-    public static void printBipartition(List<String> list_taxa_string, Map<String, Integer> map) {
+    public static void printBipartition(Map<String, Integer> map) {
         System.out.print("LEFT: ");
-        for (String key : map.keySet()) { // print left
-            if (map.get(key) == Status.LEFT_PARTITION) {
-                System.out.print(key + ", ");
+        for (String key_taxa : map.keySet()) { // print left
+            if (map.get(key_taxa) == Status.LEFT_PARTITION) {
+                System.out.print(key_taxa + ", ");
             }
         }
         System.out.print("\nRIGHT: ");
-        for (String key : map.keySet()) { // print left
-            if (map.get(key) == Status.RIGHT_PARTITION) {
-                System.out.print(key + ", ");
+        for (String key_taxa : map.keySet()) { // print left
+            if (map.get(key_taxa) == Status.RIGHT_PARTITION) {
+                System.out.print(key_taxa + ", ");
             }
         }
         System.out.println("");
     }
 
     public Map<String, Integer> getInitialBipartitionMap(CustomDSPerLevel customDS) {
-        // partition_list is the list which will the partitions of each taxa
-        // Status.LEFT_PARTITION : left , 0 : unassigned , +1 : right
-//        initiazing partition_list with 0 (all are unassigned)
-        Map<String, Integer> map_partition = new HashMap<>();
-        for (String tax : customDS.list_taxa_string) {
-            map_partition.put(tax, Status.UNASSIGNED);
+        Map<String, Integer> map_partition = new HashMap<>(); //return this map
+        for (String tax : customDS.set_taxa_string) { //initially assign all as 0/unassigned
+            map_partition.put(tax, Status.UNASSIGNED_PARTITION);
         }
         int count_taxa_left_partition = 0;
         int count_taxa_right_partition = 0;
@@ -66,8 +55,8 @@ public class InitialBipartition {
                 status_q3 = map_partition.get(q3);
                 status_q4 = map_partition.get(q4);
 
-                if (status_q1 == Status.UNASSIGNED && status_q2 == Status.UNASSIGNED /*all taxa of this quartet are unassigned to any bipartition*/
-                        && status_q3 == Status.UNASSIGNED && status_q4 == Status.UNASSIGNED) { // assign q1,q2 to left and q3,q4 to right
+                if (status_q1 == Status.UNASSIGNED_PARTITION && status_q2 == Status.UNASSIGNED_PARTITION /*all taxa of this quartet are unassigned to any bipartition*/
+                        && status_q3 == Status.UNASSIGNED_PARTITION && status_q4 == Status.UNASSIGNED_PARTITION) { // assign q1,q2 to left and q3,q4 to right
                     map_partition.put(q1, Status.LEFT_PARTITION);
                     map_partition.put(q2, Status.LEFT_PARTITION);
                     map_partition.put(q3, Status.RIGHT_PARTITION);
@@ -80,9 +69,9 @@ public class InitialBipartition {
                     status_q4 = Status.RIGHT_PARTITION;
                     //System.out.println(partition_list.get(idx_q1));
                 } else {
-                    if (status_q1 == Status.UNASSIGNED) //q1 not present in any partition
+                    if (status_q1 == Status.UNASSIGNED_PARTITION) //q1 not present in any partition
                     {	//if status_q2 is assigned
-                        if (status_q2 != Status.UNASSIGNED) { //look for q2's partition. put q1 in there
+                        if (status_q2 != Status.UNASSIGNED_PARTITION) { //look for q2's partition. put q1 in there
                             if (status_q2 == Status.LEFT_PARTITION) {
                                 status_q1 = Status.LEFT_PARTITION;
                                 map_partition.put(q1, Status.LEFT_PARTITION);
@@ -93,7 +82,7 @@ public class InitialBipartition {
                                 count_taxa_right_partition++;
                             }
                         } //q3 is assgined
-                        else if (status_q3 != Status.UNASSIGNED) {
+                        else if (status_q3 != Status.UNASSIGNED_PARTITION) {
                             // q3 in left, put q1 in right
                             if (status_q3 == Status.LEFT_PARTITION) {
                                 status_q1 = Status.RIGHT_PARTITION;
@@ -105,7 +94,7 @@ public class InitialBipartition {
                                 map_partition.put(q1, Status.LEFT_PARTITION);
                                 count_taxa_left_partition++;
                             }
-                        } else if (status_q4 != Status.UNASSIGNED) {
+                        } else if (status_q4 != Status.UNASSIGNED_PARTITION) {
                             // q4 in left, put q1 in right
                             if (status_q4 == Status.LEFT_PARTITION) {
                                 status_q1 = Status.RIGHT_PARTITION;
@@ -120,7 +109,7 @@ public class InitialBipartition {
                         }
 
                     }
-                    if (status_q2 == Status.UNASSIGNED) {
+                    if (status_q2 == Status.UNASSIGNED_PARTITION) {
                         //look for q1's partition, put q2 in there
                         if (status_q1 == Status.LEFT_PARTITION) {
                             status_q2 = Status.LEFT_PARTITION;
@@ -133,8 +122,8 @@ public class InitialBipartition {
                         }
 
                     }
-                    if (status_q3 == Status.UNASSIGNED) {
-                        if (status_q4 != Status.UNASSIGNED) //q4 is assigned, look for q4 and put q3 in there
+                    if (status_q3 == Status.UNASSIGNED_PARTITION) {
+                        if (status_q4 != Status.UNASSIGNED_PARTITION) //q4 is assigned, look for q4 and put q3 in there
                         {
                             if (status_q4 == Status.RIGHT_PARTITION) {
                                 status_q3 = Status.RIGHT_PARTITION;
@@ -157,7 +146,7 @@ public class InitialBipartition {
                             }
                         }
                     }
-                    if (status_q4 == Status.UNASSIGNED) {
+                    if (status_q4 == Status.UNASSIGNED_PARTITION) {
                         if (status_q3 == Status.LEFT_PARTITION) {
                             status_q4 = Status.LEFT_PARTITION;
                             map_partition.put(q4, Status.LEFT_PARTITION);
@@ -177,7 +166,7 @@ public class InitialBipartition {
         //now assign remaining taxa randomly step4
         int flag_for_random_assignment = 0;
         for (String key_tax : map_partition.keySet()) {
-            if (map_partition.get(key_tax) == Status.UNASSIGNED) {
+            if (map_partition.get(key_tax) == Status.UNASSIGNED_PARTITION) {
                 if (count_taxa_left_partition < count_taxa_right_partition) {
                     flag_for_random_assignment = 2;
                 } else if (count_taxa_left_partition > count_taxa_right_partition) {

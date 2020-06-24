@@ -5,8 +5,10 @@ import wqfm.utils.Utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import javafx.util.Pair;
 import wqfm.Status;
@@ -26,26 +28,19 @@ public class FMComputer {
 
     public int level;
     private Bipartition_8_values initialBipartition_8_values;
-    public List<String> taxa_list;
-//    public Map<Pair<Integer, Integer>, Boolean> map_quartets_indices;
     private final CustomDSPerLevel customDS;
-
     private Map<String, Integer> bipartitionMap;
-    private Map<String, Boolean> lockedTaxaBooleanMap; //true: LOCKED, false:FREE
-
+    private final Map<String, Boolean> lockedTaxaBooleanMap; //true: LOCKED, false:FREE
     private Map<Double, List<String>> mapCandidateGainsPerListTax; // Map of hypothetical gain vs list of taxa
     private Map<String, Bipartition_8_values> mapCandidateTax_vs_8vals; //after hypothetical swap [i.e. IF this is taken as snapshot, no need to recalculate]
-
-    private List<StatsPerPass> listOfPerPassStatistics;
+    private final List<StatsPerPass> listOfPerPassStatistics;
+    private final Set<String> taxa_set;
 
     public FMComputer(CustomDSPerLevel customDS,
             Map<String, Integer> mapInitialBipartition,
             Bipartition_8_values initialBip_8_vals, int level) {
         this.level = level;
-        this.taxa_list = customDS.list_taxa_string;
-//        this.quartets_list_indices = qrts;
         this.customDS = customDS;
-
         //Initially all the taxa will be FREE
         this.bipartitionMap = mapInitialBipartition;
         this.initialBipartition_8_values = initialBip_8_vals;
@@ -55,20 +50,18 @@ public class FMComputer {
 
         //for one-iteration/all boxes
         this.listOfPerPassStatistics = new ArrayList<>();
-
         //initialise the lockMap
         this.lockedTaxaBooleanMap = new HashMap<>();
-        for (int i = 0; i < this.taxa_list.size(); i++) {
-            this.lockedTaxaBooleanMap.put(this.taxa_list.get(i), Boolean.FALSE);
+        //obtain set of taxa
+        this.taxa_set = customDS.set_taxa_string;
+        for (String tax : this.taxa_set) {
+            this.lockedTaxaBooleanMap.put(tax, Boolean.FALSE);
         }
-
     }
 
     public void run_FM_singlepass_hypothetical_swap() {//per pass or step [per num taxa of steps].
         //Test hypothetically ...
-        for (int taxa_iter = 0; taxa_iter < this.taxa_list.size(); taxa_iter++) { // iterate over whole set of taxa
-            String taxToConsider = this.taxa_list.get(taxa_iter); // WHICH taxa to consider for hypothetical move.
-
+        for(String taxToConsider: this.taxa_set){
             if (this.lockedTaxaBooleanMap.get(taxToConsider) == false) { // this is a free taxon, hypothetically test it ....
                 int taxPartValBeforeHypoSwap = this.bipartitionMap.get(taxToConsider);
                 //First check IF moving this will lead to a singleton bipartition ....
@@ -196,7 +189,7 @@ public class FMComputer {
         //per iteration ... has many passes. [will have rollback]
         int pass = 0;
         boolean areAllTaxaLocked = false;
-        while (areAllTaxaLocked == false && pass < 10) {
+        while (areAllTaxaLocked == false) {
             pass++; //for debug printing....
 
             run_FM_singlepass_hypothetical_swap(); //FM hypothetical single swap run
@@ -247,8 +240,8 @@ public class FMComputer {
             this.listOfPerPassStatistics.clear();
             this.mapCandidateGainsPerListTax = new TreeMap<>(Collections.reverseOrder());
             this.mapCandidateTax_vs_8vals = new HashMap<>();
-            for (int i = 0; i < this.taxa_list.size(); i++) { //make all as FREE once again for next-iteration
-                this.lockedTaxaBooleanMap.put(this.taxa_list.get(i), Boolean.FALSE);
+            for(String tax: this.taxa_set){
+                this.lockedTaxaBooleanMap.put(tax, Boolean.FALSE);
             }
             return true;
         }

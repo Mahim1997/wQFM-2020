@@ -8,7 +8,7 @@ public interface Status {
 
     // Use this for logical biparititoning
     public static int LEFT_PARTITION = -1; //-1 : left
-    public static int UNASSIGNED = 0;
+    public static int UNASSIGNED_PARTITION = 0;
     public static int RIGHT_PARTITION = 1; //+1 : right
 
     // ALL ARE ARBITRARY VALUES FOR NOW ...

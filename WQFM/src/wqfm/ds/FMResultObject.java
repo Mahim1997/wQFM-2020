@@ -1,6 +1,8 @@
 package wqfm.ds;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import wqfm.Status;
 import wqfm.utils.Utils;
 
@@ -16,6 +18,9 @@ public class FMResultObject {
     public final String dummyTaxonThisLevel;
 
     private final CustomDSPerLevel customDS_initial_this_level;
+    
+    private Set<String> left_partition_taxa_set;
+    private Set<String> right_partition_taxa_set;
 
     public FMResultObject(CustomDSPerLevel customDS_this_level, int level) {
         this.customDS_initial_this_level = customDS_this_level;
@@ -23,6 +28,10 @@ public class FMResultObject {
         this.customDS_left_partition = new CustomDSPerLevel(customDS_this_level.table1_initial_table_of_quartets);
         this.customDS_right_partition = new CustomDSPerLevel(customDS_this_level.table1_initial_table_of_quartets);
         this.dummyTaxonThisLevel = Utils.getDummyTaxonName(level); //obtain the dummy node for this level
+        
+        //hashset [efficient checking for does set.contain]
+        this.left_partition_taxa_set = new HashSet<>();
+        this.right_partition_taxa_set = new HashSet<>();
     }
 
     public void createFMResultObjects(Map<String, Integer> mapOfBipartition) {

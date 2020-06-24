@@ -1,12 +1,8 @@
 package wqfm.utils;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javafx.util.Pair;
 import wqfm.Status;
-import wqfm.bip.Bipartition_8_values;
-import wqfm.ds.CustomDSPerLevel;
 
 /**
  *
@@ -67,17 +63,10 @@ public class Utils {
             case Status.RIGHT_PARTITION:
                 return Status.LEFT_PARTITION;
             default:
-                return Status.UNASSIGNED;
+                return Status.UNASSIGNED_PARTITION;
         }
     }
 
-    public static Map obtainBipartitionMap(List<String> taxaList, List<Integer> bipartitions_list) {
-        Map<String, Integer> map_bipartitions_list = new HashMap<>();
-        for (int i = 0; i < taxaList.size(); i++) {
-            map_bipartitions_list.put(taxaList.get(i), bipartitions_list.get(i));
-        }
-        return map_bipartitions_list;
-    }
 
     /*public static Bipartition_8_values obtain8ValsOfTaxonBeforeSwap(CustomDSPerLevel customDS, List<Pair<Integer, Integer>> relevantQuartetsBeforeHypoMoving, String taxToConsider, Map<String, Integer> mapInitialBip) {
         //Consider each quartet. Using that set accordingly.
