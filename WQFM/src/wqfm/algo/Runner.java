@@ -46,9 +46,10 @@ public class Runner {
     // ------>>>> Main RECURSIVE function ....
     private String recursiveDivideAndConquer(CustomDSPerLevel customDS, int level) {
         //Sort things and fill up relevant quartets map and taxa list and other required things.
-        customDS.sortQuartetIndicesMap();
-        customDS.fillRelevantQuartetsMap();
-        customDS.fillUpTaxaList();
+        /*So that when customDS is passed subsequently, automatic sorting will be done. No need to do it somewhere else*/
+        customDS.sortQuartetIndicesMap(); //sprt the quartet-index map for initial-bipartition-computation
+        customDS.fillRelevantQuartetsMap(); //fill-up the relevant quartets per taxa map
+        customDS.fillUpTaxaList(); //fill-up the taxa list (using the above map)
         
         InitialBipartition initialBip = new InitialBipartition();
         Map<String, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS);
@@ -65,13 +66,6 @@ public class Runner {
 
         /*  CustomDSPerLevel.getDummyTaxonName(level) returns a dummy taxon with this level.
             TO DO HERE .... recursive-DNC function
-            1. SET INTIIAL RETURN CONDITIONS ...
-            2. Initial bipartition should return a logical bipartition i.e. list_integer -1:left, 0:unassigned, +1:right
-            3. FM-iteration algorithm ->    should return a logical bipartition i.e. the above list AND
-                                            a map of LEFT_OR_RIGHT_INTEGER[0/1]: list< pair<int,int> >
-                                            i.e. key: 0/1 [left/right] AND value: list of <r,c> i.e. list<quartets> 
-                                            i.e. for each pair in map[0] will be list<(r,c)> for left_bipartition_quartets 
-                                                and map[1] will have list<(r,c)> for right_bipartition_quartets
         ***** In FM-iteration algorithm, dummy taxa WILL be added before returning the quartets by passing the level parameter
         eg. FM-iteration(customDS, List<Integer> initial_bipartition_logical, List<Pair<int,int>>list_quartets, int level); can be the signature    
             4. Use P_left, Q_left and P_right, Q_right to recursively call the function be adjusting params eg. level++, etc.
