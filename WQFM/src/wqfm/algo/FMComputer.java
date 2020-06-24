@@ -10,7 +10,7 @@ import java.util.TreeMap;
 import javafx.util.Pair;
 import wqfm.Status;
 import wqfm.bip.Bipartition_8_values;
-import wqfm.ds.CustomInitTables;
+import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.FMResultObject;
 import wqfm.ds.Quartet;
 import wqfm.main.Main;
@@ -28,7 +28,7 @@ public class FMComputer {
     public List<String> taxa_list;
 //    public List<Pair<Integer, Integer>> quartets_list_indices;
     public Map<Pair<Integer, Integer>, Boolean> map_quartets_indices;
-    private final CustomInitTables customDS;
+    private final CustomDSPerLevel customDS;
 
     private Map<String, Integer> initialBipartitionMap;
     private Map<String, Boolean> lockedTaxaBooleanMap; //true: LOCKED, false:FREE
@@ -38,7 +38,7 @@ public class FMComputer {
 
     private List<StatsPerPass> listOfPerPassStatistics;
 
-    public FMComputer(CustomInitTables customDS, List<String> list,
+    public FMComputer(CustomDSPerLevel customDS, List<String> list,
             Map<Pair<Integer, Integer>, Boolean> map_qrts,
             Map<String, Integer> mapInitialBipartition, Bipartition_8_values initialBip_8_vals,
             int level) {
@@ -91,7 +91,7 @@ public class FMComputer {
                     Pair<Integer, Integer> pair = relevantQuartetsBeforeHypoMoving.get(quartets_itr);
                     boolean condition = (level == 0) || (this.map_quartets_indices.containsKey(pair)); //short-circuit connection so, level 0 will be skipped.
                     if (condition) { //i.e. OVERLAP between CURRENT set of quartets and thisTaxon's relevant quartets
-                        Quartet quartet = customDS.table1_quartets_double_list.get(pair.getKey()).get(pair.getValue());
+                        Quartet quartet = customDS.quartet_indices_list_unsorted.get(pair.getKey()).get(pair.getValue());
                         int status_quartet_before_hyp_swap = Utils.findQuartetStatus(initialBipartitionMap.get(quartet.taxa_sisters_left[0]),
                                 initialBipartitionMap.get(quartet.taxa_sisters_left[1]), initialBipartitionMap.get(quartet.taxa_sisters_right[0]), initialBipartitionMap.get(quartet.taxa_sisters_right[1]));
                         //                    System.out.println("Before hypo swap, tax considered = " + taxToConsider + " , Qrt = " + quartet.toString() + " , Status = " + Status.PRINT_STATUS_QUARTET(status_quartet_before_hyp_swap));
@@ -106,7 +106,7 @@ public class FMComputer {
                 } // end for [relevant-quartets-iteration]
                 for (int itr_deferred_qrts = 0; itr_deferred_qrts < deferredQuartetsBeforeHypoMoving.size(); itr_deferred_qrts++) {
                     Pair<Integer, Integer> pair = deferredQuartetsBeforeHypoMoving.get(itr_deferred_qrts);
-                    Quartet quartet = customDS.table1_quartets_double_list.get(pair.getKey()).get(pair.getValue());
+                    Quartet quartet = customDS.quartet_indices_list_unsorted.get(pair.getKey()).get(pair.getValue());
                     int status_after_hypothetical_swap = Utils.findQuartetStatus(newMap.get(quartet.taxa_sisters_left[0]),
                             newMap.get(quartet.taxa_sisters_left[1]), newMap.get(quartet.taxa_sisters_right[0]), newMap.get(quartet.taxa_sisters_right[1]));
                     _8_vals_THIS_TAX_AFTER_hypo_swap.addRespectiveValue(quartet.weight, status_after_hypothetical_swap);

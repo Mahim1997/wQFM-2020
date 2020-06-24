@@ -36,7 +36,7 @@ public class FMResultObject {
     public List<Pair<Integer, Integer>> quartets_list_indices_left_partition;
     public List<Pair<Integer, Integer>> quartets_list_indices_right_partition;
     private final int level;
-//    public CustomInitTables customDS_New;
+//    public CustomDSPerLevel customDS_New;
     //dummy maps
     private final Map<String, Integer> map_left_taxa;
     private final Map<String, Integer> map_right_taxa;
@@ -51,7 +51,7 @@ public class FMResultObject {
         this.map_right_taxa = new HashMap<>();
     }
 
-    public void createFMResultObject(CustomInitTables customDS,
+    public void createFMResultObject(CustomDSPerLevel customDS,
             Map<String, Integer> mapOfBipartition,
             Map<Pair<Integer, Integer>, Boolean> quartetsMapFromBefore,
             List<String> taxaListFromBefore) {

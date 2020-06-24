@@ -6,7 +6,7 @@ import java.util.Map;
 import javafx.util.Pair;
 import wqfm.Status;
 import wqfm.bip.Bipartition_8_values;
-import wqfm.ds.CustomInitTables;
+import wqfm.ds.CustomDSPerLevel;
 
 /**
  *
@@ -75,7 +75,7 @@ public class Utils {
         return map_bipartitions_list;
     }
 
-    /*public static Bipartition_8_values obtain8ValsOfTaxonBeforeSwap(CustomInitTables customDS, List<Pair<Integer, Integer>> relevantQuartetsBeforeHypoMoving, String taxToConsider, Map<String, Integer> mapInitialBip) {
+    /*public static Bipartition_8_values obtain8ValsOfTaxonBeforeSwap(CustomDSPerLevel customDS, List<Pair<Integer, Integer>> relevantQuartetsBeforeHypoMoving, String taxToConsider, Map<String, Integer> mapInitialBip) {
         //Consider each quartet. Using that set accordingly.
         Bipartition_8_values _8_vals = new Bipartition_8_values();
         return _8_vals;

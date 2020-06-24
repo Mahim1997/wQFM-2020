@@ -3,6 +3,7 @@ package wqfm.main;
 import wqfm.Status;
 import wqfm.algo.Runner;
 import wqfm.testFunctions.TestNormalFunctions;
+import wqfm.testFunctions.TestThreadFunctions;
 
 /**
  *
@@ -23,11 +24,10 @@ public class Main {
     public static void main(String[] args) {
 
         long time_1 = System.currentTimeMillis();
-
-//        TestNormalFunctions.testMapFirstKeyValues();
         
         
         Runner.runFunctions(); //main functions for wQFM
+//        TestThreadFunctions.testFunction();
 
         long time_del = System.currentTimeMillis() - time_1;
         System.out.println("\n\n\nTime (ms) = " + time_del);

@@ -20,7 +20,7 @@ import javafx.util.Pair;
 import wqfm.main.Main;
 import wqfm.utils.TreeHandler;
 import wqfm.Status;
-import wqfm.ds.CustomInitTables;
+import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.Quartet;
 import wqfm.utils.Helper;
 
@@ -156,15 +156,6 @@ public class TestNormalFunctions {
 
         roll = map.get("Mahim");
         System.out.println(roll);
-
-    }
-
-    private static void testCustomDS() {
-        CustomInitTables customDS = new CustomInitTables();
-        customDS.table1_quartets_double_list.add(new ArrayList<>());
-        List<Quartet> get = customDS.table1_quartets_double_list.get(0);
-        get.add(new Quartet("A", "B", "C", "D", 10));
-        customDS.printCustomDS();
 
     }
 
