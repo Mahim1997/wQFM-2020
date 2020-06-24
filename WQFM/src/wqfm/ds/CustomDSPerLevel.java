@@ -106,4 +106,10 @@ public class CustomDSPerLevel {
         });
     }
 
+    public String onlyQuartetIndices() {
+        String s = "";
+        s = this.quartet_indices_list_unsorted.stream().map((qrtIndex) -> (String.valueOf(qrtIndex) + ", ")).reduce(s, String::concat);
+        return s;
+    }
+
 }

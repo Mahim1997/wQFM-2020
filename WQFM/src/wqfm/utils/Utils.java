@@ -56,6 +56,10 @@ public class Utils {
         return Status.VIOLATED;
     }
 
+    public static int findQuartetStatus(int[] arr) { //call the above function
+        return findQuartetStatus(arr[0], arr[1], arr[2], arr[3]);
+    }
+
     public static int getOppositePartition(int partition) {
         switch (partition) {
             case Status.LEFT_PARTITION:
@@ -86,6 +90,8 @@ public class Utils {
         }
         return Status.DEFERRED; //s->d, v->d, b->d
     }
+
+
 
 }
 

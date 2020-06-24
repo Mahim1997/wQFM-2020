@@ -8,14 +8,10 @@ public class Quartet {
 
     public static int NUM_TAXA_PER_PARTITION = 2;
 
-    public String[] taxa_sisters_left = new String[NUM_TAXA_PER_PARTITION];
-    public String[] taxa_sisters_right = new String[NUM_TAXA_PER_PARTITION];
+    public String[] taxa_sisters_left;// = new String[NUM_TAXA_PER_PARTITION];
+    public String[] taxa_sisters_right;// = new String[NUM_TAXA_PER_PARTITION];
     public double weight;
 
-    /*private void initialiseArray() {
-        this.taxa_sisters_left = new String[NUM_TAXA_PER_PARTITION];
-        this.taxa_sisters_right = new String[NUM_TAXA_PER_PARTITION];
-    }*/
     public Quartet() {
         this.weight = 1.0;
     }
@@ -25,31 +21,20 @@ public class Quartet {
         Keep the minimum of (a,b) in taxa_sisters_left i.e. taxa_sisters_left[0] = min, taxa_sisters_left[1] = max
         Same with (c,d) for taxa_sisters_right.
         FOR NOW, NOT DOING ABOVE THING
-    */
-    public void initialiseQuartet(String a, String b, String c, String d, double w) {
-        /*if (a.compareTo(b) < 0) {
-            this.taxa_sisters_left[0] = a;
-            this.taxa_sisters_left[1] = b;
-        } else {
-            this.taxa_sisters_left[0] = b;
-            this.taxa_sisters_left[1] = a;
-        }
-
-        if (c.compareTo(d) < 0) {
-            this.taxa_sisters_right[0] = c;
-            this.taxa_sisters_right[1] = d;
-        } else {
-            this.taxa_sisters_right[0] = d;
-            this.taxa_sisters_right[1] = c;
-        }
-         */
+     */
+    public final void initialiseQuartet(String a, String b, String c, String d, double w) {
+        this.taxa_sisters_left = new String[NUM_TAXA_PER_PARTITION];
+        this.taxa_sisters_right = new String[NUM_TAXA_PER_PARTITION];
         this.taxa_sisters_left[0] = a;
         this.taxa_sisters_left[1] = b;
         this.taxa_sisters_right[0] = c;
         this.taxa_sisters_right[1] = d;
         this.weight = w;
     }
-
+    public Quartet(Quartet q) {
+        initialiseQuartet(q.taxa_sisters_left[0], q.taxa_sisters_left[1], q.taxa_sisters_right[0], q.taxa_sisters_right[1], q.weight);
+    }
+    
     public Quartet(String a, String b, String c, String d, double w) {
         initialiseQuartet(a, b, c, d, w);
     }

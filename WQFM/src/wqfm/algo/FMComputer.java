@@ -1,5 +1,6 @@
 package wqfm.algo;
 
+import wqfm.ds.StatsPerPass;
 import wqfm.utils.Utils;
 import java.util.ArrayList;
 import java.util.Collections;

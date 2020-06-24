@@ -1,4 +1,4 @@
-package wqfm.algo;
+package wqfm.ds;
 
 import java.util.Map;
 import wqfm.bip.Bipartition_8_values;

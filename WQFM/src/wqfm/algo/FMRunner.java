@@ -1,5 +1,6 @@
 package wqfm.algo;
 
+import wqfm.bip.InitialBipartition;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,7 +23,7 @@ import wqfm.utils.Utils;
  *
  * @author mahim
  */
-public class Runner {
+public class FMRunner {
 
     //Main method to run all functions ... [ABSTRACT everything from Main class]
     public static void runFunctions() {
@@ -30,12 +31,11 @@ public class Runner {
     }
 
     private static void mainMethod() {
-        Runner runner = new Runner();
+        FMRunner runner = new FMRunner();
         InitialTable initialTable = new InitialTable();
         CustomDSPerLevel customDS = new CustomDSPerLevel(initialTable);
         runner.readFileAndPopulateInitialTables(Main.INPUT_FILE_NAME, customDS);
         System.out.println("Reading from file <" + Main.INPUT_FILE_NAME + "> done.\nDone populating & sorting initial tables.");
-
         //sort and populate in divide-and-conquer function so that it will keep on happening on each input recieved.
         
         /*customDS.sortQuartetIndicesMap();
@@ -45,7 +45,10 @@ public class Runner {
         int level = 0;
         TreeHandler treeHandler = new TreeHandler(); // everything object so that multi-threading can be done
         String final_tree = runner.recursiveDivideAndConquer(customDS, level, treeHandler); //customDS will have (P, Q, Q_relevant etc) all the params needed.
+        
+        System.out.println("\n\n------- Line 49 of FMRunner.java final tree return -----------");
         System.out.println(final_tree);
+        System.out.println("---------------------------------------------------------------");
     }
 
     // ------>>>> Main RECURSIVE function ....
@@ -62,7 +65,7 @@ public class Runner {
 
         //Sort things and fill up relevant quartets map and taxa list and other required things.
         /*So that when customDS is passed subsequently, automatic sorting will be done. No need to do it somewhere else*/
-        customDS.sortQuartetIndicesMap(); //sprt the quartet-index map for initial-bipartition-computation
+        customDS.sortQuartetIndicesMap(); //sort the quartet-index map for initial-bipartition-computation
         customDS.fillRelevantQuartetsMap(); //fill-up the relevant quartets per taxa map
         customDS.fillUpTaxaList(); //fill-up the taxa list (using the above map)
         
@@ -76,17 +79,26 @@ public class Runner {
         initialBip_8_vals.compute8ValuesUsingAllQuartets(customDS, mapInitialBipartition);
 ////        System.out.println("Printing initial_bipartitions_8values:\n" + initialBip_8_vals.toString());
         FMComputer fmComputerObject = new FMComputer(customDS, mapInitialBipartition, initialBip_8_vals, level);
-        FMResultObject resultObject = fmComputerObject.run_FM_Algorithm_Whole();
+        FMResultObject fmResultObject = fmComputerObject.run_FM_Algorithm_Whole();
         level++; // ????
         
+        CustomDSPerLevel customDS_left = fmResultObject.customDS_left_partition;
+        CustomDSPerLevel customDS_right = fmResultObject.customDS_right_partition;
         
-        CustomDSPerLevel customDS_left = resultObject.customDS_left_partition;
-        CustomDSPerLevel customDS_right = resultObject.customDS_right_partition;
-        String left_tree_unrooted = recursiveDivideAndConquer(customDS_left, level, treeHandler);
-        String right_tree_unrooted = recursiveDivideAndConquer(customDS_right, level, treeHandler);
-        String dummyTaxon = Utils.getDummyTaxonName(level);
-        String merged_tree = TreeHandler.mergeUnrootedTrees(left_tree_unrooted, right_tree_unrooted,
-                dummyTaxon);
+        System.out.println("-------------- After Level " + level + " LEFT Quartets -------------------- ");
+        System.out.println(customDS_left.onlyQuartetIndices());
+        System.out.println("============== After Level " + level + " RIGHT Quartets ==================== ");
+        System.out.println(customDS_right.onlyQuartetIndices());
+        System.out.println("++++++++++++++ After Level " + level + " Quartet lists ++++++++++++++++++++ ");
+        customDS.table1_initial_table_of_quartets.printQuartetList();
+        
+//        String dummyTaxon = resultObject.dummyTaxonThisLevel;
+//        String left_tree_unrooted = recursiveDivideAndConquer(customDS_left, level, treeHandler);
+//        String right_tree_unrooted = recursiveDivideAndConquer(customDS_right, level, treeHandler);
+//        String dummyTaxon = Utils.getDummyTaxonName(level);
+//        String merged_tree = TreeHandler.mergeUnrootedTrees(left_tree_unrooted, right_tree_unrooted,
+//                dummyTaxon)
+        
         return null;
     }
 
