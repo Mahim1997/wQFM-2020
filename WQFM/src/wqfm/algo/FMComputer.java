@@ -15,6 +15,7 @@ import wqfm.Status;
 import wqfm.bip.Bipartition_8_values;
 import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.FMResultObject;
+import wqfm.ds.InitialTable;
 import wqfm.ds.Quartet;
 import wqfm.main.Main;
 import wqfm.utils.Helper;
@@ -28,7 +29,8 @@ public class FMComputer {
 
     public int level;
     private Bipartition_8_values initialBipartition_8_values;
-    private final CustomDSPerLevel customDS;
+    private final CustomDSPerLevel customDS_this_level;
+    private InitialTable initial_table1_of_list_of_quartets;
     private Map<String, Integer> bipartitionMap;
     private final Map<String, Boolean> lockedTaxaBooleanMap; //true: LOCKED, false:FREE
     private Map<Double, List<String>> mapCandidateGainsPerListTax; // Map of hypothetical gain vs list of taxa
@@ -37,9 +39,10 @@ public class FMComputer {
 
     public FMComputer(CustomDSPerLevel customDS,
             Map<String, Integer> mapInitialBipartition,
-            Bipartition_8_values initialBip_8_vals, int level) {
+            Bipartition_8_values initialBip_8_vals, int level,
+            InitialTable initialTable) {
         this.level = level;
-        this.customDS = customDS;
+        this.customDS_this_level = customDS;
         //Initially all the taxa will be FREE
         this.bipartitionMap = mapInitialBipartition;
         this.initialBipartition_8_values = initialBip_8_vals;
@@ -53,14 +56,15 @@ public class FMComputer {
         this.lockedTaxaBooleanMap = new HashMap<>();
         //obtain set of taxa
 
-        for (String tax : this.customDS.taxa_list_string) {
+        for (String tax : this.customDS_this_level.taxa_list_string) {
             this.lockedTaxaBooleanMap.put(tax, Boolean.FALSE);
         }
+        this.initial_table1_of_list_of_quartets = initialTable;
     }
 
     public void run_FM_singlepass_hypothetical_swap() {//per pass or step [per num taxa of steps].
         //Test hypothetically ...
-        for (String taxToConsider : this.customDS.taxa_list_string) {
+        for (String taxToConsider : this.customDS_this_level.taxa_list_string) {
             if (this.lockedTaxaBooleanMap.get(taxToConsider) == false) { // this is a free taxon, hypothetically test it ....
                 System.out.println("Inside runFMSinglePassHypoSwap() .. taxaToConsider = " + taxToConsider);
                 int taxPartValBeforeHypoSwap = this.bipartitionMap.get(taxToConsider);
@@ -72,7 +76,7 @@ public class FMComputer {
                     continue;
                 } //ELSE: DOESN'T lead to singleton bipartition [add to map, and other datastructures]
                 //Calculate hypothetical Gain ... [using discussed short-cut]
-                List<Integer> relevantQuartetsBeforeHypoMoving = customDS.map_taxa_relevant_quartet_indices.get(taxToConsider);
+                List<Integer> relevantQuartetsBeforeHypoMoving = customDS_this_level.map_taxa_relevant_quartet_indices.get(taxToConsider);
                 Bipartition_8_values _8_vals_THIS_TAX_before_hypo_swap = new Bipartition_8_values(); // all initialized to 0
                 Bipartition_8_values _8_vals_THIS_TAX_AFTER_hypo_swap = new Bipartition_8_values(); // all initialized to 0
 
@@ -82,7 +86,7 @@ public class FMComputer {
                 for (int quartets_itr = 0; quartets_itr < relevantQuartetsBeforeHypoMoving.size(); quartets_itr++) {
                     int qrt_index_relevant_quartets = relevantQuartetsBeforeHypoMoving.get(quartets_itr);
                     //No need explicit checking as customDS will be changed after every level
-                    Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(qrt_index_relevant_quartets);
+                    Quartet quartet = this.initial_table1_of_list_of_quartets.get(qrt_index_relevant_quartets);
                     if (level > 0) {
 //                        System.out.println("Line 86. TaxaCons = " + taxToConsider + ", Quartet under consideration = " + quartet.toString());
                     }
@@ -100,7 +104,7 @@ public class FMComputer {
                 } // end for [relevant-quartets-iteration]
                 for (int itr_deferred_qrts = 0; itr_deferred_qrts < deferredQuartetsBeforeHypoMoving.size(); itr_deferred_qrts++) {
                     int qrt_idx_deferred_relevant_quartets_after_hypo_swap = deferredQuartetsBeforeHypoMoving.get(itr_deferred_qrts);
-                    Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(qrt_idx_deferred_relevant_quartets_after_hypo_swap);
+                    Quartet quartet = this.initial_table1_of_list_of_quartets.get(qrt_idx_deferred_relevant_quartets_after_hypo_swap);
                     int status_after_hypothetical_swap = Utils.findQuartetStatus(newMap.get(quartet.taxa_sisters_left[0]),
                             newMap.get(quartet.taxa_sisters_left[1]), newMap.get(quartet.taxa_sisters_right[0]), newMap.get(quartet.taxa_sisters_right[1]));
                     _8_vals_THIS_TAX_AFTER_hypo_swap.addRespectiveValue(quartet.weight, status_after_hypothetical_swap);
@@ -246,7 +250,7 @@ public class FMComputer {
             this.listOfPerPassStatistics.clear();
             this.mapCandidateGainsPerListTax = new TreeMap<>(Collections.reverseOrder());
             this.mapCandidateTax_vs_8vals = new HashMap<>();
-            for (String tax : this.customDS.taxa_list_string) {
+            for (String tax : this.customDS_this_level.taxa_list_string) {
                 this.lockedTaxaBooleanMap.put(tax, Boolean.FALSE);
             }
             return true;
@@ -283,7 +287,7 @@ public class FMComputer {
 /////
         System.out.println("-->>Returning from one fm-iteration level = " + level);
 
-        FMResultObject object = new FMResultObject(this.customDS, this.level); //pass the parent's customDS as reference
+        FMResultObject object = new FMResultObject(this.customDS_this_level, this.level); //pass the parent's customDS as reference
         object.createFMResultObjects(this.bipartitionMap); //pass THIS level's final-bipartition to get P_left,Q_left,P_right,Q_right
         return object;
     }

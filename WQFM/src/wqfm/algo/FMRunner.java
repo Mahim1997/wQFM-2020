@@ -54,11 +54,8 @@ public class FMRunner {
     // ------>>>> Main RECURSIVE function ....
     private String recursiveDivideAndConquer(CustomDSPerLevel customDS_this_level, int level, InitialTable initialTable) {
         /*So that when customDS is passed subsequently, automatic sorting will be done. No need to do it somewhere else*/
-        if(level == 0){ //only do this during level 0 [at the START]
-            customDS_this_level.setInitialTableReference(initialTable); //change reference of initial table.
-        }
-        customDS_this_level.sortQuartetIndicesMap(); //sort the quartet-index map for initial-bipartition-computation
-        customDS_this_level.fillRelevantQuartetsMap(); //fill-up the relevant quartets per taxa map
+        customDS_this_level.sortQuartetIndicesMap(initialTable); //sort the quartet-index map for initial-bipartition-computation
+        customDS_this_level.fillRelevantQuartetsMap(initialTable); //fill-up the relevant quartets per taxa map
         if (level == 0) { //only do it for the initial step, other levels will be passed as parameters
             customDS_this_level.fillUpTaxaList(); //fill-up the taxa list
         }
@@ -86,14 +83,14 @@ public class FMRunner {
         Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
         initialBip_8_vals.compute8ValuesUsingAllQuartets(customDS_this_level, mapInitialBipartition);
 ///////        System.out.println("Printing initial_bipartitions_8values:\n" + initialBip_8_vals.toString());
-        FMComputer fmComputerObject = new FMComputer(customDS_this_level, mapInitialBipartition, initialBip_8_vals, level);
+        FMComputer fmComputerObject = new FMComputer(customDS_this_level, mapInitialBipartition, initialBip_8_vals, level, initialTable);
         FMResultObject fmResultObject = fmComputerObject.run_FM_Algorithm_Whole();
 
         CustomDSPerLevel customDS_left = fmResultObject.customDS_left_partition;
         CustomDSPerLevel customDS_right = fmResultObject.customDS_right_partition;
 
         System.out.println(">>>>> INSIDE FMRunner.java ... customDS_left MAP printing ... ");
-        customDS_left.initial_table1_of_list_of_quartets.printQuartetList();
+        initialTable.printQuartetList();
         
 //Debug printing begin
         //        System.out.println("-------------- After Level " + level + " LEFT Quartets -------------------- ");
