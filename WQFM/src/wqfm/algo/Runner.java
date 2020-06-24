@@ -58,10 +58,9 @@ public class Runner {
 
         Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
         initialBip_8_vals.compute8ValuesUsingAllQuartets(customDS, mapInitialBipartition);
-//        System.out.println("Printing initial_bipartitions_8values:\n" + initialBip_8_vals.toString());
-//        FMComputer fmComputerObject = new FMComputer(customDS, list_taxa_string, map_quartet_indices,
-//                mapInitialBipartition, initialBip_8_vals, level);
-//        fmComputerObject.run_FM_Algorithm_Whole();
+////        System.out.println("Printing initial_bipartitions_8values:\n" + initialBip_8_vals.toString());
+        FMComputer fmComputerObject = new FMComputer(customDS, mapInitialBipartition, initialBip_8_vals, level);
+        fmComputerObject.run_FM_Algorithm_Whole();
 //        level++; // ????
 
         /*  CustomDSPerLevel.getDummyTaxonName(level) returns a dummy taxon with this level.

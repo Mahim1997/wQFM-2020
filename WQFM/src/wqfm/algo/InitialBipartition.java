@@ -49,11 +49,11 @@ public class InitialBipartition {
         int count_taxa_left_partition = 0;
         int count_taxa_right_partition = 0;
 
-        for (double weight_key : customDS.map_sorted_quartets_weight_list_indices.keySet()) { //Mahim
-            List<Integer> list_quartets_with_this_weight = customDS.map_sorted_quartets_weight_list_indices.get(weight_key); //Mahim
+        for (double weight_key : customDS.sorted_quartets_weight_list_indices_map.keySet()) { //Mahim
+            List<Integer> list_quartets_with_this_weight = customDS.sorted_quartets_weight_list_indices_map.get(weight_key); //Mahim
             for (int j = 0; j < list_quartets_with_this_weight.size(); j++) { //Mahim
                 int quartet_index = list_quartets_with_this_weight.get(j);//Mahim
-                Quartet quartet_under_consideration = customDS.table1_initial_table_of_quartets.getQuartetAt(quartet_index);//Mahim
+                Quartet quartet_under_consideration = customDS.table1_initial_table_of_quartets.get(quartet_index);//Mahim
 
                 String q1 = quartet_under_consideration.taxa_sisters_left[0];
                 String q2 = quartet_under_consideration.taxa_sisters_left[1];

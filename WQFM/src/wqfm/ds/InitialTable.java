@@ -17,7 +17,7 @@ public class InitialTable { //STORED separately to have the synchronized add fun
         return "InitialTable{" + "list_quartets=" + list_quartets + '}';
     }
 
-    public Quartet getQuartetAt(int idx) {
+    public Quartet get(int idx) {
         return list_quartets.get(idx);
     }
 
