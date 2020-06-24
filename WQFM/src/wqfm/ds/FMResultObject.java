@@ -58,6 +58,10 @@ public class FMResultObject {
         
         System.out.println("-->In createFMResultObject.... bipartition is " + mapOfBipartition);
         
+        /*
+            probably would be best if we produce two new customObjects for ...
+            
+        */
         
         //First partition taxa lists
         for (int i = 0; i < taxaListFromBefore.size(); i++) {
