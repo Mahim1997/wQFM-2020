@@ -34,7 +34,6 @@ public class FMComputer {
     private Map<Double, List<String>> mapCandidateGainsPerListTax; // Map of hypothetical gain vs list of taxa
     private Map<String, Bipartition_8_values> mapCandidateTax_vs_8vals; //after hypothetical swap [i.e. IF this is taken as snapshot, no need to recalculate]
     private final List<StatsPerPass> listOfPerPassStatistics;
-    private final Set<String> taxa_set;
 
     public FMComputer(CustomDSPerLevel customDS,
             Map<String, Integer> mapInitialBipartition,
@@ -53,15 +52,15 @@ public class FMComputer {
         //initialise the lockMap
         this.lockedTaxaBooleanMap = new HashMap<>();
         //obtain set of taxa
-        this.taxa_set = customDS.set_taxa_string;
-        for (String tax : this.taxa_set) {
+        
+        for (String tax : this.customDS.taxa_list_string) {
             this.lockedTaxaBooleanMap.put(tax, Boolean.FALSE);
         }
     }
 
     public void run_FM_singlepass_hypothetical_swap() {//per pass or step [per num taxa of steps].
         //Test hypothetically ...
-        for(String taxToConsider: this.taxa_set){
+        for(String taxToConsider: this.customDS.taxa_list_string){
             if (this.lockedTaxaBooleanMap.get(taxToConsider) == false) { // this is a free taxon, hypothetically test it ....
                 int taxPartValBeforeHypoSwap = this.bipartitionMap.get(taxToConsider);
                 //First check IF moving this will lead to a singleton bipartition ....
@@ -239,7 +238,7 @@ public class FMComputer {
             this.listOfPerPassStatistics.clear();
             this.mapCandidateGainsPerListTax = new TreeMap<>(Collections.reverseOrder());
             this.mapCandidateTax_vs_8vals = new HashMap<>();
-            for(String tax: this.taxa_set){
+            for(String tax: this.customDS.taxa_list_string){
                 this.lockedTaxaBooleanMap.put(tax, Boolean.FALSE);
             }
             return true;

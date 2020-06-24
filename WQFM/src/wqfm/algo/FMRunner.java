@@ -96,10 +96,10 @@ public class FMRunner {
 
         System.out.println("-------------- After Level " + level + " LEFT Quartets -------------------- ");
         System.out.println(customDS_left.onlyQuartetIndices());
-        System.out.println(customDS_left.set_taxa_string);
+        System.out.println(customDS_left.taxa_list_string);
         System.out.println("============== After Level " + level + " RIGHT Quartets ==================== ");
         System.out.println(customDS_right.onlyQuartetIndices());
-        System.out.println(customDS_right.set_taxa_string);
+        System.out.println(customDS_right.taxa_list_string);
         System.out.println("++++++++++++++ After Level " + level + " Quartet lists ++++++++++++++++++++ ");
         customDS.table1_initial_table_of_quartets.printQuartetList();
         level++; // ????

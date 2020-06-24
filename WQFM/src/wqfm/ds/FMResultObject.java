@@ -1,8 +1,6 @@
 package wqfm.ds;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import wqfm.Status;
 import wqfm.utils.Utils;
 
@@ -16,8 +14,10 @@ public class FMResultObject {
     public CustomDSPerLevel customDS_right_partition;
 
     public final String dummyTaxonThisLevel;
-
     private final CustomDSPerLevel customDS_initial_this_level;
+
+    private boolean is_dummy_added_to_left = false; // for faster checking
+    private boolean is_dummy_added_to_right = false; //for faster checking
 
     public FMResultObject(CustomDSPerLevel customDS_this_level, int level) {
         this.customDS_initial_this_level = customDS_this_level;
@@ -28,6 +28,15 @@ public class FMResultObject {
     }
 
     public void createFMResultObjects(Map<String, Integer> mapOfBipartition) {
+        //Initially just transfer all to P_left and P_right. [Then for quartets-with-dummy, just pass the dummy node]
+        for (String key_taxon : mapOfBipartition.keySet()) {
+            if (mapOfBipartition.get(key_taxon) == Status.LEFT_PARTITION) {
+                this.customDS_left_partition.taxa_list_string.add(key_taxon);
+            } else if (mapOfBipartition.get(key_taxon) == Status.RIGHT_PARTITION) {
+                this.customDS_right_partition.taxa_list_string.add(key_taxon);
+            }
+        }
+
         //1. Traverse each quartet, find the deferred and blank quartets and pass to next.
         for (int itr_for_quartet_indices = 0; itr_for_quartet_indices < this.customDS_initial_this_level.quartet_indices_list_unsorted.size(); itr_for_quartet_indices++) {
             int qrt_idx = this.customDS_initial_this_level.quartet_indices_list_unsorted.get(itr_for_quartet_indices); //add to new lists of customDS
@@ -44,20 +53,10 @@ public class FMResultObject {
             if (quartet_status == Status.BLANK) { // pass THIS quartet, no need to add dummy [all 4 are on same side]
                 if (left_1_partition == Status.LEFT_PARTITION) { //all four tax of the parent quartet are in left partition
                     this.customDS_left_partition.quartet_indices_list_unsorted.add(qrt_idx); //add old quartet's index in Q_left
-                    for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
-                        this.customDS_left_partition.set_taxa_string.add(quartet_parent.taxa_sisters_left[i]); //add taxa to P_right [hashset]
-                    }
-                    for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
-                        this.customDS_left_partition.set_taxa_string.add(quartet_parent.taxa_sisters_right[i]); //add taxa to P_right [hashset]
-                    }
+
                 } else if (left_1_partition == Status.RIGHT_PARTITION) { //all four tax of the parent quartet are in right partition
                     this.customDS_right_partition.quartet_indices_list_unsorted.add(qrt_idx);  //add old quartet's index in Q_right
-                    for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) { 
-                        this.customDS_right_partition.set_taxa_string.add(quartet_parent.taxa_sisters_right[i]); //add taxa to P_right [hashset]
-                    }
-                    for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) { 
-                        this.customDS_right_partition.set_taxa_string.add(quartet_parent.taxa_sisters_right[i]); //add taxa to P_right [hashset]
-                    }
+
                 }
             } else if (quartet_status == Status.DEFERRED) {
                 int[] arr_bipartition = {left_1_partition, left_2_partition, right_1_partition, right_2_partition};
@@ -68,20 +67,10 @@ public class FMResultObject {
                 //check on which Q subset to add i.e. Q_left or Q_right
                 if (commonBipartitionValue == Status.LEFT_PARTITION) {
                     this.customDS_left_partition.quartet_indices_list_unsorted.add(idx_new_quartet_with_dummy); //add new quartet's index in Q_left
-                    for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
-                        this.customDS_left_partition.set_taxa_string.add(newQuartetWithDummy.taxa_sisters_left[i]); //add taxa to P_left [hashset]
-                    }
-                    for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
-                        this.customDS_left_partition.set_taxa_string.add(newQuartetWithDummy.taxa_sisters_right[i]); //add taxa to P_left [hashset]
-                    }
+                    addDummyToLeftPartition(); //only add the dummy node to P_left as all the others were added before.
                 } else if (commonBipartitionValue == Status.RIGHT_PARTITION) {
                     this.customDS_right_partition.quartet_indices_list_unsorted.add(idx_new_quartet_with_dummy); //add new quartet's index in Q_right
-                    for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
-                        this.customDS_right_partition.set_taxa_string.add(newQuartetWithDummy.taxa_sisters_right[i]); //add taxa to P_right [hashset]
-                    }
-                    for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
-                        this.customDS_right_partition.set_taxa_string.add(newQuartetWithDummy.taxa_sisters_right[i]); //add taxa to P_right [hashset]
-                    }
+                    addDummyToRightPartition(); //only add the dummy node to P_right as all the others were added before.
                 }
             }
 
@@ -126,6 +115,20 @@ public class FMResultObject {
         }
 
         return q;
+    }
+
+    private void addDummyToLeftPartition() {
+        if (this.is_dummy_added_to_left == false) {
+            this.customDS_left_partition.taxa_list_string.add(dummyTaxonThisLevel);
+            this.is_dummy_added_to_left = true; //no need to add again.
+        }
+    }
+
+    private void addDummyToRightPartition() {
+        if (this.is_dummy_added_to_right == false) {
+            this.customDS_right_partition.taxa_list_string.add(dummyTaxonThisLevel);
+            this.is_dummy_added_to_right = true; //no need to add again.
+        }
     }
 
 }

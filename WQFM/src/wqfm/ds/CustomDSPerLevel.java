@@ -3,10 +3,8 @@ package wqfm.ds;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -21,14 +19,14 @@ public class CustomDSPerLevel {
     public List<Integer> quartet_indices_list_unsorted;
     public Map<String, List<Integer>> map_taxa_relevant_quartet_indices; //releveant quartets map, key: taxa & val:list<indices>
     public Map<Double, List<Integer>> sorted_quartets_weight_list_indices_map;
-    public Set<String> set_taxa_string;
+    public List<String> taxa_list_string;
 
     public CustomDSPerLevel(InitialTable initialTable) {
         this.table1_initial_table_of_quartets = initialTable;
         this.quartet_indices_list_unsorted = new ArrayList<>();
         this.map_taxa_relevant_quartet_indices = new HashMap<>();
         this.sorted_quartets_weight_list_indices_map = new TreeMap<>(Collections.reverseOrder());
-        this.set_taxa_string = new HashSet<>();
+        this.taxa_list_string = new ArrayList<>();
     }
 
     private void printTable1() {
@@ -104,7 +102,7 @@ public class CustomDSPerLevel {
 
     public void fillUpTaxaList() {
         this.map_taxa_relevant_quartet_indices.keySet().forEach((tax) -> {
-            this.set_taxa_string.add(tax);
+            this.taxa_list_string.add(tax);
         });
     }
 

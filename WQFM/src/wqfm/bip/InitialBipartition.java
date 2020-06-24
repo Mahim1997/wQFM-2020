@@ -32,7 +32,7 @@ public class InitialBipartition {
 
     public Map<String, Integer> getInitialBipartitionMap(CustomDSPerLevel customDS) {
         Map<String, Integer> map_partition = new HashMap<>(); //return this map
-        for (String tax : customDS.set_taxa_string) { //initially assign all as 0/unassigned
+        for (String tax : customDS.taxa_list_string) { //initially assign all as 0/unassigned
             map_partition.put(tax, Status.UNASSIGNED_PARTITION);
         }
         int count_taxa_left_partition = 0;
