@@ -3,13 +3,11 @@ wQFM implementation in Java
 
 ## Initial Custom DataStructure
 ```
-** WILL use single list of quartets.
+** WILL use single list of quartets. (for now weights are stored in double ... maybe long will be needed for high weights ?)
 ```
 *** No (row,col) to store a quartet. Now only an integer to store a quartet.
+*** CustomDatastructuresPerLevel will contain everything required ... so no need to explicitly pass Q,P, etc.
+*** InitialTable will be a separate class (maybe needed to implement multi-threading in the future).
 
-Table 1: List<Quartets> for list_of_quartets (we can sort  using TreeMap<wt, List<Integer>> quartets-indices-with-same-weight desc/asc order)
-
-Table 2: TreeMap(descending order) of Pair<double,int> for list of <weight,row_index_to_table_1> values.
-
-Table 3: HashMap<TaxaString, List<Integer> quartets> for relevant-quartets-per-tax
-
+DS 1: InitialTable List<Quartets>
+DS 2: CustomDatastructuresPerLevel (will contain required Q,P,relevant-quartets-per-taxa-mapping, etc)

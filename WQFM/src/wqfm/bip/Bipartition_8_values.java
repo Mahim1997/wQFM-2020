@@ -91,16 +91,9 @@ public class Bipartition_8_values {
         addRespectiveValue(q.weight, status);
     }
 
-    public void compute8ValuesUsingAllQuartets(CustomDSPerLevel customDS, List<String> list_taxa_string,
-            Map<Pair<Integer, Integer>, Boolean> map_quartet_indices, Map<String, Integer> map_bipartitions) {
-
-//        Map<String, Integer> map_bipartitions = Utils.obtainBipartitionMap(list_taxa_string, bipartitions_list);
-//        for (int i = 0; i < list_quartets_indices.size(); i++) {
-        for (Pair<Integer, Integer> pair : map_quartet_indices.keySet()) {
-            int row = pair.getKey(); //obtain row idx
-            int col = pair.getValue(); //obtian col idx
-            Quartet quartet = customDS.quartet_indices_list_unsorted.get(row); //obtain actual quartet
-
+    public void compute8ValuesUsingAllQuartets(CustomDSPerLevel customDS, Map<String, Integer> map_bipartitions) {
+        for (int idx_quartet : customDS.quartet_indices_list_unsorted) {
+            Quartet quartet = customDS.table1_initial_table_of_quartets.getQuartetAt(idx_quartet);
             //obtain the quartet's taxa's bipartitions
             int left_sis_1_bip_val = map_bipartitions.get(quartet.taxa_sisters_left[0]);
             int left_sis_2_bip_val = map_bipartitions.get(quartet.taxa_sisters_left[1]);
@@ -129,7 +122,6 @@ public class Bipartition_8_values {
                 default:
                     break;
             }
-
         }
     }
 

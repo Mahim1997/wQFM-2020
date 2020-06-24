@@ -3,7 +3,10 @@ Avian 2X/R1 (checked with C++ code) calls reroot.pl 89 times.
 89 times python3 reroot will take 11.176 s
 So, we have already wasted ~15s.
 
-
+REROOT: [89 times]
+C++ perl takes ~7s {6955 ms} 
+Python script java dendropy (ternary trees) takes more than 10s
+Jar library takes around 100ms.
 
 -------------------------------------------------------------------------------------------
 INITIAL BIPARTITION [21-December-Morning-Ouptuts]
