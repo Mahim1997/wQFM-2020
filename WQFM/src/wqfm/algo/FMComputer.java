@@ -194,6 +194,8 @@ public class FMComputer {
             find_best_taxa_of_single_pass(); //Find the best-taxon for THIS swap
 
             //Debug printing.
+            System.out.println("-->>Inside run_FM_single_iteration() [Line.197] level = " + level);
+            
             StatsPerPass last_pass_stat = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
             System.out.println("[Line 200]. FM-pass(box) = " + pass + " , best-taxon: " + last_pass_stat.whichTaxaWasPassed + " , MaxGain = "
                     + last_pass_stat.maxGainOfThisPass);

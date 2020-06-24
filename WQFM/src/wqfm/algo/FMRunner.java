@@ -43,8 +43,8 @@ public class FMRunner {
         customDS.fillUpTaxaList();*/
 //        customDS.printCustomDS(); //PRINTING FOR DEBUG
         int level = 0;
-        TreeHandler treeHandler = new TreeHandler(); // everything object so that multi-threading can be done
-        String final_tree = runner.recursiveDivideAndConquer(customDS, level, treeHandler); //customDS will have (P, Q, Q_relevant etc) all the params needed.
+//        TreeHandler treeHandler = new TreeHandler(); // everything object so that multi-threading can be done [normal utility methods ... maybe static not needed]
+        String final_tree = runner.recursiveDivideAndConquer(customDS, level); //customDS will have (P, Q, Q_relevant etc) all the params needed.
 
         System.out.println("\n\n------- Line 49 of FMRunner.java final tree return -----------");
         System.out.println(final_tree);
@@ -52,66 +52,62 @@ public class FMRunner {
     }
 
     // ------>>>> Main RECURSIVE function ....
-    private String recursiveDivideAndConquer(CustomDSPerLevel customDS, int level,
-            TreeHandler treeHandler) {
-
-        //Sort things and fill up relevant quartets map and taxa list and other required things.
+    private String recursiveDivideAndConquer(CustomDSPerLevel customDS_this_level, int level) {
         /*So that when customDS is passed subsequently, automatic sorting will be done. No need to do it somewhere else*/
-        customDS.sortQuartetIndicesMap(); //sort the quartet-index map for initial-bipartition-computation
-        customDS.fillRelevantQuartetsMap(); //fill-up the relevant quartets per taxa map
-
+        customDS_this_level.sortQuartetIndicesMap(); //sort the quartet-index map for initial-bipartition-computation
+        customDS_this_level.fillRelevantQuartetsMap(); //fill-up the relevant quartets per taxa map
         if(level == 0){ //only do it for the initial step, other levels will be passed as parameters
-            customDS.fillUpTaxaList(); //fill-up the taxa list
+            customDS_this_level.fillUpTaxaList(); //fill-up the taxa list
         }
-//        (THIS should be called from outside as we can have |Q| = 0 but |P| > 0)
         /*
-            Handle terminating conditions.
+            //////////// Handle terminating conditions \\\\\\\\\\\\\\\\
             1. |P| == 0 then return "()"
             2. |P| <= 3, then return a star/depth-one-tree over set of taxon.
             3. |Q| = empty, then return a star/depth-one-tree over set of taxon.
          */
-        //if |P| == 0
-        
-        if(customDS.quartet_indices_list_unsorted.isEmpty()){ // if |Q| == 0
-//            return treeHandler.getDepthOneTree(customDS)
+        // |P| <= 3 OR |Q|.isEmpty() ... return star over taxa list{P}
+        if((customDS_this_level.taxa_list_string.size() <= 3) || (customDS_this_level.quartet_indices_list_unsorted.isEmpty())){
+            //static method ... [utility method, so maybe threads won't create an issue here] [if issue created, just pass an object]
+            return TreeHandler.getStarTree(customDS_this_level.taxa_list_string); 
         }
-        if (level == 1) { //level 1 for initial checking.
-            return "NOT_RETURING_ANYTHING_NOW";
-        }
+//        if (level == 1) { //level 1 for initial checking. //for initial debug
+//            return "NOT_RETURING_ANYTHING_NOW";
+//        }
 
+        level++; // For dummy node finding.
         InitialBipartition initialBip = new InitialBipartition();
-        Map<String, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS);
+        Map<String, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS_this_level);
 
-        System.out.println("Printing Initial Bipartition");
+        System.out.println("Printing Initial Bipartition for level " + level);
         InitialBipartition.printBipartition(mapInitialBipartition);
-
         Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
-        initialBip_8_vals.compute8ValuesUsingAllQuartets(customDS, mapInitialBipartition);
+        initialBip_8_vals.compute8ValuesUsingAllQuartets(customDS_this_level, mapInitialBipartition);
 ////        System.out.println("Printing initial_bipartitions_8values:\n" + initialBip_8_vals.toString());
-        FMComputer fmComputerObject = new FMComputer(customDS, mapInitialBipartition, initialBip_8_vals, level);
+        FMComputer fmComputerObject = new FMComputer(customDS_this_level, mapInitialBipartition, initialBip_8_vals, level);
         FMResultObject fmResultObject = fmComputerObject.run_FM_Algorithm_Whole();
 
         CustomDSPerLevel customDS_left = fmResultObject.customDS_left_partition;
         CustomDSPerLevel customDS_right = fmResultObject.customDS_right_partition;
 
-        System.out.println("-------------- After Level " + level + " LEFT Quartets -------------------- ");
-        System.out.println(customDS_left.onlyQuartetIndices());
-        System.out.println(customDS_left.taxa_list_string);
-        System.out.println("============== After Level " + level + " RIGHT Quartets ==================== ");
-        System.out.println(customDS_right.onlyQuartetIndices());
-        System.out.println(customDS_right.taxa_list_string);
-        System.out.println("++++++++++++++ After Level " + level + " Quartet lists ++++++++++++++++++++ ");
-        customDS.table1_initial_table_of_quartets.printQuartetList();
-        level++; // ????
+        //Debug printing begin
+//        System.out.println("-------------- After Level " + level + " LEFT Quartets -------------------- ");
+//        System.out.println(customDS_left.onlyQuartetIndices());
+//        System.out.println(customDS_left.taxa_list_string);
+//        System.out.println("============== After Level " + level + " RIGHT Quartets ==================== ");
+//        System.out.println(customDS_right.onlyQuartetIndices());
+//        System.out.println(customDS_right.taxa_list_string);
+//        System.out.println("++++++++++++++ After Level " + level + " Quartet lists ++++++++++++++++++++ ");
+//        customDS_this_level.table1_initial_table_of_quartets.printQuartetList();
+        //Debug printing end
 
-        //////////////////// Beginning of Recursion \\\\\\\\\\\\\\\\\\\\\\\\\\\
-//        String dummyTaxon = resultObject.dummyTaxonThisLevel;
-//        String left_tree_unrooted = recursiveDivideAndConquer(customDS_left, level, treeHandler);
-//        String right_tree_unrooted = recursiveDivideAndConquer(customDS_right, level, treeHandler);
-//        String dummyTaxon = Utils.getDummyTaxonName(level);
-//        String merged_tree = TreeHandler.mergeUnrootedTrees(left_tree_unrooted, right_tree_unrooted,
-//                dummyTaxon)
-        return null;
+
+        /////////////////// Beginning of Recursion \\\\\\\\\\\\\\\\\\\\\\\\\\\
+        String dummyTaxon = fmResultObject.dummyTaxonThisLevel;
+        String left_tree_unrooted = recursiveDivideAndConquer(customDS_left, level);
+        String right_tree_unrooted = recursiveDivideAndConquer(customDS_right, level);
+        String merged_tree = TreeHandler.mergeUnrootedTrees(left_tree_unrooted, right_tree_unrooted, dummyTaxon);
+        
+        return merged_tree;
     }
 
     //------------------Initial Bipartition --------------------

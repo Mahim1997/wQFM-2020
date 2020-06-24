@@ -252,8 +252,19 @@ public class TestNormalFunctions {
             map.put(i, list.get(i));
         }
         System.out.println(map);
-        Map.Entry<Integer,String> entry = map.entrySet().iterator().next();
+        Map.Entry<Integer, String> entry = map.entrySet().iterator().next();
         System.out.println(entry + " , " + entry.getKey() + " , " + entry.getValue());
+    }
+
+    public static void testStarTree() {
+        List<String> list1 = new ArrayList<>(Arrays.asList("Mahim", "Ronaldo"));
+        List<String> list2 = new ArrayList<>(Arrays.asList("Mahim"));
+        List<String> list3 = new ArrayList<>(Arrays.asList("Mahim", "Ronaldo", "CR7"));
+        List<String> list4 = new ArrayList<>();
+        System.out.println("List 1 ->" + TreeHandler.getStarTree(list1));
+        System.out.println("List 2 ->" + TreeHandler.getStarTree(list2));
+        System.out.println("List 3 ->" + TreeHandler.getStarTree(list3));
+        System.out.println("List 4 ->" + TreeHandler.getStarTree(list4));
     }
 
     private TreeMap<Double, Integer> sortMap(Map<Double, Integer> map) {

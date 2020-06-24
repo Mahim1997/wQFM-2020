@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Scanner;
 import phylonet.tree.io.ParseException;
 import phylonet.tree.model.sti.STITree;
@@ -169,7 +170,24 @@ public class TreeHandler {
 
         } catch (Exception ex) {
         }
-        
+
         return "ERROR_IN_TREE";
+    }
+
+    //eg: a b c d
+    public static String getStarTree(List<String> taxa_list_string) {
+        if (taxa_list_string.isEmpty()) {
+            return "();";
+        }
+        String s = "";
+        s += "(";
+        for (int i = 0; i < taxa_list_string.size(); i++) {
+            s += taxa_list_string.get(i);
+            if (i != taxa_list_string.size() - 1) {
+                s += ","; //do not add comma for the last taxon
+            }
+        }
+        s += ");";
+        return s;
     }
 }

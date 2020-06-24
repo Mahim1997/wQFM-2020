@@ -30,7 +30,7 @@ public class Main {
         
         
         FMRunner.runFunctions(); //main functions for wQFM
-//        TestThreadFunctions.testFunction();
+//        TestNormalFunctions.testStarTree();
 
         long time_del = System.currentTimeMillis() - time_1;
         System.out.println("\n\n\nTime (ms) = " + time_del);
