@@ -42,7 +42,7 @@ public class InitialBipartition {
             List<Integer> list_quartets_with_this_weight = customDS.sorted_quartets_weight_list_indices_map.get(weight_key); //Mahim
             for (int j = 0; j < list_quartets_with_this_weight.size(); j++) { //Mahim
                 int quartet_index = list_quartets_with_this_weight.get(j);//Mahim
-                Quartet quartet_under_consideration = customDS.table1_initial_table_of_quartets.get(quartet_index);//Mahim
+                Quartet quartet_under_consideration = customDS.initial_table1_of_list_of_quartets.get(quartet_index);//Mahim
 
                 String q1 = quartet_under_consideration.taxa_sisters_left[0];
                 String q2 = quartet_under_consideration.taxa_sisters_left[1];

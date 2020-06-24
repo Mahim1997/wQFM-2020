@@ -93,7 +93,7 @@ public class Bipartition_8_values {
 
     public void compute8ValuesUsingAllQuartets(CustomDSPerLevel customDS, Map<String, Integer> map_bipartitions) {
         for (int idx_quartet : customDS.quartet_indices_list_unsorted) {
-            Quartet quartet = customDS.table1_initial_table_of_quartets.get(idx_quartet);
+            Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_quartet);
             //obtain the quartet's taxa's bipartitions
             int left_sis_1_bip_val = map_bipartitions.get(quartet.taxa_sisters_left[0]);
             int left_sis_2_bip_val = map_bipartitions.get(quartet.taxa_sisters_left[1]);

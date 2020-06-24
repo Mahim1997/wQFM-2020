@@ -11,7 +11,8 @@ import wqfm.Status;
 public class Utils {
 
     public static String getDummyTaxonName(int level) {
-        String dummyTax = "DUMMY_MZCR_" + String.valueOf(level); //arbitrary names so as to not get mixed up with actual names
+//        String dummyTax = "DUMMY_MZCR_" + String.valueOf(level); //arbitrary names so as to not get mixed up with actual names
+        String dummyTax = "X" + String.valueOf(level); //debug
         return dummyTax;
     }
 
@@ -79,8 +80,6 @@ public class Utils {
         }
         return Status.DEFERRED; //s->d, v->d, b->d
     }
-
-
 
 }
 
