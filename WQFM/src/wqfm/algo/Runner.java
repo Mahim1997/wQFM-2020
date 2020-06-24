@@ -11,9 +11,12 @@ import java.util.Map;
 import javafx.util.Pair;
 import wqfm.bip.Bipartition_8_values;
 import wqfm.ds.CustomDSPerLevel;
+import wqfm.ds.FMResultObject;
 import wqfm.ds.InitialTable;
 import wqfm.ds.Quartet;
 import wqfm.main.Main;
+import wqfm.utils.TreeHandler;
+import wqfm.utils.Utils;
 
 /**
  *
@@ -40,11 +43,23 @@ public class Runner {
         customDS.fillUpTaxaList();*/
 //        customDS.printCustomDS(); //PRINTING FOR DEBUG
         int level = 0;
-        runner.recursiveDivideAndConquer(customDS, level); //customDS will have (P, Q, Q_relevant etc) all the params needed.
+        TreeHandler treeHandler = new TreeHandler(); // everything object so that multi-threading can be done
+        String final_tree = runner.recursiveDivideAndConquer(customDS, level, treeHandler); //customDS will have (P, Q, Q_relevant etc) all the params needed.
+        System.out.println(final_tree);
     }
 
     // ------>>>> Main RECURSIVE function ....
-    private String recursiveDivideAndConquer(CustomDSPerLevel customDS, int level) {
+    private String recursiveDivideAndConquer(CustomDSPerLevel customDS, int level,
+            TreeHandler treeHandler) {
+        
+        /*
+            Handle terminating conditions.
+        */
+        if(level == 1){ //level 1 for initial checking.
+            return "NOT_RETURING_ANYTHING_NOW";
+        }
+
+
         //Sort things and fill up relevant quartets map and taxa list and other required things.
         /*So that when customDS is passed subsequently, automatic sorting will be done. No need to do it somewhere else*/
         customDS.sortQuartetIndicesMap(); //sprt the quartet-index map for initial-bipartition-computation
@@ -61,23 +76,17 @@ public class Runner {
         initialBip_8_vals.compute8ValuesUsingAllQuartets(customDS, mapInitialBipartition);
 ////        System.out.println("Printing initial_bipartitions_8values:\n" + initialBip_8_vals.toString());
         FMComputer fmComputerObject = new FMComputer(customDS, mapInitialBipartition, initialBip_8_vals, level);
-        fmComputerObject.run_FM_Algorithm_Whole();
-//        level++; // ????
-
-        /*  CustomDSPerLevel.getDummyTaxonName(level) returns a dummy taxon with this level.
-            TO DO HERE .... recursive-DNC function
-        ***** In FM-iteration algorithm, dummy taxa WILL be added before returning the quartets by passing the level parameter
-        eg. FM-iteration(customDS, List<Integer> initial_bipartition_logical, List<Pair<int,int>>list_quartets, int level); can be the signature    
-            4. Use P_left, Q_left and P_right, Q_right to recursively call the function be adjusting params eg. level++, etc.
-            level++;
-            tree_left = recursiveDivideAndConquer(customDS, level, taxa_left_partition, list_quartetes_left_partition)
-            tree_right = recursiveDivideAndConquer(customDS, level, taxa_right_partition, list_quartetes_right_partition)
-            String dummy_Taxon_this_level = CustomDSPerLevel.getDummyTaxon(level - 1); //one-step before since we have incremented level
-            tree_left_rooted = Reroot.rerootTree_python(tree_left, dummy_Taxon_this_level); // left tree will be just as is
-            tree_right_rooted = Reroot.rerootTree_python(tree_right, dummy_Taxon_this_level).reverse(); //right tree should be reversed to maintain same face with left rooted tree. 
-            merged_tree = merge_by_removing_dummy_and_bracket_balance(tree_left_rooted, tree_right_rooted);
-            return merged_tree;
-         */
+        FMResultObject resultObject = fmComputerObject.run_FM_Algorithm_Whole();
+        level++; // ????
+        
+        
+        CustomDSPerLevel customDS_left = resultObject.customDS_left_partition;
+        CustomDSPerLevel customDS_right = resultObject.customDS_right_partition;
+        String left_tree_unrooted = recursiveDivideAndConquer(customDS_left, level, treeHandler);
+        String right_tree_unrooted = recursiveDivideAndConquer(customDS_right, level, treeHandler);
+        String dummyTaxon = Utils.getDummyTaxonName(level);
+        String merged_tree = TreeHandler.mergeUnrootedTrees(left_tree_unrooted, right_tree_unrooted,
+                dummyTaxon);
         return null;
     }
 
