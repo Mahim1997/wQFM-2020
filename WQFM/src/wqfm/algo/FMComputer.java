@@ -186,9 +186,8 @@ public class FMComputer {
     }
 
     public void run_FM_single_iteration() {
-        //per iteration ... has many passes. [will have rollback]
-        int pass = 0;
-        boolean areAllTaxaLocked = false;
+        int pass = 0; //to print while debugging.
+        boolean areAllTaxaLocked = false; //initially this condition is false.
         while (areAllTaxaLocked == false) {
             pass++; //for debug printing....
 

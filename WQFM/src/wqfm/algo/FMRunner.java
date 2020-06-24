@@ -94,12 +94,14 @@ public class FMRunner {
         CustomDSPerLevel customDS_left = fmResultObject.customDS_left_partition;
         CustomDSPerLevel customDS_right = fmResultObject.customDS_right_partition;
 
-//        System.out.println("-------------- After Level " + level + " LEFT Quartets -------------------- ");
-//        System.out.println(customDS_left.onlyQuartetIndices());
-//        System.out.println("============== After Level " + level + " RIGHT Quartets ==================== ");
-//        System.out.println(customDS_right.onlyQuartetIndices());
-//        System.out.println("++++++++++++++ After Level " + level + " Quartet lists ++++++++++++++++++++ ");
-//        customDS.table1_initial_table_of_quartets.printQuartetList();
+        System.out.println("-------------- After Level " + level + " LEFT Quartets -------------------- ");
+        System.out.println(customDS_left.onlyQuartetIndices());
+        System.out.println(customDS_left.set_taxa_string);
+        System.out.println("============== After Level " + level + " RIGHT Quartets ==================== ");
+        System.out.println(customDS_right.onlyQuartetIndices());
+        System.out.println(customDS_right.set_taxa_string);
+        System.out.println("++++++++++++++ After Level " + level + " Quartet lists ++++++++++++++++++++ ");
+        customDS.table1_initial_table_of_quartets.printQuartetList();
         level++; // ????
 
         //////////////////// Beginning of Recursion \\\\\\\\\\\\\\\\\\\\\\\\\\\
