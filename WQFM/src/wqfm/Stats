@@ -1,0 +1,44 @@
+Avian 2X/R1 takes Time (ms) = 3531 ms on poulating initial datastructure tables + initial bipartition printing.
+Avian 2X/R1 (checked with C++ code) calls reroot.pl 89 times.
+89 times python3 reroot will take 11.176 s
+So, we have already wasted ~15s.
+
+REROOT: [89 times]
+C++ perl takes ~7s {6955 ms} 
+Python script java dendropy (ternary trees) takes more than 10s
+Jar library takes around 100ms.
+
+-------------------------------------------------------------------------------------------
+INITIAL BIPARTITION [21-December-Morning-Ouptuts]
+
+Reading from file <wqrts_11Tax_est_5G_R1> done
+-->>Inside recursiveDNC() function ... of Runner.java LINE 57
+LEFT: 11-->1-->2-->3-->4-->5-->6-->9-->10-->
+RIGHT: 7-->8-->
+
+-->>Inside recursiveDNC() function ... of Runner.java LINE 57
+LEFT: A-->B-->C-->D-->E-->F-->
+RIGHT: G-->H-->I-->J-->K-->L-->M-->N-->O-->
+
+
+Reading from file <wqrts_avian_2X_R1> done
+-->>Inside recursiveDNC() function ... of Runner.java LINE 57
+LEFT: FULGL-->ANAPL-->COLLI-->MESUN-->PHALE-->TAUER-->GALGA-->BUCRH-->TINMA-->TYTAL-->MELGA-->COLST-->CALAN-->STRCA-->GAVST-->APAVI-->MERNU-->CAPCA-->FALPE-->BALRE-->CHAPE-->PTEGU-->CORBR-->CATAU-->CHAVO-->PICPU-->EURHE-->CARCR-->PHACA-->OPHHO-->CHLUN-->LEPDI-->MANVI-->ACACH-->CUCCA-->
+RIGHT: HALAL-->MELUN-->PYGAD-->PHORU-->NESNO-->PODCR-->TAEGU-->NIPNI-->PELCR-->EGRGA-->GEOFO-->APTFO-->HALLE-->
+
+
+AVIAN
+Time (ms) = 785 using Scanner
+Time (ms) = 107 using BufferedReader [USE THIS]
+Time (ms) = 228 using StreamFiles.files
+
+========================================================================
+
+22 December Morning
+
+Reading from file <wqrts_avian_2X_R1> done.
+Done populating & sorting initial tables.
+Printing Initial Bipartition
+LEFT: FULGL-->ANAPL-->COLLI-->MESUN-->GALGA-->PHALE-->TAUER-->BUCRH-->TINMA-->MELGA-->TYTAL-->COLST-->CALAN-->STRCA-->GAVST-->APAVI-->MERNU-->CAPCA-->FALPE-->BALRE-->CHAPE-->PTEGU-->CORBR-->CATAU-->CHAVO-->PICPU-->EURHE-->CARCR-->PHACA-->OPHHO-->CHLUN-->LEPDI-->MANVI-->ACACH-->CUCCA-->
+RIGHT: HALAL-->MELUN-->PYGAD-->PHORU-->NESNO-->TAEGU-->PODCR-->NIPNI-->PELCR-->EGRGA-->GEOFO-->APTFO-->HALLE-->
+Time (ms) = 3557
