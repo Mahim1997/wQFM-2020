@@ -26,6 +26,10 @@ public class WeightedPartitionScores {
         return (3 * bip_8_vals.wtSatisfied - 2 * bip_8_vals.wtViolated);
     }
 
+    private static double calculatePScore4(Bipartition_8_values bip_8_vals) {
+        return (5 * bip_8_vals.wtSatisfied - 4 * bip_8_vals.wtViolated);
+    }
+
     public static double calculatePartitionScoreReduced(Bipartition_8_values bip_8_vals) {
 
         switch (Main.PARTITION_SCORE_MODE) {
@@ -37,6 +41,8 @@ public class WeightedPartitionScores {
                 return WeightedPartitionScores.calculatePScore2(bip_8_vals);
             case Status.PARTITION_SCORE_MODE_3:
                 return WeightedPartitionScores.calculatePScore3(bip_8_vals);
+            case Status.PARTITION_SCORE_MODE_4:
+                return WeightedPartitionScores.calculatePScore4(bip_8_vals);
             default:
                 return WeightedPartitionScores.calculatePScore0(bip_8_vals); //[s]-[v] is default.
         }
