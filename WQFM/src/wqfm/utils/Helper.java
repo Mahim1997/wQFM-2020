@@ -39,6 +39,10 @@ public class Helper {
     }
 
     public static void findOptionsUsingCommandLineArgs(String[] args) {
+        if (args.length < 2) {
+            System.out.println("Arguments given length < 2, so using built-in parameter values.");
+            return;
+        }
         if (args.length > 3) {
             printUsageAndExitSystem();
         }

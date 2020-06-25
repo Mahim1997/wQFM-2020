@@ -4,6 +4,7 @@ import wqfm.interfaces.Status;
 import wqfm.algo.FMRunner;
 import wqfm.testFunctions.TestNormalFunctions;
 import wqfm.testFunctions.TestThreadFunctions;
+import wqfm.utils.Helper;
 
 /**
  *
@@ -13,12 +14,12 @@ public class Main {
 //    public static String INPUT_FILE_NAME = "wqrts_toy_dataset_QFM_paper_dummy_weights";
 
     public static int REROOT_MODE = Status.REROOT_USING_JAR;
-    public static int PARTITION_SCORE_MODE = Status.PARTITION_SCORE_MODE_1; //1->[s]-[v], 2->[s]-0.5[v], 3->[s]-[v]-[d]
+    public static int PARTITION_SCORE_MODE = Status.PARTITION_SCORE_MODE_2; //1->[s]-[v], 2->[s]-0.5[v], 3->[s]-[v]-[d]
 
 //    public static String INPUT_FILE_NAME = "input_files/wqrts_avian_2X_R1";
 //    public static String INPUT_FILE_NAME = "input_files/wqrts_37Tax_noscale_800g_500b_R1";
-//    public static String INPUT_FILE_NAME = "input_files/wqrts_15G_100g100b_R1";
-    public static String INPUT_FILE_NAME = "input_files/wqrts_11Tax_est_5G_R1";
+    public static String INPUT_FILE_NAME = "input_files/wqrts_15G_100g100b_R1";
+//    public static String INPUT_FILE_NAME = "input_files/wqrts_11Tax_est_5G_R1";
 //    public static String INPUT_FILE_NAME = "input_files/wqrts_toy_dataset_QFM_paper";
     
 //    public static String INPUT_FILE_NAME = "test-input-file-wqrts-java";
@@ -40,7 +41,7 @@ public class Main {
 
     private static void readArguments(String[] args) {
         //For now <input-file> <output-file> <partition-score>
-        
+        Helper.findOptionsUsingCommandLineArgs(args);
     }
 
 }

@@ -13,6 +13,7 @@ import wqfm.ds.InitialTable;
 import wqfm.ds.Quartet;
 import wqfm.interfaces.Status;
 import wqfm.main.Main;
+import wqfm.utils.Helper;
 import wqfm.utils.TreeHandler;
 
 /**
@@ -47,7 +48,7 @@ public class FMRunner {
         System.out.println("\n\n---------- [L 49.] FMRunner: final tree return -----------");
         System.out.println(final_tree);
         System.out.println("---------------------------------------------------------------");
-        
+        Helper.writeToFile(final_tree, Main.OUTPUT_FILE_NAME);
     }
 
     // ------>>>> Main RECURSIVE function ....
@@ -126,7 +127,6 @@ public class FMRunner {
             try (BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
                 String line;
                 while ((line = bufferedReader.readLine()) != null && !line.isEmpty()) {
-//                    System.out.println(line);
                     populatePerInputLine(customDS, initialTable, line);
                 }
             }
