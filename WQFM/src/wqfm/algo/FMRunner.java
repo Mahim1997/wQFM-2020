@@ -62,6 +62,10 @@ public class FMRunner {
         if (level == 0) { //only do it for the initial step, other levels will be passed as parameters
             customDS_this_level.fillUpTaxaList(); //fill-up the taxa list
         }
+        System.out.println("==== ------ ====== ------ Starting DNC level = " + level);
+        System.out.println(">>>> Map-relevant-qrts = " + customDS_this_level.map_taxa_relevant_quartet_indices);
+        System.out.println(">>>> List<Integer> qrts-indices = " + customDS_this_level.quartet_indices_list_unsorted);
+        
         /*
             //////////// Handle terminating conditions \\\\\\\\\\\\\\\\
             1. |P| == 0 then return "()"
@@ -92,9 +96,6 @@ public class FMRunner {
         CustomDSPerLevel customDS_left = fmResultObject.customDS_left_partition;
         CustomDSPerLevel customDS_right = fmResultObject.customDS_right_partition;
 
-        System.out.println(">>>>> INSIDE FMRunner.java ... customDS_left MAP printing ... ");
-        customDS_left.initial_table1_of_list_of_quartets.printQuartetList();
-        
 //Debug printing begin
         //        System.out.println("-------------- After Level " + level + " LEFT Quartets -------------------- ");
         //        System.out.println(customDS_left.onlyQuartetIndices());

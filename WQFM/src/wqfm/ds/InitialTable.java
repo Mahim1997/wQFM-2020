@@ -12,6 +12,10 @@ public class InitialTable { //STORED separately to have the synchronized add fun
 
     private List<Quartet> list_quartets;
 
+    InitialTable(boolean flag) {
+        // do not initialize.
+    }
+
     @Override
     public String toString() {
         return "InitialTable{" + "list_quartets=" + list_quartets + '}';
@@ -37,6 +41,10 @@ public class InitialTable { //STORED separately to have the synchronized add fun
         for(int i=0; i<this.list_quartets.size(); i++){
             System.out.println(i + ":-> " + this.list_quartets.get(i).toString());
         }
+    }
+
+    public void assignByReference(InitialTable initialTable) {
+        this.list_quartets = initialTable.list_quartets; //assign be reference
     }
 
     

@@ -62,7 +62,7 @@ public class FMComputer {
         //Test hypothetically ...
         for (String taxToConsider : this.customDS.taxa_list_string) {
             if (this.lockedTaxaBooleanMap.get(taxToConsider) == false) { // this is a free taxon, hypothetically test it ....
-                System.out.println("Inside runFMSinglePassHypoSwap() .. taxaToConsider = " + taxToConsider);
+//                System.out.println("Line 65. Inside runFMSinglePassHypoSwap() .. taxaToConsider = " + taxToConsider);
                 int taxPartValBeforeHypoSwap = this.bipartitionMap.get(taxToConsider);
                 //First check IF moving this will lead to a singleton bipartition ....
                 Map<String, Integer> newMap = new HashMap<>(this.bipartitionMap);
@@ -79,12 +79,13 @@ public class FMComputer {
                 List<Integer> deferredQuartetsBeforeHypoMoving = new ArrayList<>(); //keep deferred quartets for later checking ...
                 //For each quartet, find status, compute previous-hypothetical-swap-values, and using short-cuts (excluding deferred), compute after-hypothetical-swap-values
 
-                for (int quartets_itr = 0; quartets_itr < relevantQuartetsBeforeHypoMoving.size(); quartets_itr++) {
-                    int qrt_index_relevant_quartets = relevantQuartetsBeforeHypoMoving.get(quartets_itr);
+                for (int itr = 0; itr < relevantQuartetsBeforeHypoMoving.size(); itr++) {
+                    int idx_relevant_qrt = relevantQuartetsBeforeHypoMoving.get(itr);
                     //No need explicit checking as customDS will be changed after every level
-                    Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(qrt_index_relevant_quartets);
-                    if (level > 0) {
-//                        System.out.println("Line 86. TaxaCons = " + taxToConsider + ", Quartet under consideration = " + quartet.toString());
+                    Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_relevant_qrt);
+
+                    if (level > 1) {
+                        System.out.println("Line 86. TaxaCons = " + taxToConsider + ", Quartet under consideration = " + quartet.toString());
                     }
                     int status_quartet_before_hyp_swap = Utils.findQuartetStatus(bipartitionMap.get(quartet.taxa_sisters_left[0]),
                             bipartitionMap.get(quartet.taxa_sisters_left[1]), bipartitionMap.get(quartet.taxa_sisters_right[0]), bipartitionMap.get(quartet.taxa_sisters_right[1]));
@@ -94,7 +95,7 @@ public class FMComputer {
                     _8_vals_THIS_TAX_AFTER_hypo_swap.addRespectiveValue(quartet.weight, status_quartet_after_hyp_swap); //If status.UNKNOWN, then don't add anything.
 
                     if (status_quartet_before_hyp_swap == Status.DEFERRED) {
-                        deferredQuartetsBeforeHypoMoving.add(qrt_index_relevant_quartets);
+                        deferredQuartetsBeforeHypoMoving.add(idx_relevant_qrt);
                     }
 
                 } // end for [relevant-quartets-iteration]
@@ -147,9 +148,8 @@ public class FMComputer {
          */
         if (this.mapCandidateGainsPerListTax.isEmpty() == true) {
             System.out.println("-->>ALL LEADING TO SINGLE BIPARTITION CONDITION [line 145].");
-            //ALL LEAD TO SINGLETON BIPARTITION .... [LOCK ALL THE TAXA]
             for (String key : this.lockedTaxaBooleanMap.keySet()) {
-                this.lockedTaxaBooleanMap.put(key, Boolean.TRUE);
+                this.lockedTaxaBooleanMap.put(key, Boolean.TRUE); //ALL LEAD TO SINGLETON BIPARTITION .... [LOCK ALL THE TAXA]
             }
         }//do not add the prospective steps thing.
         else {
@@ -200,11 +200,12 @@ public class FMComputer {
             find_best_taxa_of_single_pass(); //Find the best-taxon for THIS swap
 
             //Debug printing.
-            StatsPerPass last_pass_stat = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
-            System.out.println("[Line 200]. FM-pass(box) = " + pass + " , best-taxon: " + last_pass_stat.whichTaxaWasPassed + " , MaxGain = "
-                    + last_pass_stat.maxGainOfThisPass);
-            changeParameterValuesForNextPass();//Change parameters to maintain consistency wrt next step/box/pass.
-
+            if (listOfPerPassStatistics.isEmpty() == false) { //AT LEAST ONE per-pass val exists.
+                StatsPerPass last_pass_stat = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
+                System.out.println("[Line 200]. FM-pass(box) = " + pass + " , best-taxon: " + last_pass_stat.whichTaxaWasPassed + " , MaxGain = "
+                        + last_pass_stat.maxGainOfThisPass);
+                changeParameterValuesForNextPass();//Change parameters to maintain consistency wrt next step/box/pass.
+            }
             areAllTaxaLocked = Helper.checkAllValuesIFSame(this.lockedTaxaBooleanMap, true); //if ALL are true, then stop.
             System.out.println("Line 206. pass = " + pass + " , allLocked condition = " + areAllTaxaLocked);
 

@@ -25,6 +25,9 @@ public class FMResultObject {
         this.customDS_left_partition = new CustomDSPerLevel(); //do not initialize tables YET
         this.customDS_right_partition = new CustomDSPerLevel(); //do not initialize tables YET
         this.dummyTaxonThisLevel = Utils.getDummyTaxonName(level); //obtain the dummy node for this level
+    
+        this.customDS_left_partition.initial_table1_of_list_of_quartets = new InitialTable(false);
+        this.customDS_right_partition.initial_table1_of_list_of_quartets = new InitialTable(false);
     }
 
     public void createFMResultObjects(Map<String, Integer> mapOfBipartition) {
@@ -38,8 +41,8 @@ public class FMResultObject {
         }
 
         //1. Traverse each quartet, find the deferred and blank quartets and pass to next.
-        for (int itr_for_quartet_indices = 0; itr_for_quartet_indices < this.customDS_initial_this_level.quartet_indices_list_unsorted.size(); itr_for_quartet_indices++) {
-            int qrt_idx = this.customDS_initial_this_level.quartet_indices_list_unsorted.get(itr_for_quartet_indices); //add to new lists of customDS
+        for (int itr = 0; itr < this.customDS_initial_this_level.quartet_indices_list_unsorted.size(); itr++) {
+            int qrt_idx = this.customDS_initial_this_level.quartet_indices_list_unsorted.get(itr); //add to new lists of customDS
             Quartet quartet_parent = this.customDS_initial_this_level.initial_table1_of_list_of_quartets.get(qrt_idx);
             // find quartet's status.
             int left_1_partition = mapOfBipartition.get(quartet_parent.taxa_sisters_left[0]);
@@ -77,8 +80,8 @@ public class FMResultObject {
 
         }
         //finally add the references to left and right partitions.
-        this.customDS_left_partition.initial_table1_of_list_of_quartets = this.customDS_initial_this_level.initial_table1_of_list_of_quartets;
-        this.customDS_right_partition.initial_table1_of_list_of_quartets = this.customDS_initial_this_level.initial_table1_of_list_of_quartets;
+        this.customDS_left_partition.initial_table1_of_list_of_quartets.assignByReference(this.customDS_initial_this_level.initial_table1_of_list_of_quartets);
+        this.customDS_right_partition.initial_table1_of_list_of_quartets.assignByReference(this.customDS_initial_this_level.initial_table1_of_list_of_quartets);
     }
 
     private int findCommonBipartition(int[] arr) {

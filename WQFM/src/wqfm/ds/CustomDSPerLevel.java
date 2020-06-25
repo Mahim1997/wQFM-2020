@@ -21,11 +21,10 @@ public class CustomDSPerLevel {
     public Map<Double, List<Integer>> sorted_quartets_weight_list_indices_map;
     public List<String> taxa_list_string;
 
-    public void setInitialTableReference(InitialTable initTable)
-    {
+    public void setInitialTableReference(InitialTable initTable) {
         this.initial_table1_of_list_of_quartets = initTable;
     }
-    
+
     public CustomDSPerLevel() {
         this.quartet_indices_list_unsorted = new ArrayList<>();
         this.map_taxa_relevant_quartet_indices = new HashMap<>();
@@ -83,25 +82,23 @@ public class CustomDSPerLevel {
     }
 
     public void fillRelevantQuartetsMap() {
-        System.out.println("-->>Inside fillRelevantQuartetsMap() ... initialTable.size = " + this.initial_table1_of_list_of_quartets.sizeTable());
-        this.initial_table1_of_list_of_quartets.printQuartetList();
         //For each quartet
-        for (int itr_quartet = 0; itr_quartet < this.quartet_indices_list_unsorted.size(); itr_quartet++) {
-            int index_qrt = this.quartet_indices_list_unsorted.get(itr_quartet);
+        for (int itr = 0; itr < this.quartet_indices_list_unsorted.size(); itr++) {
+            int index_qrt = this.quartet_indices_list_unsorted.get(itr);
             Quartet q = this.initial_table1_of_list_of_quartets.get(index_qrt);
             for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) { // Do for left-sisters ... push to map THIS quartet's row,col
                 String taxon = q.taxa_sisters_left[i];
                 if (this.map_taxa_relevant_quartet_indices.containsKey(taxon) == false) { //map doesn't have an entry yet for THIS taxon
                     this.map_taxa_relevant_quartet_indices.put(taxon, new ArrayList<>()); // initialize for THIS taxon
                 }
-                this.map_taxa_relevant_quartet_indices.get(taxon).add(itr_quartet);
+                this.map_taxa_relevant_quartet_indices.get(taxon).add(index_qrt);
             }
             for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) { // Repeat the same for right-sisters
                 String taxon = q.taxa_sisters_right[i];
                 if (this.map_taxa_relevant_quartet_indices.containsKey(taxon) == false) { //map doesn't have an entry yet for THIS taxon
                     this.map_taxa_relevant_quartet_indices.put(taxon, new ArrayList<>()); // initialize for THIS taxon
                 }
-                this.map_taxa_relevant_quartet_indices.get(taxon).add(itr_quartet);
+                this.map_taxa_relevant_quartet_indices.get(taxon).add(index_qrt);
             }
         }
     }
@@ -117,6 +114,5 @@ public class CustomDSPerLevel {
         s = this.quartet_indices_list_unsorted.stream().map((qrtIndex) -> (String.valueOf(qrtIndex) + ", ")).reduce(s, String::concat);
         return s;
     }
-
 
 }
