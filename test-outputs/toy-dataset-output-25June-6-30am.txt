@@ -1,0 +1,132 @@
+run:
+Reading from file <input_files/wqrts_toy_dataset_QFM_paper> done.
+Done populating & sorting initial tables.
+==== ------ ====== ------ Starting DNC level = 0
+>>>> Map-relevant-qrts = {1=[0, 1, 3, 5], 2=[0, 1, 2, 3], 3=[0, 1, 2, 4, 5], 4=[0, 1, 2, 4], 5=[2, 3, 4, 5], 6=[3, 4, 5]}
+>>>> List<Integer> qrts-indices = [0, 1, 2, 3, 4, 5]
+>>> TAXA LIST = [1, 2, 3, 4, 5, 6]
+Printing Initial Bipartition for level 1
+LEFT: 1, 2, 
+RIGHT: 3, 4, 5, 6, 
+---------------- LEVEL 1, Iteration 1 ----------------
+Line 194. After runFMSingleSwap()
+[Line 200]. FM-pass(box) = 1 , best-taxon: 3 , MaxGain = 2.0
+Line 206. pass = 1 , allLocked condition = false
+Line 194. After runFMSingleSwap()
+[Line 200]. FM-pass(box) = 2 , best-taxon: 4 , MaxGain = 0.0
+Line 206. pass = 2 , allLocked condition = false
+Line 194. After runFMSingleSwap()
+[Line 200]. FM-pass(box) = 3 , best-taxon: 2 , MaxGain = -2.0
+Line 206. pass = 3 , allLocked condition = false
+Line 194. After runFMSingleSwap()
+[Line 200]. FM-pass(box) = 4 , best-taxon: 1 , MaxGain = -1.0
+Line 206. pass = 4 , allLocked condition = false
+Line 194. After runFMSingleSwap()
+[Line 200]. FM-pass(box) = 5 , best-taxon: 5 , MaxGain = -1.0
+Line 206. pass = 5 , allLocked condition = false
+Line 194. After runFMSingleSwap()
+[Line 200]. FM-pass(box) = 6 , best-taxon: 6 , MaxGain = 2.0
+Line 206. pass = 6 , allLocked condition = true
+End of Iteration 1 new bipartition =>> 
+LEFT: 1, 2, 3, 
+RIGHT: 4, 5, 6, 
+
+================================================================
+---------------- LEVEL 1, Iteration 2 ----------------
+Line 194. After runFMSingleSwap()
+[Line 200]. FM-pass(box) = 1 , best-taxon: 4 , MaxGain = 0.0
+Line 206. pass = 1 , allLocked condition = false
+Line 194. After runFMSingleSwap()
+[Line 200]. FM-pass(box) = 2 , best-taxon: 2 , MaxGain = -2.0
+Line 206. pass = 2 , allLocked condition = false
+Line 194. After runFMSingleSwap()
+[Line 200]. FM-pass(box) = 3 , best-taxon: 1 , MaxGain = -1.0
+Line 206. pass = 3 , allLocked condition = false
+Line 194. After runFMSingleSwap()
+[Line 200]. FM-pass(box) = 4 , best-taxon: 5 , MaxGain = -1.0
+Line 206. pass = 4 , allLocked condition = false
+Line 194. After runFMSingleSwap()
+[Line 200]. FM-pass(box) = 5 , best-taxon: 6 , MaxGain = 2.0
+Line 206. pass = 5 , allLocked condition = false
+Line 194. After runFMSingleSwap()
+[Line 200]. FM-pass(box) = 6 , best-taxon: 3 , MaxGain = 2.0
+Line 206. pass = 6 , allLocked condition = true
+End of Iteration 2 new bipartition =>> 
+LEFT: 1, 2, 3, 
+RIGHT: 4, 5, 6, 
+
+================================================================
+-->>Returning from one fm-iteration level = 1
+>> FMResultObject (line 64) parent qrt = ((1,2),(3,4));1.0 bip = {1=-1, 2=-1, 3=-1, 4=1, 5=1, 6=1}
+>> FMResultObject (line 64) parent qrt = ((1,3),(2,4));1.0 bip = {1=-1, 2=-1, 3=-1, 4=1, 5=1, 6=1}
+>> FMResultObject (line 64) parent qrt = ((3,4),(5,6));1.0 bip = {1=-1, 2=-1, 3=-1, 4=1, 5=1, 6=1}
+==== ------ ====== ------ Starting DNC level = 1
+>>>> Map-relevant-qrts = {1=[6, 7], 2=[6, 7], 3=[6, 7], X1=[6, 7]}
+>>>> List<Integer> qrts-indices = [6, 7]
+>>> TAXA LIST = [1, 2, 3, X1]
+Printing Initial Bipartition for level 2
+LEFT: 1, 2, 
+RIGHT: 3, X1, 
+---------------- LEVEL 2, Iteration 1 ----------------
+Line 194. After runFMSingleSwap()
+-->>ALL LEADING TO SINGLE BIPARTITION CONDITION [line 145].
+Line 206. pass = 1 , allLocked condition = true
+End of Iteration 1 new bipartition =>> 
+LEFT: 1, 2, 
+RIGHT: X1, 3, 
+
+================================================================
+-->>Returning from one fm-iteration level = 2
+==== ------ ====== ------ Starting DNC level = 2
+>>>> Map-relevant-qrts = {}
+>>>> List<Integer> qrts-indices = []
+>>> TAXA LIST = [1, 2, X2]
+-->>RETURNING level = 2 , tree = (1,2,X2);
+==== ------ ====== ------ Starting DNC level = 2
+>>>> Map-relevant-qrts = {}
+>>>> List<Integer> qrts-indices = []
+>>> TAXA LIST = [X1, 3, X2]
+-->>RETURNING level = 2 , tree = (X1,3,X2);
+-->>INSIDE mergeUnrootedTrees() treeLeft = (1,2,X2); , treeRight = (X1,3,X2); , outGroup = X2
+-->>FOR level = 2 returning ((1,2),(X1,3));
+==== ------ ====== ------ Starting DNC level = 1
+>>>> Map-relevant-qrts = {4=[8], 5=[8], 6=[8], X1=[8]}
+>>>> List<Integer> qrts-indices = [8]
+>>> TAXA LIST = [4, 5, 6, X1]
+Printing Initial Bipartition for level 2
+LEFT: 4, X1, 
+RIGHT: 5, 6, 
+---------------- LEVEL 2, Iteration 1 ----------------
+Line 194. After runFMSingleSwap()
+-->>ALL LEADING TO SINGLE BIPARTITION CONDITION [line 145].
+Line 206. pass = 1 , allLocked condition = true
+End of Iteration 1 new bipartition =>> 
+LEFT: X1, 4, 
+RIGHT: 5, 6, 
+
+================================================================
+-->>Returning from one fm-iteration level = 2
+==== ------ ====== ------ Starting DNC level = 2
+>>>> Map-relevant-qrts = {}
+>>>> List<Integer> qrts-indices = []
+>>> TAXA LIST = [X1, 4, X2]
+-->>RETURNING level = 2 , tree = (X1,4,X2);
+==== ------ ====== ------ Starting DNC level = 2
+>>>> Map-relevant-qrts = {}
+>>>> List<Integer> qrts-indices = []
+>>> TAXA LIST = [5, 6, X2]
+-->>RETURNING level = 2 , tree = (5,6,X2);
+-->>INSIDE mergeUnrootedTrees() treeLeft = (X1,4,X2); , treeRight = (5,6,X2); , outGroup = X2
+-->>FOR level = 2 returning ((X1,4),(5,6));
+-->>INSIDE mergeUnrootedTrees() treeLeft = ((1,2),(X1,3)); , treeRight = ((X1,4),(5,6)); , outGroup = X1
+-->>FOR level = 1 returning ((3,(1,2)),(4,(5,6)));
+
+
+------- Line 49 of FMRunner.java final tree return -----------
+((3,(1,2)),(4,(5,6)));
+---------------------------------------------------------------
+
+
+
+Time (ms) = 77
+BUILD SUCCESSFUL (total time: 0 seconds)
