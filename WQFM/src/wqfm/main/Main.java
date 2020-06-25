@@ -25,19 +25,20 @@ public class Main {
 //    public static String INPUT_FILE_NAME = "test-input-file-wqrts-java";
     public static String OUTPUT_FILE_NAME = "test-output-file-wqfm-java.tre";
 
-    public static boolean DEBUG_MODE_TESTING = false;
+    public static boolean DEBUG_MODE_TESTING = true;
     public static double SMALLEPSILON = 0.00001; //if cumulative gain of iteration < this_num then stop
     public static int MAX_ITERATIONS_LIMIT = 10000000; //can we keep it as another stopping-criterion ?
 
     public static void main(String[] args) {
-        readArguments(args);
-        long time_1 = System.currentTimeMillis();
-
         System.out.println("================= **** ======================== **** ====================");
+        readArguments(args); //initial arguments processing
+        long time_1 = System.currentTimeMillis(); //calculate starting time
+        
         FMRunner.runFunctions(); //main functions for wQFM
-
         long time_del = System.currentTimeMillis() - time_1;
-        System.out.println("\n\nTime taken = " + time_del + " ms");
+        long minutes = (time_del / 1000) / 60;
+        long seconds = (time_del / 1000) % 60;
+        System.out.format("\nTime taken = %d ms ==> %d minutes and %d seconds.\n", time_del ,minutes, seconds);
         System.out.println("================= **** ======================== **** ====================");
     }
 
