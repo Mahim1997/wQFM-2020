@@ -42,7 +42,7 @@ public class Helper {
     public static void printUsageAndExitSystem() {
 //        System.out.println("java -jar wQFM.jar -i <input-file-name> -o <output-file-name> [-p 0/1 <partition-score-mode>]");
         System.out.println("USAGE: java -jar wQFM.jar <input-file-name> <output-file-name> <partition-score-mode>\n"
-                + "Partition Score modes are: (0:s-v, 1:s-0.5*v, 2:s-v-d)");
+                + "Partition Score modes are: (0:s-v, 1:s-0.5*v, 2:s-v-d, 3:3s-2d)");
         System.out.println("Exiting System (arguments not used according to usage)");
         System.exit(-1);
     }

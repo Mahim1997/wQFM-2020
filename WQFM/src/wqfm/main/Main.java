@@ -14,7 +14,7 @@ public class Main {
 //    public static String INPUT_FILE_NAME = "wqrts_toy_dataset_QFM_paper_dummy_weights";
 
     public static int REROOT_MODE = Status.REROOT_USING_JAR;
-    public static int PARTITION_SCORE_MODE = Status.PARTITION_SCORE_MODE_1; //1->[s]-[v], 2->[s]-0.5[v], 3->[s]-[v]-[d]
+    public static int PARTITION_SCORE_MODE = Status.PARTITION_SCORE_MODE_1; //0->[s]-[v], 1->[s]-0.5[v], 2->[s]-[v]-[d], 3->3[s]-2[v]
 
 //    public static String INPUT_FILE_NAME = "input_files/wqrts_avian_2X_R1";
 //    public static String INPUT_FILE_NAME = "input_files/wqrts_37Tax_noscale_800g_500b_R1";
@@ -27,7 +27,7 @@ public class Main {
 
     public static boolean DEBUG_MODE_TESTING = false;
     public static double SMALLEPSILON = 0.00001; //if cumulative gain of iteration < this_num then stop
-    public static int MAX_ITERATIONS_LIMIT = 10000000; //can we keep it as another stopping-criterion ?
+    public static int MAX_ITERATIONS_LIMIT = 1000000; //can we keep it as another stopping-criterion ? [100k]
 
     public static void main(String[] args) {
         System.out.println("================= **** ======================== **** ====================");

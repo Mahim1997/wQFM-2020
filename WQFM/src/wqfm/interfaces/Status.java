@@ -27,11 +27,6 @@ public interface Status {
     public static int REROOT_USING_PYTHON = 42;
     public static int REROOT_USING_PERL = 43;
 
-    //Partition score modes ... 0->[s]-[v], 1->[s]-0.5[v], 2->[s]-[v]-[d]
-    public static int PARTITION_SCORE_MODE_0 = 0;
-    public static int PARTITION_SCORE_MODE_1 = 1;
-    public static int PARTITION_SCORE_MODE_2 = 2;
-
     //Any undefined values used throughout
     public static int UNDEFINED = -1000;
 
@@ -40,6 +35,12 @@ public interface Status {
     public static int LEFT_SISTER_2_IDX = 1;
     public static int RIGHT_SISTER_1_IDX = 2;
     public static int RIGHT_SISTER_2_IDX = 3;
+
+    //Partition score modes ... 0->[s]-[v], 1->[s]-0.5[v], 2->[s]-[v]-[d], 3->3[s]-2[v]
+    public static int PARTITION_SCORE_MODE_0 = 0;
+    public static int PARTITION_SCORE_MODE_1 = 1;
+    public static int PARTITION_SCORE_MODE_2 = 2;
+    public static int PARTITION_SCORE_MODE_3 = 3;
 
     //Helper method for printing quartet's status
     public static String GET_QUARTET_STATUS(int status) {
@@ -66,6 +67,8 @@ public interface Status {
                 return "mode = " + mode + ", [ws - 0.5*wv]";
             case Status.PARTITION_SCORE_MODE_2:
                 return "mode = " + mode + ", [ws - wv - wd]";
+            case Status.PARTITION_SCORE_MODE_3:
+                return "mode = " + mode + ", [3*ws - 2*wv]";
             default:
                 return "default partition score mode = " + mode + ", [ws - wv]";
         }
