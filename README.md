@@ -10,4 +10,5 @@ wQFM implementation in Java
 *** InitialTable will be a separate class (maybe needed to implement multi-threading in the future).
 
 DS 1: InitialTable List<Quartets>
+  
 DS 2: CustomDatastructuresPerLevel (will contain required Q,P,relevant-quartets-per-taxa-mapping, etc)
