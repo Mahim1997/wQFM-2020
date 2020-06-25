@@ -66,7 +66,7 @@ public class FMResultObject {
             } else if (quartet_status == Status.DEFERRED) {
                 int[] arr_bipartition = {left_1_partition, left_2_partition, right_1_partition, right_2_partition};
                 int commonBipartitionValue = findCommonBipartition(arr_bipartition); //find the common bipartition [i.e. whether q goes to Q_left or Q_right]
-                System.out.println(">> FMResultObject (line 64) parent qrt = " + quartet_parent + " bip = " + mapOfBipartition);
+//                System.out.println(">> FMResultObject (line 64) parent qrt = " + quartet_parent + " bip = " + mapOfBipartition);
                 Quartet newQuartetWithDummy = replaceExistingQuartetWithDummyNode(quartet_parent, arr_bipartition, commonBipartitionValue); //Find the new quartet WITH dummy node [replaces uncommon tax]
                 this.customDS_initial_this_level.initial_table1_of_list_of_quartets.addToListOfQuartets(newQuartetWithDummy); //Add the INITIAL TABLE ...
                 int idx_new_quartet_with_dummy = this.customDS_initial_this_level.initial_table1_of_list_of_quartets.sizeTable() - 1; //obtain latest index

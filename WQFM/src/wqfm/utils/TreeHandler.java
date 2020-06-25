@@ -92,8 +92,6 @@ public class TreeHandler {
     }
 
     public static String mergeUnrootedTrees(String treeLeft, String treeRight, String outGroup) {
-        System.out.println("-->>INSIDE mergeUnrootedTrees() treeLeft = " + treeLeft
-         + " , treeRight = " + treeRight + " , outGroup = " + outGroup);
         //Check these two conditions
         if (treeLeft.equals("")) {
             return treeRight;

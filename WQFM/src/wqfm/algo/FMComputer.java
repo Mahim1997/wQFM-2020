@@ -84,9 +84,6 @@ public class FMComputer {
                     //No need explicit checking as customDS will be changed after every level
                     Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_relevant_qrt);
 
-                    if (level > 1) {
-                        System.out.println("Line 86. TaxaCons = " + taxToConsider + ", Quartet under consideration = " + quartet.toString());
-                    }
                     int status_quartet_before_hyp_swap = Utils.findQuartetStatus(bipartitionMap.get(quartet.taxa_sisters_left[0]),
                             bipartitionMap.get(quartet.taxa_sisters_left[1]), bipartitionMap.get(quartet.taxa_sisters_right[0]), bipartitionMap.get(quartet.taxa_sisters_right[1]));
                     //                    System.out.println("Before hypo swap, tax considered = " + taxToConsider + " , Qrt = " + quartet.toString() + " , Status = " + Status.PRINT_STATUS_QUARTET(status_quartet_before_hyp_swap));
@@ -147,7 +144,6 @@ public class FMComputer {
         3.  LOCK the bestTaxaToMove and put corresponding stats in map
          */
         if (this.mapCandidateGainsPerListTax.isEmpty() == true) {
-            System.out.println("-->>ALL LEADING TO SINGLE BIPARTITION CONDITION [line 145].");
             for (String key : this.lockedTaxaBooleanMap.keySet()) {
                 this.lockedTaxaBooleanMap.put(key, Boolean.TRUE); //ALL LEAD TO SINGLETON BIPARTITION .... [LOCK ALL THE TAXA]
             }
@@ -196,19 +192,18 @@ public class FMComputer {
             pass++; //for debug printing....
 
             run_FM_singlepass_hypothetical_swap(); //FM hypothetical single swap run
-            System.out.println("Line 194. After runFMSingleSwap()");
             find_best_taxa_of_single_pass(); //Find the best-taxon for THIS swap
 
             //Debug printing.
             if (listOfPerPassStatistics.isEmpty() == false) { //AT LEAST ONE per-pass val exists.
                 StatsPerPass last_pass_stat = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
-                System.out.println("[Line 200]. FM-pass(box) = " + pass + " , best-taxon: " + last_pass_stat.whichTaxaWasPassed + " , MaxGain = "
-                        + last_pass_stat.maxGainOfThisPass);
+                
+//                System.out.println("[Line 200]. FM-pass(box) = " + pass + " , best-taxon: " + last_pass_stat.whichTaxaWasPassed + " , MaxGain = "
+//                        + last_pass_stat.maxGainOfThisPass);
+                
                 changeParameterValuesForNextPass();//Change parameters to maintain consistency wrt next step/box/pass.
             }
             areAllTaxaLocked = Helper.checkAllValuesIFSame(this.lockedTaxaBooleanMap, true); //if ALL are true, then stop.
-            System.out.println("Line 206. pass = " + pass + " , allLocked condition = " + areAllTaxaLocked);
-
         }
 
     }
@@ -263,26 +258,23 @@ public class FMComputer {
         int iterationsFM = 0; //can have stopping criterion for 10k iterations ?
         while (iterationsFM <= Main.MAX_ITERATIONS_LIMIT) { //stopping condition
             iterationsFM++;
-            System.out.println("---------------- LEVEL " + level + ", Iteration " + iterationsFM + " ----------------");
+//            System.out.println("---------------- LEVEL " + level + ", Iteration " + iterationsFM + " ----------------");
             map_previous_iteration = new HashMap<>(this.bipartitionMap); // always store this
             run_FM_single_iteration();
             willIterateMore = changeAndCheckAfterFMSingleIteration();
             if (willIterateMore == false) {
                 this.bipartitionMap = map_previous_iteration; // just change as previous map
             }
-            System.out.println("End of Iteration " + iterationsFM
-                    + " new bipartition =>> \n"
-                    + Helper.getGoodMap(bipartitionMap));
-            System.out.println("================================================================");
+            
+//            System.out.println("End of Iteration " + iterationsFM
+//                    + " new bipartition =>> \n"
+//                    + Helper.getGoodMap(bipartitionMap));
+//            System.out.println("================================================================");
+            
             if (willIterateMore == false) {
                 break;
             }
         }
-
-///// DEBUGGING
-//        run_FM_singlepass_hypothetical_swap();
-/////
-        System.out.println("-->>Returning from one fm-iteration level = " + level);
 
         FMResultObject object = new FMResultObject(this.customDS, this.level); //pass the parent's customDS as reference
         object.createFMResultObjects(this.bipartitionMap); //pass THIS level's final-bipartition to get P_left,Q_left,P_right,Q_right
