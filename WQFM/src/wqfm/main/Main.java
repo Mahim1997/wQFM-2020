@@ -25,7 +25,7 @@ public class Main {
 //    public static String INPUT_FILE_NAME = "test-input-file-wqrts-java";
     public static String OUTPUT_FILE_NAME = "test-output-file-wqfm-java.tre";
 
-    public static boolean DEBUG_MODE_TESTING = true;
+    public static boolean DEBUG_MODE_TESTING = false;
     public static double SMALLEPSILON = 0.00001; //if cumulative gain of iteration < this_num then stop
     public static int MAX_ITERATIONS_LIMIT = 10000000; //can we keep it as another stopping-criterion ?
 

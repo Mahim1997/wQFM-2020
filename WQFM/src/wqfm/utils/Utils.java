@@ -11,8 +11,8 @@ import wqfm.interfaces.Status;
 public class Utils {
 
     public static String getDummyTaxonName(int level) {
-//        String dummyTax = "DUMMY_MZCR_" + String.valueOf(level); //arbitrary names so as to not get mixed up with actual names
-        String dummyTax = "X" + String.valueOf(level); //debug
+        String dummyTax = "DUMMY_MZCR_" + String.valueOf(level); //arbitrary names so as to not get mixed up with actual names
+//        String dummyTax = "X" + String.valueOf(level); //debug
         return dummyTax;
     }
 

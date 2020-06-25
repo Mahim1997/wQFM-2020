@@ -57,7 +57,8 @@ public class Helper {
             return;
         }
         if (args.length == 1) {
-            System.out.println("No output file is given, so using default output file name");
+            System.out.println("No output file, using default output file <" + Main.OUTPUT_FILE_NAME + ">");
+            Main.INPUT_FILE_NAME = args[0];
             return;
         }
         if (args.length > 3) {
