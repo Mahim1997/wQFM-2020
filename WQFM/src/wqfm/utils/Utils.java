@@ -2,7 +2,7 @@ package wqfm.utils;
 
 import java.util.List;
 import java.util.Map;
-import wqfm.Status;
+import wqfm.interfaces.Status;
 
 /**
  *

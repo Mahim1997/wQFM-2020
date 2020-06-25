@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 import phylonet.tree.io.ParseException;
 import phylonet.tree.model.sti.STITree;
-import wqfm.Status;
+import wqfm.interfaces.Status;
 
 /**
  *

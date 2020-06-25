@@ -1,4 +1,4 @@
-package wqfm;
+package wqfm.interfaces;
 
 /**
  *
@@ -56,6 +56,20 @@ public interface Status {
                 break;
         }
         return "NULL";
+    }
+
+    public static String GET_PARTITION_SCORE_PRINT(int mode){
+        switch(mode)
+        {
+            case Status.PARTITION_SCORE_MODE_1:
+                return "mode = 1, [ws - wv]";
+            case Status.PARTITION_SCORE_MODE_2:
+                return "mode = 2, [ws - 0.5*wv]";
+            case Status.PARTITION_SCORE_MODE_3:
+                return "mode = 3, [ws - wv - wd]";
+            default:
+                return "default partition score, [ws - wv]";
+        }
     }
 
 }

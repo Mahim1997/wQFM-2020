@@ -19,7 +19,7 @@ import java.util.TreeMap;
 import javafx.util.Pair;
 import wqfm.main.Main;
 import wqfm.utils.TreeHandler;
-import wqfm.Status;
+import wqfm.interfaces.Status;
 import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.Quartet;
 import wqfm.utils.Helper;

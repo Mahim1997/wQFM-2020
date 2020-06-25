@@ -5,13 +5,10 @@ import wqfm.utils.Utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-import javafx.util.Pair;
-import wqfm.Status;
+import wqfm.interfaces.Status;
 import wqfm.bip.Bipartition_8_values;
 import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.FMResultObject;
@@ -233,7 +230,7 @@ public class FMComputer {
 //        System.out.println("[L 236] Cumulative gain (max) = " + max_cumulative_gain_of_current_iteration
 //                + " , for pass = " + (pass_index_with_max_cumulative_gain + 1)
 //                + " , Tax = " + statOfMaxCumulativeGainBox.whichTaxaWasPassed);
-//                + " map_final_bipartition = \n" + Helper.getGoodMap(statOfMaxCumulativeGainBox.map_final_bipartition));
+//                + " map_final_bipartition = \n" + Helper.getReadableMap(statOfMaxCumulativeGainBox.map_final_bipartition));
         //Initial bipartitions and ALL maps //Now change parameters accordingly for next FM iteration.
         //only when max-cumulative-gain is GREATER than zero, we will change, otherwise return the initial bipartition of this iteration
         if (max_cumulative_gain_of_current_iteration > Main.SMALLEPSILON) {
@@ -256,7 +253,13 @@ public class FMComputer {
         Map<String, Integer> map_previous_iteration;//= new HashMap<>();
         boolean willIterateMore = true;
         int iterationsFM = 0; //can have stopping criterion for 10k iterations ?
-        while (iterationsFM <= Main.MAX_ITERATIONS_LIMIT) { //stopping condition
+        while (true) { //stopping condition
+            if(iterationsFM > Main.MAX_ITERATIONS_LIMIT){ //another stopping criterion.
+                System.out.println("[FMComputer L258.] Thread (" + Thread.currentThread().getName() +
+                        ", " + Thread.currentThread().getId() + ") MAX_ITERATIONS_LIMIT = " + 
+                        Main.MAX_ITERATIONS_LIMIT + " is reached for level = " + this.level);
+                break;
+            }
             iterationsFM++;
 //            System.out.println("---------------- LEVEL " + level + ", Iteration " + iterationsFM + " ----------------");
             map_previous_iteration = new HashMap<>(this.bipartitionMap); // always store this
@@ -268,7 +271,7 @@ public class FMComputer {
             
 //            System.out.println("End of Iteration " + iterationsFM
 //                    + " new bipartition =>> \n"
-//                    + Helper.getGoodMap(bipartitionMap));
+//                    + Helper.getReadableMap(bipartitionMap));
 //            System.out.println("================================================================");
             
             if (willIterateMore == false) {
@@ -280,8 +283,7 @@ public class FMComputer {
         object.createFMResultObjects(this.bipartitionMap); //pass THIS level's final-bipartition to get P_left,Q_left,P_right,Q_right
         return object;
     }
-
-    //--------------------------------------- For debugging -------------------------------
+    ///////////////////////////// FOR DEBUGGING \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     private void printTwoMaps() {
         for (String tax : this.mapCandidateTax_vs_8vals.keySet()) {
             Bipartition_8_values _8_vals = this.mapCandidateTax_vs_8vals.get(tax);

@@ -5,19 +5,15 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import javafx.util.Pair;
 import wqfm.bip.Bipartition_8_values;
 import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.FMResultObject;
 import wqfm.ds.InitialTable;
 import wqfm.ds.Quartet;
+import wqfm.interfaces.Status;
 import wqfm.main.Main;
 import wqfm.utils.TreeHandler;
-import wqfm.utils.Utils;
 
 /**
  *
@@ -35,18 +31,20 @@ public class FMRunner {
         InitialTable initialTable = new InitialTable();
         CustomDSPerLevel customDS = new CustomDSPerLevel();
         runner.readFileAndPopulateInitialTables(Main.INPUT_FILE_NAME, customDS, initialTable);
-        System.out.println("Reading from file <" + Main.INPUT_FILE_NAME + "> done.\nDone populating & sorting initial tables.");
+        System.out.println("Reading from file <" + Main.INPUT_FILE_NAME + "> done."
+                + "\nDone populating & sorting initial tables." + ""
+                + "\nInitial-Num-Quartets = " + initialTable.sizeTable());
+        System.out.println("Running with partition score " + Status.GET_PARTITION_SCORE_PRINT(Main.PARTITION_SCORE_MODE));
         //sort and populate in divide-and-conquer function so that it will keep on happening on each input recieved.
 
         /*customDS.sortQuartetIndicesMap();
         customDS.fillRelevantQuartetsMap();
         customDS.fillUpTaxaList();*/
 //        customDS.printCustomDS(); //PRINTING FOR DEBUG
-        int level = 0;
 //        TreeHandler treeHandler = new TreeHandler(); // maybe static utilites functions won't cause problems
+        int level = 0;
         String final_tree = runner.recursiveDivideAndConquer(customDS, level, initialTable); //customDS will have (P, Q, Q_relevant etc) all the params needed.
-
-        System.out.println("\n\n------- Line 49 of FMRunner.java final tree return -----------");
+        System.out.println("\n\n---------- [L 49.] FMRunner: final tree return -----------");
         System.out.println(final_tree);
         System.out.println("---------------------------------------------------------------");
         
@@ -62,6 +60,7 @@ public class FMRunner {
         customDS_this_level.fillRelevantQuartetsMap(); //fill-up the relevant quartets per taxa map
         if (level == 0) { //only do it for the initial step, other levels will be passed as parameters
             customDS_this_level.fillUpTaxaList(); //fill-up the taxa list
+            System.out.println("Total Num-Taxa = " + customDS_this_level.taxa_list_string.size());
         }
 //        System.out.println("==== ------ ====== ------ Starting DNC level = " + level);
 //        System.out.println(">>>> Map-relevant-qrts = " + customDS_this_level.map_taxa_relevant_quartet_indices);

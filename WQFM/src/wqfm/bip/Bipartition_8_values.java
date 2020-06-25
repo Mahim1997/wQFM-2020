@@ -8,7 +8,7 @@ package wqfm.bip;
 import java.util.List;
 import java.util.Map;
 import javafx.util.Pair;
-import wqfm.Status;
+import wqfm.interfaces.Status;
 import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.Quartet;
 import wqfm.utils.Utils;

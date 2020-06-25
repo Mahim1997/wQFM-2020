@@ -1,6 +1,6 @@
 package wqfm.utils;
 
-import wqfm.Status;
+import wqfm.interfaces.Status;
 import wqfm.bip.Bipartition_8_values;
 import wqfm.main.Main;
 
