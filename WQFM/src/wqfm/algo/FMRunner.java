@@ -65,7 +65,7 @@ public class FMRunner {
         System.out.println("==== ------ ====== ------ Starting DNC level = " + level);
         System.out.println(">>>> Map-relevant-qrts = " + customDS_this_level.map_taxa_relevant_quartet_indices);
         System.out.println(">>>> List<Integer> qrts-indices = " + customDS_this_level.quartet_indices_list_unsorted);
-        
+        System.out.println(">>> TAXA LIST = " + customDS_this_level.taxa_list_string);
         /*
             //////////// Handle terminating conditions \\\\\\\\\\\\\\\\
             1. |P| == 0 then return "()"
@@ -75,7 +75,9 @@ public class FMRunner {
         // |P| <= 3 OR |Q|.isEmpty() ... return star over taxa list{P}
         if ((customDS_this_level.taxa_list_string.size() <= 3) || (customDS_this_level.quartet_indices_list_unsorted.isEmpty())) {
             //static method ... [utility method, so maybe threads won't create an issue here] [if issue created, just pass an object]
-            return TreeHandler.getStarTree(customDS_this_level.taxa_list_string);
+            String starTree = TreeHandler.getStarTree(customDS_this_level.taxa_list_string);
+            System.out.println("-->>RETURNING level = " + level + " , tree = " + starTree);
+            return starTree;
         }
 //        if (level == 1) { //level 1 for initial checking. //for initial debug
 //            return "NOT_RETURING_ANYTHING_NOW";
@@ -112,6 +114,7 @@ public class FMRunner {
         String right_tree_unrooted = recursiveDivideAndConquer(customDS_right, level, initialTable);
         String merged_tree = TreeHandler.mergeUnrootedTrees(left_tree_unrooted, right_tree_unrooted, dummyTaxon);
 
+        System.out.println("-->>FOR level = " + level + " returning " + merged_tree);
         return merged_tree;
     }
 

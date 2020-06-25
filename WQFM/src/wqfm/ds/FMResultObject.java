@@ -16,9 +16,6 @@ public class FMResultObject {
     public final String dummyTaxonThisLevel;
     private final CustomDSPerLevel customDS_initial_this_level;
 
-    private boolean is_dummy_added_to_left = false; // for faster checking
-    private boolean is_dummy_added_to_right = false; //for faster checking
-
     public FMResultObject(CustomDSPerLevel customDS_this_level, int level) {
         this.customDS_initial_this_level = customDS_this_level;
         //pass the reference of initial table to both left & right partitions.
@@ -32,6 +29,7 @@ public class FMResultObject {
 
     public void createFMResultObjects(Map<String, Integer> mapOfBipartition) {
         //Initially just transfer all to P_left and P_right. [Then for quartets-with-dummy, just pass the dummy node]
+        
         for (String key_taxon : mapOfBipartition.keySet()) {
             if (mapOfBipartition.get(key_taxon) == Status.LEFT_PARTITION) {
                 this.customDS_left_partition.taxa_list_string.add(key_taxon);
@@ -39,6 +37,10 @@ public class FMResultObject {
                 this.customDS_right_partition.taxa_list_string.add(key_taxon);
             }
         }
+        //Add dummy taxon to both partitions.
+        this.customDS_left_partition.taxa_list_string.add(dummyTaxonThisLevel);
+        this.customDS_right_partition.taxa_list_string.add(dummyTaxonThisLevel);
+        
 
         //1. Traverse each quartet, find the deferred and blank quartets and pass to next.
         for (int itr = 0; itr < this.customDS_initial_this_level.quartet_indices_list_unsorted.size(); itr++) {
@@ -71,10 +73,8 @@ public class FMResultObject {
                 //check on which Q subset to add i.e. Q_left or Q_right
                 if (commonBipartitionValue == Status.LEFT_PARTITION) {
                     this.customDS_left_partition.quartet_indices_list_unsorted.add(idx_new_quartet_with_dummy); //add new quartet's index in Q_left
-                    addDummyToLeftPartition(); //only add the dummy node to P_left as all the others were added before.
                 } else if (commonBipartitionValue == Status.RIGHT_PARTITION) {
                     this.customDS_right_partition.quartet_indices_list_unsorted.add(idx_new_quartet_with_dummy); //add new quartet's index in Q_right
-                    addDummyToRightPartition(); //only add the dummy node to P_right as all the others were added before.
                 }
             }
 
@@ -122,20 +122,6 @@ public class FMResultObject {
         }
 
         return q;
-    }
-
-    private void addDummyToLeftPartition() {
-        if (this.is_dummy_added_to_left == false) {
-            this.customDS_left_partition.taxa_list_string.add(dummyTaxonThisLevel);
-            this.is_dummy_added_to_left = true; //no need to add again.
-        }
-    }
-
-    private void addDummyToRightPartition() {
-        if (this.is_dummy_added_to_right == false) {
-            this.customDS_right_partition.taxa_list_string.add(dummyTaxonThisLevel);
-            this.is_dummy_added_to_right = true; //no need to add again.
-        }
     }
 
 }
