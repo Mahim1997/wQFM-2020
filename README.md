@@ -1,7 +1,10 @@
 # wQFM-2020
 wQFM implementation in Java 
 
-## Initial Custom DataStructure
+## Need to have "lib" folder in same path as jar file. (Check github/astral at https://github.com/smirarab/ASTRAL for more details on lib [uses phylonet package])
+### This is needed to reroot the tree with respect to an outgroup node.
+
+## Initial & Custom DataStructures
 ```
 ** WILL use single list of quartets. (for now weights are stored in double ... maybe long will be needed for high weights ?)
 ```
@@ -12,3 +15,5 @@ wQFM implementation in Java
 DS 1: InitialTable List<Quartets>
   
 DS 2: CustomDatastructuresPerLevel (will contain required Q,P,relevant-quartets-per-taxa-mapping, etc)
+
+
