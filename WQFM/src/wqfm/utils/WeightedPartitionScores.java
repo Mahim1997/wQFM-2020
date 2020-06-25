@@ -25,11 +25,11 @@ public class WeightedPartitionScores {
     public static double calculatePartitionScoreReduced(Bipartition_8_values vals) {
 
         switch (Main.PARTITION_SCORE_MODE) {
-            case Status.PARTITION_SCORE_MODE_1:
+            case Status.PARTITION_SCORE_MODE_0:
                 return WeightedPartitionScores.calculatePScore1(vals);
-            case Status.PARTITION_SCORE_MODE_2:
+            case Status.PARTITION_SCORE_MODE_1:
                 return WeightedPartitionScores.calculatePScore2(vals);
-            case Status.PARTITION_SCORE_MODE_3:
+            case Status.PARTITION_SCORE_MODE_2:
                 return WeightedPartitionScores.calculatePScore3(vals);
             default:
                 return WeightedPartitionScores.calculatePScore1(vals); //[s]-[v] is default.

@@ -45,9 +45,8 @@ public class FMRunner {
 //        TreeHandler treeHandler = new TreeHandler(); // maybe static utilites functions won't cause problems
         int level = 0;
         String final_tree = runner.recursiveDivideAndConquer(customDS, level, initialTable); //customDS will have (P, Q, Q_relevant etc) all the params needed.
-        System.out.println("\n\n---------- [L 49.] FMRunner: final tree return -----------");
+        System.out.println("\n\n[L 49.] FMRunner: final tree return");
         System.out.println(final_tree);
-        System.out.println("---------------------------------------------------------------");
         Helper.writeToFile(final_tree, Main.OUTPUT_FILE_NAME);
     }
 

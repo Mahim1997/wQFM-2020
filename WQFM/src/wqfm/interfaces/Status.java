@@ -27,14 +27,14 @@ public interface Status {
     public static int REROOT_USING_PYTHON = 42;
     public static int REROOT_USING_PERL = 43;
 
-    //Partition score modes ... 1->[s]-[v], 2->[s]-0.5[v], 3->[s]-[v]-[d]
-    public static int PARTITION_SCORE_MODE_1 = 51;
-    public static int PARTITION_SCORE_MODE_2 = 52;
-    public static int PARTITION_SCORE_MODE_3 = 53;
-    
+    //Partition score modes ... 0->[s]-[v], 1->[s]-0.5[v], 2->[s]-[v]-[d]
+    public static int PARTITION_SCORE_MODE_0 = 0;
+    public static int PARTITION_SCORE_MODE_1 = 1;
+    public static int PARTITION_SCORE_MODE_2 = 2;
+
     //Any undefined values used throughout
     public static int UNDEFINED = -1000;
-    
+
     //Quartet's each taxon indices
     public static int LEFT_SISTER_1_IDX = 0;
     public static int LEFT_SISTER_2_IDX = 1;
@@ -58,17 +58,16 @@ public interface Status {
         return "NULL";
     }
 
-    public static String GET_PARTITION_SCORE_PRINT(int mode){
-        switch(mode)
-        {
+    public static String GET_PARTITION_SCORE_PRINT(int mode) {
+        switch (mode) {
+            case Status.PARTITION_SCORE_MODE_0:
+                return "mode = " + mode + ", [ws - wv]";
             case Status.PARTITION_SCORE_MODE_1:
-                return "mode = 1, [ws - wv]";
+                return "mode = " + mode + ", [ws - 0.5*wv]";
             case Status.PARTITION_SCORE_MODE_2:
-                return "mode = 2, [ws - 0.5*wv]";
-            case Status.PARTITION_SCORE_MODE_3:
-                return "mode = 3, [ws - wv - wd]";
+                return "mode = " + mode + ", [ws - wv - wd]";
             default:
-                return "default partition score, [ws - wv]";
+                return "default partition score mode = " + mode + ", [ws - wv]";
         }
     }
 

@@ -3,6 +3,7 @@ package wqfm.utils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import wqfm.interfaces.Status;
@@ -38,9 +39,25 @@ public class Helper {
         System.out.println(">-> Successfully written to output-file " + outputfileName);
     }
 
+    public static void printUsageAndExitSystem() {
+//        System.out.println("java -jar wQFM.jar -i <input-file-name> -o <output-file-name> [-p 0/1 <partition-score-mode>]");
+        System.out.println("USAGE: java -jar wQFM.jar <input-file-name> <output-file-name> <partition-score-mode>\n"
+                + "Partition Score modes are: (0:s-v, 1:s-0.5*v, 2:s-v-d)");
+        System.out.println("Exiting System (arguments not used according to usage)");
+        System.exit(-1);
+    }
+
     public static void findOptionsUsingCommandLineArgs(String[] args) {
-        if (args.length < 2) {
-            System.out.println("Arguments given length < 2, so using built-in parameter values.");
+        System.out.println("Command line args are -> " + Arrays.toString(args));
+        if (args.length == 0) {
+            if (Main.DEBUG_MODE_TESTING == false) {
+                Helper.printUsageAndExitSystem();
+            }
+            System.out.println("-->>Using default params. ");
+            return;
+        }
+        if (args.length == 1) {
+            System.out.println("No output file is given, so using default output file name");
             return;
         }
         if (args.length > 3) {
@@ -51,21 +68,11 @@ public class Helper {
         if (args.length == 3) {
             //partition-score argument given.
             int partition_score_argument = Integer.parseInt(args[2]);
-            if (partition_score_argument == 0) {
-                Main.PARTITION_SCORE_MODE = Status.PARTITION_SCORE_MODE_1;
-            } else if (partition_score_argument == 1) {
-                Main.PARTITION_SCORE_MODE = Status.PARTITION_SCORE_MODE_2;
-            }
+            Main.PARTITION_SCORE_MODE = partition_score_argument;
         }
         if (args.length == 2) {
             //partition-score argument not given. [to do feature selection] //default is [s] - [v]
         }
-    }
-
-    public static void printUsageAndExitSystem() {
-        System.out.println("java -jar WQFM.jar -i <input-file-name> -o <output-file-name> [-p 0/1 <partition-score-mode>]");
-        System.out.println("Exiting (not used according to usage)");
-        System.exit(-1);
     }
 
     public static int sumArray(int[] arr) {
