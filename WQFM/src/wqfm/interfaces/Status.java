@@ -1,5 +1,7 @@
 package wqfm.interfaces;
 
+import wqfm.utils.WeightedPartitionScores;
+
 /**
  *
  * @author mahim
@@ -45,7 +47,10 @@ public interface Status {
     public static int PARTITION_SCORE_MODE_5 = 5;
     public static int PARTITION_SCORE_MODE_6 = 6;
     public static int PARTITION_SCORE_MODE_7 = 7;
+    public static int PARITTION_SCORE_COMMAND_LINE = 8;
 
+    
+    
     //Helper method for printing quartet's status
     public static String GET_QUARTET_STATUS(int status) {
         switch (status) {
@@ -81,6 +86,8 @@ public interface Status {
                 return "mode = " + mode + ", [ws - 0.5*wv - 0.25*wd]";
             case Status.PARTITION_SCORE_MODE_7:
                 return "mode = " + mode + ", [11*ws - 1*wv]";
+            case Status.PARITTION_SCORE_COMMAND_LINE:
+                return "mode = Command line [" + WeightedPartitionScores.ALPHA_PARTITION_SCORE + "*ws - " + WeightedPartitionScores.BETA_PARTITION_SCORE + "*wv]";
             default:
                 return "default partition score mode = " + mode + ", [ws - wv]";
         }

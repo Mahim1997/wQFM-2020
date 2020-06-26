@@ -10,6 +10,9 @@ import wqfm.main.Main;
  */
 public class WeightedPartitionScores {
 
+    public static double ALPHA_PARTITION_SCORE = 1;
+    public static double BETA_PARTITION_SCORE = 1;
+
     private static double calculatePScore0(Bipartition_8_values bip_8_vals) {
         return (bip_8_vals.wtSatisfied - bip_8_vals.wtViolated);
     }
@@ -42,6 +45,10 @@ public class WeightedPartitionScores {
         return (11 * bip_8_vals.wtSatisfied - 1 * bip_8_vals.wtViolated);
     }
 
+    private static double calculatePScoreCommandLine(Bipartition_8_values bip_8_vals) {
+        return (WeightedPartitionScores.ALPHA_PARTITION_SCORE * bip_8_vals.wtSatisfied - WeightedPartitionScores.BETA_PARTITION_SCORE * bip_8_vals.wtViolated);
+    }
+
     public static double calculatePartitionScoreReduced(Bipartition_8_values bip_8_vals) {
 
         switch (Main.PARTITION_SCORE_MODE) {
@@ -61,6 +68,8 @@ public class WeightedPartitionScores {
                 return WeightedPartitionScores.calculatePScore6(bip_8_vals);
             case Status.PARTITION_SCORE_MODE_7:
                 return WeightedPartitionScores.calculatePScore7(bip_8_vals);
+            case Status.PARITTION_SCORE_COMMAND_LINE:
+                return WeightedPartitionScores.calculatePScoreCommandLine(bip_8_vals);
             default:
                 return WeightedPartitionScores.calculatePScore0(bip_8_vals); //[s]-[v] is default.
         }

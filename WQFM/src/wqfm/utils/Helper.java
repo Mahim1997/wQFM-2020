@@ -41,7 +41,8 @@ public class Helper {
 
     public static void printUsageAndExitSystem() {
 //        System.out.println("java -jar wQFM.jar -i <input-file-name> -o <output-file-name> [-p 0/1 <partition-score-mode>]");
-        System.out.println("USAGE: java -jar wQFM.jar <input-file-name> <output-file-name> <partition-score-mode>\n"
+        System.out.println("USAGE: java -jar wQFM.jar <input-file> <output-file> <partition-score-alpha> <partition-score-beta>\n"
+                + "Or, java -jar wQFM.jar <input-file> <output-file> <partition-score-mode>\n"
                 + "Partition Score modes are: (0:s-v, 1:s-0.5*v, 2:s-v-d, 3:3s-2d)");
         System.out.println("Exiting System (arguments not used according to usage)");
         System.exit(-1);
@@ -61,7 +62,7 @@ public class Helper {
             Main.INPUT_FILE_NAME = args[0];
             return;
         }
-        if (args.length > 3) {
+        if (args.length > 4) {
             printUsageAndExitSystem();
         }
         Main.INPUT_FILE_NAME = args[0];
@@ -71,8 +72,12 @@ public class Helper {
             int partition_score_argument = Integer.parseInt(args[2]);
             Main.PARTITION_SCORE_MODE = partition_score_argument;
         }
-        if (args.length == 2) {
+        if (args.length == 4) {
             //partition-score argument not given. [to do feature selection] //default is [s] - [v]
+            double alpha = Double.parseDouble(args[2]);
+            double beta = Double.parseDouble(args[3]);
+            WeightedPartitionScores.ALPHA_PARTITION_SCORE = alpha;
+            WeightedPartitionScores.BETA_PARTITION_SCORE = beta;
         }
     }
 
