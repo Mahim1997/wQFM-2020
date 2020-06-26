@@ -101,17 +101,12 @@ def find_in_bins(list_ratios):
     for _bin in bins:
         dictionary_bins[_bin] = 0 # initially each bin has 0 ratios/elements
     for ratio in list_ratios:
-        total_counts_all += 1        
         for _bin in bins:
             (lower_lim, upper_lim) = _bin # unwrap the bin
             if(ratio >= lower_lim and ratio < upper_lim):
                 dictionary_bins[_bin] += 1 # incrememnt count for this bin
-
-    count_before_thresh = 0
-    count_after_thresh = 0
-
     # compute frequency wise mid-point splitting of classes.
-    total_weights_before_thresh = 0
+    total_count_before_thresh = 0
     cumulative_weighted_midpoint_before_thresh = 0
 
     for _bin in bins:
@@ -119,19 +114,19 @@ def find_in_bins(list_ratios):
         if lower_lim < thresh: # ALL are before threshold
             mid_point = 0.5*(lower_lim + upper_lim)
             weighted_mid_ratio = mid_point*dictionary_bins[_bin]
-            count_before_thresh += dictionary_bins[_bin] # increment by the count inside bin of < thresh
             ####### compute cumulative things ########
             cumulative_weighted_midpoint_before_thresh += weighted_mid_ratio
-            total_weights_before_thresh += dictionary_bins[_bin]
-            
+            total_count_before_thresh += dictionary_bins[_bin] # increment by the count inside bin of < thresh
+            total_counts_all += dictionary_bins[_bin]
 
-    if total_weights_before_thresh == 0:
+
+    if total_count_before_thresh == 0:
         weighted_avg_bin_ratio_before_thresh = -1
     else:
-        weighted_avg_bin_ratio_before_thresh = cumulative_weighted_midpoint_before_thresh/total_weights_before_thresh
+        weighted_avg_bin_ratio_before_thresh = cumulative_weighted_midpoint_before_thresh/total_count_before_thresh
 
 
-    total_weights_after_thresh = 0
+    total_counts_after_thresh = 0
     cumulative_weighted_midpoint_after_thresh = 0
     
     for _bin in bins:
@@ -139,17 +134,17 @@ def find_in_bins(list_ratios):
         if lower_lim >= thresh: # ALL are after threshold
             mid_point = 0.5*(lower_lim + upper_lim)
             weighted_mid_ratio = mid_point*dictionary_bins[_bin]
-            count_after_thresh += dictionary_bins[_bin] # increment by the count inside bin of >= thresh [but less than 1.]
             ####### compute cumulative things ########
             cumulative_weighted_midpoint_after_thresh += weighted_mid_ratio
-            total_weights_after_thresh += dictionary_bins[_bin]
-
-    if total_weights_after_thresh == 0:
+            total_counts_after_thresh += dictionary_bins[_bin] # increment by the count inside bin of >= thresh [but less than 1.]
+            total_counts_all += dictionary_bins[_bin]
+            
+    if total_counts_after_thresh == 0:
         weighted_avg_bin_ratio_after_thresh = -1
     else:
-        weighted_avg_bin_ratio_after_thresh = cumulative_weighted_midpoint_after_thresh/total_weights_after_thresh
+        weighted_avg_bin_ratio_after_thresh = cumulative_weighted_midpoint_after_thresh/total_counts_after_thresh
 
-    return weighted_avg_bin_ratio_before_thresh, weighted_avg_bin_ratio_after_thresh, normal_range_counts, last_range_counts, total_counts_all, dictionary_bins
+    return weighted_avg_bin_ratio_before_thresh, weighted_avg_bin_ratio_after_thresh, total_count_before_thresh, total_counts_after_thresh, total_counts_all, dictionary_bins
 
 # F1,F2,F3,F4,F5,F6,F7,F8, ratios_table = find_stats(sys.argv[1], THRESHOLD_TWO_QUARTETS=0.5, THRESHOLD_THREE_QUARTETS=0.6667) # Explanation will be provided.
 
