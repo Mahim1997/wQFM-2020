@@ -89,7 +89,7 @@ def create_bins(lower_bound, upper_bound, step_size):
 def find_in_bins(list_ratios):
     bins = create_bins(lower_bound=0.5, upper_bound=1, step_size=0.01)
     thresh = 0.9
-
+    # print(bins)
     # bins = [(0.5,0.6), (0.6,0.7), (0.7,0.8), (0.8,0.9), (0.9, 1)] # 0.5 to 1 are divided in bins, >= 1 is a separate bin [consider later]
     (_,upper_lim_of_last_bin) = bins[len(bins)-1] # last bin's upper-limit
     # print(upper_lim_of_last_bin)
@@ -101,17 +101,14 @@ def find_in_bins(list_ratios):
     for _bin in bins:
         dictionary_bins[_bin] = 0 # initially each bin has 0 ratios/elements
     for ratio in list_ratios:
-        total_counts_all += 1
-        if ratio >= upper_lim_of_last_bin:
-            last_range_counts += 1
-        else:
-            normal_range_counts += 1
-        
+        total_counts_all += 1        
         for _bin in bins:
             (lower_lim, upper_lim) = _bin # unwrap the bin
             if(ratio >= lower_lim and ratio < upper_lim):
                 dictionary_bins[_bin] += 1 # incrememnt count for this bin
 
+    count_before_thresh = 0
+    count_after_thresh = 0
 
     # compute frequency wise mid-point splitting of classes.
     total_weights_before_thresh = 0
@@ -122,7 +119,7 @@ def find_in_bins(list_ratios):
         if lower_lim < thresh: # ALL are before threshold
             mid_point = 0.5*(lower_lim + upper_lim)
             weighted_mid_ratio = mid_point*dictionary_bins[_bin]
-            
+            count_before_thresh += dictionary_bins[_bin] # increment by the count inside bin of < thresh
             ####### compute cumulative things ########
             cumulative_weighted_midpoint_before_thresh += weighted_mid_ratio
             total_weights_before_thresh += dictionary_bins[_bin]
@@ -142,7 +139,7 @@ def find_in_bins(list_ratios):
         if lower_lim >= thresh: # ALL are after threshold
             mid_point = 0.5*(lower_lim + upper_lim)
             weighted_mid_ratio = mid_point*dictionary_bins[_bin]
-            
+            count_after_thresh += dictionary_bins[_bin] # increment by the count inside bin of >= thresh [but less than 1.]
             ####### compute cumulative things ########
             cumulative_weighted_midpoint_after_thresh += weighted_mid_ratio
             total_weights_after_thresh += dictionary_bins[_bin]
@@ -167,7 +164,7 @@ else:
 
 
 if num_four_tax_seq_with_3_qrts == 0:
-    print("1 1 -1 -1")
+    print("0 -1 -1 -1 -1")
 else:
     print(f"{num_four_tax_seq_with_3_qrts/num_total_four_tax_seq} {weighted_avg_bin_ratio_before_thresh} {weighted_avg_bin_ratio_after_thresh} {normal_range_counts/total_counts_all} {last_range_counts/total_counts_all}")
     
