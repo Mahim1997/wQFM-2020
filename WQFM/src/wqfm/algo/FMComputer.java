@@ -104,17 +104,19 @@ public class FMComputer {
                 double ps_after_reduced = WeightedPartitionScores.calculatePartitionScoreReduced(_8_vals_THIS_TAX_AFTER_hypo_swap);
                 double gainOfThisTax = ps_after_reduced - ps_before_reduced; //correct calculation
 
-                if (this.mapCandidateGainsPerListTax.containsKey(gainOfThisTax) == false) { // this gain was not contained
-                    //initialize the taxon(for this gain-val) list.
-                    this.mapCandidateGainsPerListTax.put(gainOfThisTax, new ArrayList<>());
-                }//else: simply append to the list.
-                this.mapCandidateGainsPerListTax.get(gainOfThisTax).add(taxToConsider); //add gain to map
                 Bipartition_8_values _8_values_whole_considering_thisTax_swap = new Bipartition_8_values();
                 /*AfterHypoSwap.Whole_8Vals - BeforeHypoSwap.Whole_8Vals = AfterHypoSwap.OneTax.8Vals - BeforeHypoSwap.OneTax.8vals //vector rules of distance addition*/
                 //So, AfterHypoSwap.Whole_8Vals = BeforeHypoSwap.Whole_8Vals + AfterHypoSwap.OneTax.8Vals - BeforeHypoSwap.OneTax.8vals
                 _8_values_whole_considering_thisTax_swap.addObject(this.initialBipartition_8_values);
                 _8_values_whole_considering_thisTax_swap.addObject(_8_vals_THIS_TAX_AFTER_hypo_swap);
                 _8_values_whole_considering_thisTax_swap.subtractObject(_8_vals_THIS_TAX_before_hypo_swap);
+
+
+                if (this.mapCandidateGainsPerListTax.containsKey(gainOfThisTax) == false) { // this gain was not contained
+                    //initialize the taxon(for this gain-val) list.
+                    this.mapCandidateGainsPerListTax.put(gainOfThisTax, new ArrayList<>());
+                }//else: simply append to the list.
+                this.mapCandidateGainsPerListTax.get(gainOfThisTax).add(taxToConsider); //add gain to map
                 this.mapCandidateTax_vs_8vals.put(taxToConsider, _8_values_whole_considering_thisTax_swap);
 
             } //end if
