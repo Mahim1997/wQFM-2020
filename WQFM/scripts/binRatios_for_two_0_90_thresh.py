@@ -152,10 +152,20 @@ def find_in_bins(list_ratios):
 
 list_ratios, num_four_tax_seq_with_3_qrts, num_total_four_tax_seq = find_stats(sys.argv[1])
 
-weighted_avg_bin_ratio_before_thresh, weighted_avg_bin_ratio_after_thresh, normal_range_counts, last_range_counts, total_counts_all, dictionary_bins = find_in_bins(list_ratios)
+print(num_four_tax_seq_with_3_qrts, num_total_four_tax_seq, list_ratios)
+
+"""if num_four_tax_seq_with_3_qrts == 0:
+    # print(f"{weighted_avg_bin_ratio_before_thresh} {weighted_avg_bin_ratio_after_thresh} {normal_range_counts/total_counts_all} {last_range_counts/total_counts_all}")
+    pass
+else:
+    weighted_avg_bin_ratio_before_thresh, weighted_avg_bin_ratio_after_thresh, normal_range_counts, last_range_counts, total_counts_all, dictionary_bins = find_in_bins(list_ratios)
 
 if len(sys.argv) == 2:
-    print(f"{weighted_avg_bin_ratio_before_thresh} {weighted_avg_bin_ratio_after_thresh} {normal_range_counts/total_counts_all} {last_range_counts/total_counts_all}")
+    if num_four_tax_seq_with_3_qrts == 0:
+        print("1 1 -1 -1")
+    else:
+        print(f"{weighted_avg_bin_ratio_before_thresh} {weighted_avg_bin_ratio_after_thresh} {normal_range_counts/total_counts_all} {last_range_counts/total_counts_all}")
+    
     # print(dictionary_bins)
 
     # print(proportion_with_greater_than_or_equal_to_1, weighted_avg_bin_ratio)
@@ -167,3 +177,4 @@ else: # Print to output file
     f = open(str(sys.argv[2]), "w")
     f.write(str_to_write)
     f.close()
+"""
