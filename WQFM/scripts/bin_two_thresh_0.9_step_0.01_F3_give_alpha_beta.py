@@ -93,8 +93,8 @@ def find_in_bins(list_ratios):
     # bins = [(0.5,0.6), (0.6,0.7), (0.7,0.8), (0.8,0.9), (0.9, 1)] # 0.5 to 1 are divided in bins, >= 1 is a separate bin [consider later]
     (_,upper_lim_of_last_bin) = bins[len(bins)-1] # last bin's upper-limit
     # print(upper_lim_of_last_bin)
-    normal_range_counts = 0
-    last_range_counts = 0
+    total_counts_before_thresh = 0
+    total_counts_after_thresh = 0
     total_counts_all = 0
     
     dictionary_bins = {}
@@ -152,20 +152,40 @@ list_ratios, num_four_tax_seq_with_3_qrts, num_total_four_tax_seq = find_stats(s
 
 
 if num_total_four_tax_seq == 0:
-    # print(f"{weighted_avg_bin_ratio_before_thresh} {weighted_avg_bin_ratio_after_thresh} {normal_range_counts/total_counts_all} {last_range_counts/total_counts_all}")
+    # print(f"{weighted_avg_bin_ratio_before_thresh} {weighted_avg_bin_ratio_after_thresh} {total_counts_before_thresh/total_counts_all} {total_counts_after_thresh/total_counts_all}")
     pass
 else:
-    weighted_avg_bin_ratio_before_thresh, weighted_avg_bin_ratio_after_thresh, normal_range_counts, last_range_counts, total_counts_all, dictionary_bins = find_in_bins(list_ratios)
+    weighted_avg_bin_ratio_before_thresh, weighted_avg_bin_ratio_after_thresh, total_counts_before_thresh, total_counts_after_thresh, total_counts_all, dictionary_bins = find_in_bins(list_ratios)
 
 
-if num_four_tax_seq_with_3_qrts == 0:
-    print("0 -1 -1 -1 -1")
+CUT_OFF_LIMIT = 0.25 # consider 25% as cut-off limit [reasonable enough.]
+
+ALPHA = 1 # initialization [arbitrary]
+BETA = 1 # initialization [arbitrary]
+
+if num_four_tax_seq_with_3_qrts == 0 or total_counts_all == 0: # ZERO 4-tax-seq exists with three-quartet-config. so [s] - [v]
+    ALPHA = 1
+    BETA = 1
 else:
-    print(f"{num_four_tax_seq_with_3_qrts/num_total_four_tax_seq} {weighted_avg_bin_ratio_before_thresh} {weighted_avg_bin_ratio_after_thresh} {normal_range_counts/total_counts_all} {last_range_counts/total_counts_all}")
     
-    # print(dictionary_bins)
+    proportion_counts_bins_before_thresh = float(total_counts_before_thresh/total_counts_all)
+    proportion_counts_bins_after_thresh = float(total_counts_after_thresh/total_counts_all)
 
-    # print(proportion_with_greater_than_or_equal_to_1, weighted_avg_bin_ratio)
-    # print(dictionary_bins)
-    # print(num_four_tax_seq_with_3_qrts, num_total_four_tax_seq, (num_four_tax_seq_with_3_qrts/num_total_four_tax_seq))
-    # print(list_ratios)
+    if proportion_counts_bins_before_thresh >= CUT_OFF_LIMIT: # Bin(0.5, 0.9, del=0.01)
+        ALPHA = 1 # ALPHA will be 1
+        BETA = weighted_avg_bin_ratio_before_thresh # basically this new ratio-wise calculation will get BETA
+    else: # Bin(0.9, 1, del=0.01)
+        ALPHA = 1 # ALPHA will be 1
+        BETA = weighted_avg_bin_ratio_after_thresh # basically this new ratio-wise calculation will get BETA
+
+
+
+
+
+# if num_four_tax_seq_with_3_qrts == 0 or total_counts_all == 0:
+#     print("0 -1 -1 -1 -1")
+# else:
+#     print(f"{num_four_tax_seq_with_3_qrts/num_total_four_tax_seq} {weighted_avg_bin_ratio_before_thresh} {weighted_avg_bin_ratio_after_thresh} {total_counts_before_thresh/total_counts_all} {total_counts_after_thresh/total_counts_all}")
+
+
+print(BETA)
