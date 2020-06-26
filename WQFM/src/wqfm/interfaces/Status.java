@@ -44,6 +44,7 @@ public interface Status {
     public static int PARTITION_SCORE_MODE_4 = 4;
     public static int PARTITION_SCORE_MODE_5 = 5;
     public static int PARTITION_SCORE_MODE_6 = 6;
+    public static int PARTITION_SCORE_MODE_7 = 7;
 
     //Helper method for printing quartet's status
     public static String GET_QUARTET_STATUS(int status) {
@@ -78,6 +79,8 @@ public interface Status {
                 return "mode = " + mode + ", [ws]";
             case Status.PARTITION_SCORE_MODE_6:
                 return "mode = " + mode + ", [ws - 0.5*wv - 0.25*wd]";
+            case Status.PARTITION_SCORE_MODE_7:
+                return "mode = " + mode + ", [11*ws - 1*wv]";
             default:
                 return "default partition score mode = " + mode + ", [ws - wv]";
         }

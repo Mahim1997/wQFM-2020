@@ -31,7 +31,7 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("================= **** ======================== **** ====================");
-        readArguments(args); //initial arguments processing
+        Helper.findOptionsUsingCommandLineArgs(args); //initial arguments processing
         long time_1 = System.currentTimeMillis(); //calculate starting time
         
         FMRunner.runFunctions(); //main functions for wQFM
@@ -42,9 +42,5 @@ public class Main {
         System.out.println("================= **** ======================== **** ====================");
     }
 
-    private static void readArguments(String[] args) {
-        //For now <input-file> <output-file> <partition-score>
-        Helper.findOptionsUsingCommandLineArgs(args);
-    }
 
 }
