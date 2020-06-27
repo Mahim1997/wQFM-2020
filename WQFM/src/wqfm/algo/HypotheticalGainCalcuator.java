@@ -44,7 +44,7 @@ public class HypotheticalGainCalcuator implements Callable<HypotheticalGain_Obje
         //First check IF moving this will lead to a singleton bipartition ....
         Map<String, Integer> newMap = new HashMap<>(this.bipartitionMap);
         newMap.put(taxToConsider, Utils.getOppositePartition(taxPartValBeforeHypoSwap)); //hypothetically make the swap.
-
+     //   System.out.println(taxToConsider);
         List<Integer> relevantQuartetsBeforeHypoMoving = customDS.map_taxa_relevant_quartet_indices.get(taxToConsider);
         Bipartition_8_values _8_vals_THIS_TAX_before_hypo_swap = new Bipartition_8_values(); // all initialized to 0
         Bipartition_8_values _8_vals_THIS_TAX_AFTER_hypo_swap = new Bipartition_8_values(); // all initialized to 0
@@ -79,7 +79,7 @@ public class HypotheticalGainCalcuator implements Callable<HypotheticalGain_Obje
         double ps_before_reduced = WeightedPartitionScores.calculatePartitionScoreReduced(_8_vals_THIS_TAX_before_hypo_swap);
         double ps_after_reduced = WeightedPartitionScores.calculatePartitionScoreReduced(_8_vals_THIS_TAX_AFTER_hypo_swap);
         double gainOfThisTax = ps_after_reduced - ps_before_reduced; //correct calculation
-
+      //  System.out.println(taxToConsider);
         Bipartition_8_values _8_values_whole_considering_thisTax_swap = new Bipartition_8_values();
         /*AfterHypoSwap.Whole_8Vals - BeforeHypoSwap.Whole_8Vals = AfterHypoSwap.OneTax.8Vals - BeforeHypoSwap.OneTax.8vals //vector rules of distance addition*/
         //So, AfterHypoSwap.Whole_8Vals = BeforeHypoSwap.Whole_8Vals + AfterHypoSwap.OneTax.8Vals - BeforeHypoSwap.OneTax.8vals

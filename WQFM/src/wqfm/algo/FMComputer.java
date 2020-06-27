@@ -274,13 +274,15 @@ public class FMComputer {
         boolean areAllTaxaLocked = false; //initially this condition is false.
         while (areAllTaxaLocked == false) {
             pass++; //for debug printing....
-            try {
-                //    run_FM_singlepass_hypothetical_swap(); //FM hypothetical single swap run
-                
-                run_FM_singlepass_hypothetical_swap_threaded_version();
-            } catch (ExecutionException ex) {
-                Logger.getLogger(FMComputer.class.getName()).log(Level.SEVERE, null, ex);
-            }
+           if(false) run_FM_singlepass_hypothetical_swap();
+           else{ 
+               try {
+              //    //FM hypothetical single swap run
+                    run_FM_singlepass_hypothetical_swap_threaded_version();
+                } catch (ExecutionException ex) {
+                    Logger.getLogger(FMComputer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+           }
             find_best_taxa_of_single_pass(); //Find the best-taxon for THIS swap
 
             //Debug printing.

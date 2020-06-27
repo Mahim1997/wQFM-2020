@@ -15,6 +15,9 @@ public class InitialTable { //STORED separately to have the synchronized add fun
     InitialTable(boolean flag) {
         // do not initialize.
     }
+    public List<Quartet> get_QuartetList(){
+        return list_quartets;
+    }
 
     @Override
     public String toString() {

@@ -5,12 +5,14 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Map;
 import wqfm.bip.Bipartition_8_values;
 import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.FMResultObject;
 import wqfm.ds.InitialTable;
 import wqfm.ds.Quartet;
+import wqfm.feature.FeatureComputer;
 import wqfm.interfaces.Status;
 import wqfm.main.Main;
 import wqfm.utils.Helper;
@@ -141,6 +143,7 @@ public class FMRunner {
                 System.exit(-1);
             }
         }
+        FeatureComputer.Compute_Feature(initialTable.get_QuartetList());
 
     }
 
