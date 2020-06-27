@@ -49,7 +49,7 @@ public interface Status {
     public static int PARTITION_SCORE_MODE_7 = 7;
     public static int PARITTION_SCORE_COMMAND_LINE = 8;
 
-    
+    public static int TOTAL_THREADS = 5;
     
     //Helper method for printing quartet's status
     public static String GET_QUARTET_STATUS(int status) {

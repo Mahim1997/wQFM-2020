@@ -8,6 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import wqfm.interfaces.Status;
 import wqfm.bip.Bipartition_8_values;
 import wqfm.ds.CustomDSPerLevel;
@@ -21,6 +28,7 @@ import wqfm.utils.WeightedPartitionScores;
  *
  * @author mahim
  */
+
 public class FMComputer {
 
     public int level;
@@ -54,7 +62,84 @@ public class FMComputer {
             this.lockedTaxaBooleanMap.put(tax, Boolean.FALSE);
         }
     }
+    public void run_FM_singlepass_hypothetical_swap_threaded_version() throws InterruptedException, ExecutionException {//per pass or step [per num taxa of steps].
+        //Test hypothetically ...
+        List<String> freeTaxList = new ArrayList<String>();
+        for (String taxToConsider : this.customDS.taxa_list_string) {
+            if (this.lockedTaxaBooleanMap.get(taxToConsider) == false) { // this is a free taxon, hypothetically test it ....
+//                System.out.println("Line 65. Inside runFMSinglePassHypoSwap() .. taxaToConsider = " + taxToConsider);
 
+                int taxPartValBeforeHypoSwap = this.bipartitionMap.get(taxToConsider);
+                //First check IF moving this will lead to a singleton bipartition ....
+                Map<String, Integer> newMap = new HashMap<>(this.bipartitionMap);
+                newMap.put(taxToConsider, Utils.getOppositePartition(taxPartValBeforeHypoSwap)); //hypothetically make the swap.
+                if (Utils.isThisSingletonBipartition(newMap) == true) {
+                    //THIS hypothetical movement of taxToConsider leads to singleton bipartition so, continue ...
+                    continue;
+                } //ELSE: DOESN'T lead to singleton bipartition [add to map, and other datastructures]
+                //Calculate hypothetical Gain ... [using discussed short-cut]
+                freeTaxList.add(taxToConsider);
+
+            } //end if
+        }//end outer for
+        int totalThreads = Status.TOTAL_THREADS;
+        int totalLoops = (int) Math.floor(freeTaxList.size() / totalThreads);
+        //System.out.println("totalLoops: " + totalLoops);
+        //System.out.println("freetaxList: " + freeTaxList.size());
+        int remainingTax = freeTaxList.size() - totalLoops * totalThreads;
+        for (int j = 0; j < totalLoops; j++) {
+            ExecutorService executorService = Executors.newFixedThreadPool(totalThreads);
+
+            List<Callable<HypotheticalGain_Object>> list = new ArrayList<Callable<HypotheticalGain_Object>>();
+           
+            int initialCounter = j * totalThreads;
+            int finalCounter = initialCounter + totalThreads;
+            for (int i = initialCounter; i < finalCounter; i++) {
+                list.add(new HypotheticalGainCalcuator(freeTaxList.get(i), initialBipartition_8_values, customDS, bipartitionMap));
+
+            }
+
+            List<Future<HypotheticalGain_Object>> tasks = executorService.invokeAll(list);
+           
+            for (Future<HypotheticalGain_Object> task : tasks) {
+                HypotheticalGain_Object hypotheticGain_Object = task.get();
+                if (this.mapCandidateGainsPerListTax.containsKey(hypotheticGain_Object.Gain) == false) { // this gain was not contained
+                    //initialize the taxon(for this gain-val) list.
+                    this.mapCandidateGainsPerListTax.put(hypotheticGain_Object.Gain, new ArrayList<>());
+                }//else: simply append to the list.
+                this.mapCandidateGainsPerListTax.get(hypotheticGain_Object.Gain).add(hypotheticGain_Object.taxToConsider);
+                this.mapCandidateTax_vs_8vals.put(hypotheticGain_Object.taxToConsider, hypotheticGain_Object._8_values_whole_considering_thisTax_swap);
+
+            }
+            executorService.shutdown();
+
+        }
+        //System.out.println("Remaining Tax:"+remainingTax);
+        if (remainingTax > 0) {
+            ExecutorService executorService = Executors.newFixedThreadPool(remainingTax);
+
+            List<Callable<HypotheticalGain_Object>> list = new ArrayList<Callable<HypotheticalGain_Object>>();
+            for (int i = freeTaxList.size() - remainingTax; i < freeTaxList.size(); i++) {
+                
+                list.add(new HypotheticalGainCalcuator(freeTaxList.get(i), initialBipartition_8_values, customDS, bipartitionMap));
+
+            }
+
+            List<Future<HypotheticalGain_Object>> tasks = executorService.invokeAll(list);
+            //  System.out.println(tasks.size() + " Responses recieved.\n");
+            for (Future<HypotheticalGain_Object> task : tasks) {
+                HypotheticalGain_Object hypotheticGain_Object = task.get();
+                if (this.mapCandidateGainsPerListTax.containsKey(hypotheticGain_Object.Gain) == false) { // this gain was not contained
+                    //initialize the taxon(for this gain-val) list.
+                    this.mapCandidateGainsPerListTax.put(hypotheticGain_Object.Gain, new ArrayList<>());
+                }//else: simply append to the list.
+                this.mapCandidateGainsPerListTax.get(hypotheticGain_Object.Gain).add(hypotheticGain_Object.taxToConsider);
+                this.mapCandidateTax_vs_8vals.put(hypotheticGain_Object.taxToConsider, hypotheticGain_Object._8_values_whole_considering_thisTax_swap);
+
+            }
+            executorService.shutdown();
+        }
+    }
     public void run_FM_singlepass_hypothetical_swap() {//per pass or step [per num taxa of steps].
         //Test hypothetically ...
         for (String taxToConsider : this.customDS.taxa_list_string) {
@@ -184,13 +269,18 @@ public class FMComputer {
         }
     }
 
-    public void run_FM_single_iteration() {
+    public void run_FM_single_iteration() throws InterruptedException {
         int pass = 0; //to print while debugging.
         boolean areAllTaxaLocked = false; //initially this condition is false.
         while (areAllTaxaLocked == false) {
             pass++; //for debug printing....
-
-            run_FM_singlepass_hypothetical_swap(); //FM hypothetical single swap run
+            try {
+                //    run_FM_singlepass_hypothetical_swap(); //FM hypothetical single swap run
+                
+                run_FM_singlepass_hypothetical_swap_threaded_version();
+            } catch (ExecutionException ex) {
+                Logger.getLogger(FMComputer.class.getName()).log(Level.SEVERE, null, ex);
+            }
             find_best_taxa_of_single_pass(); //Find the best-taxon for THIS swap
 
             //Debug printing.
@@ -265,7 +355,11 @@ public class FMComputer {
             iterationsFM++;
 //            System.out.println("---------------- LEVEL " + level + ", Iteration " + iterationsFM + " ----------------");
             map_previous_iteration = new HashMap<>(this.bipartitionMap); // always store this
-            run_FM_single_iteration();
+            try {
+                run_FM_single_iteration();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(FMComputer.class.getName()).log(Level.SEVERE, null, ex);
+            }
             willIterateMore = changeAndCheckAfterFMSingleIteration();
             if (willIterateMore == false) {
                 this.bipartitionMap = map_previous_iteration; // just change as previous map
