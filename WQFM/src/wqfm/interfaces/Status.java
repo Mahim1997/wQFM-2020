@@ -53,11 +53,9 @@ public interface Status {
     
     public static int TOTAL_THREADS = 4;
 
-    public static int WHETHER_DYNAMICALLY_COMPUTE_PARTITION_SCORE_EVERY_LEVEL = 1;
     public static boolean THREADED_GAIN_CALCULATION_MODE = false;
-  
+
     // default values for partition-scores
-    
     public static double ALPHA_DEFAULT_VAL = 1.0;
     public static double BETA_DEFAULT_VAL = 1.0;
     

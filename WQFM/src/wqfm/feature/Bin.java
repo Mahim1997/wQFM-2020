@@ -14,11 +14,10 @@ import wqfm.main.Main;
  */
 public class Bin {
 
-    public static String bin_decision_msg;
-
     public static double proportion_left_thresh;
     public static double proportion_after_thresh_before_1;
     public static double proportion_greater_or_equal_1;
+    public static boolean WILL_DO_DYNAMIC;
 
     private double lower_limit;
     private double upper_limit;
@@ -54,7 +53,7 @@ public class Bin {
         return 0.5 * (this.lower_limit + this.upper_limit);
     }
 
-    public static double findInBins(List<Double> list_ratios) {
+    public static double calculateBinsAndFormScores(List<Double> list_ratios) {
         int cnt_before_thresh = 0;
         int cnt_after_thresh_before_1 = 0;
         int cnt_after_1 = 0;

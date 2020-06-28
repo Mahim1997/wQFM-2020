@@ -41,7 +41,9 @@ public class FeatureComputer {
         return (v1 - v2) / ((v1 + v2) / 2) <= threshold;
     }
 
-    public static void computeBinningFeature(HashMap<List<String>, List<Quartet>> dictionary_4Tax_sequence, HashMap<List<String>, List<Double>> dictionary_4Tax_sequence_weight) {
+    public static void computeBinningFeature(HashMap<List<String>, List<Quartet>> dictionary_4Tax_sequence,
+            HashMap<List<String>, List<Double>> dictionary_4Tax_sequence_weight, int level) {
+        //check on level==0 if is on the right side, don't bin further ...
         List<Double> list_ratios = new ArrayList<>();
         int num_four_tax_seq_with_3_qrts = 0;
         for (List<String> threeTax : dictionary_4Tax_sequence_weight.keySet()) {
@@ -57,18 +59,33 @@ public class FeatureComputer {
             System.out.println("Empty 4-tax-seq (default ratio): " + Status.BETA_DEFAULT_VAL);
             WeightedPartitionScores.ALPHA_PARTITION_SCORE = Status.ALPHA_DEFAULT_VAL;
             WeightedPartitionScores.BETA_PARTITION_SCORE = 1;
-        } else {
-            double weighted_avg_bin_ratio = Bin.findInBins(list_ratios);
-            
-            WeightedPartitionScores.ALPHA_PARTITION_SCORE = 1;
-            WeightedPartitionScores.BETA_PARTITION_SCORE = weighted_avg_bin_ratio;
-            
-            System.out.println("\nP(0.5," + Main.THRESHOLD_BINNING + ") = " + Bin.proportion_left_thresh + 
-                    ", P(" + Main.THRESHOLD_BINNING + ",1) = "
-                    + Bin.proportion_after_thresh_before_1 + ", P(>=1) = " + Bin.proportion_greater_or_equal_1);
-            
-            System.out.println("Weighted-Avg-Bin-Ratio (to set BETA) = " + weighted_avg_bin_ratio);
-            
+
+        } else { //calculate bins
+            double weighted_avg_bin_ratio = Status.BETA_DEFAULT_VAL;
+
+            if (Bin.WILL_DO_DYNAMIC == true) { //only compute on Bin.true
+                weighted_avg_bin_ratio = Bin.calculateBinsAndFormScores(list_ratios); //forms bins and calculates scores..
+
+            }
+            if (level == 1) { //check on level == 1 and set accordingly.
+                if (Bin.proportion_left_thresh < Main.CUT_OFF_LIMIT_BINNING) { //level == 0 has no good distribution ... so do no more.
+                    //stop ... don't bin on any levels. set to 1.
+                    Bin.WILL_DO_DYNAMIC = false;
+                    System.out.println("Don't bin further. Level 0 has good distribution above threshold = " + Main.THRESHOLD_BINNING
+                            + " set BETA = " + Status.BETA_DEFAULT_VAL);
+                }
+                WeightedPartitionScores.BETA_PARTITION_SCORE = Status.BETA_DEFAULT_VAL; // set to 1 
+            }
+            if (Bin.WILL_DO_DYNAMIC == true) { //only bin on true conditions.
+                WeightedPartitionScores.BETA_PARTITION_SCORE = weighted_avg_bin_ratio;
+                System.out.println("\nP(0.5," + Main.THRESHOLD_BINNING + ") = " + Bin.proportion_left_thresh
+                        + ", P(" + Main.THRESHOLD_BINNING + ",1) = "
+                        + Bin.proportion_after_thresh_before_1 + ", P(>=1) = " + Bin.proportion_greater_or_equal_1);
+
+                System.out.println("Level" + level + ", Weighted-Avg-Bin-Ratio (to set BETA) = " + weighted_avg_bin_ratio);
+
+            }
+
         }
 
     }
