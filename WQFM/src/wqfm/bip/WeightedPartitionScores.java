@@ -1,4 +1,4 @@
-package wqfm.utils;
+package wqfm.bip;
 
 import wqfm.interfaces.Status;
 import wqfm.bip.Bipartition_8_values;
@@ -46,7 +46,11 @@ public class WeightedPartitionScores {
     }
 
     private static double calculatePScoreCommandLine(Bipartition_8_values bip_8_vals) {
-     //   System.out.println("ALPHA: "+WeightedPartitionScores.ALPHA_PARTITION_SCORE + "BETA: "+WeightedPartitionScores.BETA_PARTITION_SCORE);
+        //   System.out.println("ALPHA: "+WeightedPartitionScores.ALPHA_PARTITION_SCORE + "BETA: "+WeightedPartitionScores.BETA_PARTITION_SCORE);
+        return (WeightedPartitionScores.ALPHA_PARTITION_SCORE * bip_8_vals.wtSatisfied - WeightedPartitionScores.BETA_PARTITION_SCORE * bip_8_vals.wtViolated);
+    }
+
+    private static double calculatePScoreFullDynamic(Bipartition_8_values bip_8_vals) {
         return (WeightedPartitionScores.ALPHA_PARTITION_SCORE * bip_8_vals.wtSatisfied - WeightedPartitionScores.BETA_PARTITION_SCORE * bip_8_vals.wtViolated);
     }
 
@@ -71,6 +75,8 @@ public class WeightedPartitionScores {
                 return WeightedPartitionScores.calculatePScore7(bip_8_vals);
             case Status.PARITTION_SCORE_COMMAND_LINE:
                 return WeightedPartitionScores.calculatePScoreCommandLine(bip_8_vals);
+            case Status.PARTITION_SCORE_FULL_DYNAMIC:
+                return WeightedPartitionScores.calculatePScoreFullDynamic(bip_8_vals);
             default:
                 return WeightedPartitionScores.calculatePScore0(bip_8_vals); //[s]-[v] is default.
         }

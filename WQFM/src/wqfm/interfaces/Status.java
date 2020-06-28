@@ -1,6 +1,7 @@
 package wqfm.interfaces;
 
-import wqfm.utils.WeightedPartitionScores;
+import wqfm.bip.WeightedPartitionScores;
+import wqfm.main.Main;
 
 /**
  *
@@ -48,12 +49,18 @@ public interface Status {
     public static int PARTITION_SCORE_MODE_6 = 6;
     public static int PARTITION_SCORE_MODE_7 = 7;
     public static int PARITTION_SCORE_COMMAND_LINE = 8;
-
+    public static int PARTITION_SCORE_FULL_DYNAMIC = 9;
+    
     public static int TOTAL_THREADS = 4;
 
     public static int WHETHER_DYNAMICALLY_COMPUTE_PARTITION_SCORE_EVERY_LEVEL = 1;
     public static boolean THREADED_GAIN_CALCULATION_MODE = false;
-
+  
+    // default values for partition-scores
+    
+    public static double ALPHA_DEFAULT_VAL = 1.0;
+    public static double BETA_DEFAULT_VAL = 1.0;
+    
     //Helper method for printing quartet's status
     public static String GET_QUARTET_STATUS(int status) {
         switch (status) {
@@ -91,6 +98,8 @@ public interface Status {
                 return "mode = " + mode + ", [11*ws - 1*wv]";
             case Status.PARITTION_SCORE_COMMAND_LINE:
                 return "mode = Command line [" + WeightedPartitionScores.ALPHA_PARTITION_SCORE + "*ws - " + WeightedPartitionScores.BETA_PARTITION_SCORE + "*wv]";
+            case Status.PARTITION_SCORE_FULL_DYNAMIC:
+                return "mode: FULL DYNAMIC. Threshold = " + Main.THRESHOLD_BINNING + " , Cut-off = " + Main.CUT_OFF_LIMIT_BINNING;
             default:
                 return "default partition score mode = " + mode + ", [ws - wv]";
         }

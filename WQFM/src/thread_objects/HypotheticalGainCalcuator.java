@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqfm.algo;
+package thread_objects;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.Quartet;
 import wqfm.interfaces.Status;
 import wqfm.utils.Utils;
-import wqfm.utils.WeightedPartitionScores;
+import wqfm.bip.WeightedPartitionScores;
 
 /**
  *

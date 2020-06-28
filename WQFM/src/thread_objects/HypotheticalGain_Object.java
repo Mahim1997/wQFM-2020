@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqfm.algo;
+package thread_objects;
 
 import wqfm.bip.Bipartition_8_values;
 
@@ -11,7 +11,7 @@ import wqfm.bip.Bipartition_8_values;
  *
  * @author Zahin
  */
-class HypotheticalGain_Object {
+public class HypotheticalGain_Object {
 
     public String taxToConsider;
     public Bipartition_8_values _8_values_whole_considering_thisTax_swap;

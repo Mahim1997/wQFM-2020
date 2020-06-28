@@ -1,5 +1,6 @@
 package wqfm.algo;
 
+import thread_objects.HypotheticalGainCalcuator;
 import wqfm.ds.StatsPerPass;
 import wqfm.utils.Utils;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import thread_objects.HypotheticalGain_Object;
 import wqfm.interfaces.Status;
 import wqfm.bip.Bipartition_8_values;
 import wqfm.ds.CustomDSPerLevel;
@@ -22,7 +24,7 @@ import wqfm.ds.FMResultObject;
 import wqfm.ds.Quartet;
 import wqfm.main.Main;
 import wqfm.utils.Helper;
-import wqfm.utils.WeightedPartitionScores;
+import wqfm.bip.WeightedPartitionScores;
 
 /**
  *
@@ -64,7 +66,7 @@ public class FMComputer {
 
     public void run_FM_singlepass_hypothetical_swap_threaded_version() throws InterruptedException, ExecutionException {//per pass or step [per num taxa of steps].
         //Test hypothetically ...
-        List<String> freeTaxList = new ArrayList<String>();
+        List<String> freeTaxList = new ArrayList<>();
         for (String taxToConsider : this.customDS.taxa_list_string) {
             if (this.lockedTaxaBooleanMap.get(taxToConsider) == false) { // this is a free taxon, hypothetically test it ....
 //                System.out.println("Line 65. Inside runFMSinglePassHypoSwap() .. taxaToConsider = " + taxToConsider);
@@ -274,7 +276,7 @@ public class FMComputer {
         boolean areAllTaxaLocked = false; //initially this condition is false.
         while (areAllTaxaLocked == false) {
             pass++; //for debug printing....
-            
+
             //Either do threaded or single-thread calculation for hypothetical gain calculation
             if (Status.THREADED_GAIN_CALCULATION_MODE == false) { //for now it is false.
                 run_FM_singlepass_hypothetical_swap();
@@ -284,11 +286,10 @@ public class FMComputer {
                     run_FM_singlepass_hypothetical_swap_threaded_version();
                 } catch (ExecutionException ex) {
                     System.out.println("-->>(L 286.) Exception while running threads in run_FM_single_iteration()");
-                    ex.printStackTrace();
+
                 }
             }
-            
-            
+
             find_best_taxa_of_single_pass(); //Find the best-taxon for THIS swap
 
             //Debug printing.

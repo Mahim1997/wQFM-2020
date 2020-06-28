@@ -16,12 +16,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
-import java.util.function.BiFunction;
 import javafx.util.Pair;
+import wqfm.feature.Bin;
 import wqfm.main.Main;
 import wqfm.utils.TreeHandler;
 import wqfm.interfaces.Status;
-import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.Quartet;
 import wqfm.utils.Helper;
 
@@ -30,6 +29,24 @@ import wqfm.utils.Helper;
  * @author mahim
  */
 public class TestNormalFunctions {
+
+    private static List<Bin> getListOfBins(double lower_limit, double upper_limit, double step_size) {
+        List<Bin> bins = new ArrayList<>();
+        double lower_iter = lower_limit;
+        while (lower_iter < upper_limit) {
+            bins.add(new Bin(lower_iter, (lower_iter + step_size)));
+            lower_iter += step_size;
+        }
+        return bins;
+    }
+
+    public static void testBin() {
+        List<Bin> bins = getListOfBins(0.5, 1.0, 0.01);
+        
+        for(Bin bin: bins){
+            System.out.println(bin);
+        }
+    }
 
     public static void testMyPairClass() {
         for (int i = 5; i <= 9; i++) {

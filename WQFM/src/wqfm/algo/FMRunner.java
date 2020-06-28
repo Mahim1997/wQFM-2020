@@ -17,7 +17,7 @@ import wqfm.interfaces.Status;
 import wqfm.main.Main;
 import wqfm.utils.Helper;
 import wqfm.utils.TreeHandler;
-import wqfm.utils.WeightedPartitionScores;
+import wqfm.bip.WeightedPartitionScores;
 
 /**
  *

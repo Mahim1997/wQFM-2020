@@ -107,7 +107,7 @@ public class Bipartition_8_values {
 //           
             FeatureComputer.makeDictionary(quartet, dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight);
          }
-         FeatureComputer.Compute_Feature(dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight);
+         FeatureComputer.computeBinningFeature(dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight);
         for (int idx_quartet : customDS.quartet_indices_list_unsorted) {
             Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_quartet);
 

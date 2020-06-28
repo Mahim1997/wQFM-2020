@@ -1,5 +1,6 @@
 package wqfm.utils;
 
+import wqfm.bip.WeightedPartitionScores;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
