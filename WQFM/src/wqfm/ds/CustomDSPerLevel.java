@@ -15,6 +15,8 @@ public class CustomDSPerLevel {
 
     public InitialTable initial_table1_of_list_of_quartets; //immutable [doesn't change, only as reference, is passed]
 
+    public int level;
+    
     //Will mutate per level
     public List<Integer> quartet_indices_list_unsorted;
     public Map<String, List<Integer>> map_taxa_relevant_quartet_indices; //releveant quartets map, key: taxa & val:list<indices>

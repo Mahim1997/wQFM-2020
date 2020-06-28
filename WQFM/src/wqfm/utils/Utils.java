@@ -3,6 +3,7 @@ package wqfm.utils;
 import java.util.List;
 import java.util.Map;
 import wqfm.interfaces.Status;
+import wqfm.main.Main;
 
 /**
  *
@@ -11,9 +12,13 @@ import wqfm.interfaces.Status;
 public class Utils {
 
     public static String getDummyTaxonName(int level) {
-        String dummyTax = "DUMMY_MZCR_" + String.valueOf(level); //arbitrary names so as to not get mixed up with actual names
-//        String dummyTax = "X" + String.valueOf(level); //debug
-        return dummyTax;
+        if (Main.DEBUG_DUMMY_NAME == true) {
+            String dummyTax = "X" + String.valueOf(level); //debug
+            return dummyTax;
+        } else {
+            String dummyTax = "DUMMY_MZCR_" + String.valueOf(level); //arbitrary names so as to not get mixed up with actual names
+            return dummyTax;
+        }
     }
 
     //Returns true if there is 1 taxa on either side, OR zero taxa on either side.[for pairwise swapping maybe needed]

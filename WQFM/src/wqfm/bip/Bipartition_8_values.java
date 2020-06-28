@@ -5,12 +5,15 @@
  */
 package wqfm.bip;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import javafx.util.Pair;
 import wqfm.interfaces.Status;
 import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.Quartet;
+import wqfm.feature.FeatureComputer;
 import wqfm.utils.Utils;
 
 /**
@@ -91,9 +94,30 @@ public class Bipartition_8_values {
         addRespectiveValue(q.weight, status);
     }
 
-    public void compute8ValuesUsingAllQuartets(CustomDSPerLevel customDS, Map<String, Integer> map_bipartitions) {
+    public void compute8ValuesUsingAllQuartets_this_level(CustomDSPerLevel customDS, Map<String, Integer> map_bipartitions) {
+        HashMap<List<String>, List<Quartet>> dictiory_4Tax_sequence = new HashMap<>();
+        HashMap<List<String>, List<Double>> dictiory_4Tax_sequence_weight = new HashMap<>();
+      //  System.out.println("L 100. Bipartition_8_vals: BIPARTITION size : " + map_bipartitions.keySet().size());
+      //  System.out.println("Keyset size before populating: " + dictiory_4Tax_sequence.keySet().size());
+        HashSet<Quartet> set = new HashSet<>();
+
+         for (int idx_quartet : customDS.quartet_indices_list_unsorted) {
+            Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_quartet);
+
+//           
+            FeatureComputer.makeDictionary(quartet, dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight);
+         }
+         FeatureComputer.Compute_Feature(dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight);
         for (int idx_quartet : customDS.quartet_indices_list_unsorted) {
             Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_quartet);
+
+
+//            if (!set.contains(quartet)) {
+//                System.out.println("Hello, new quartet: " + quartet);
+//                set.add(quartet);
+//
+            FeatureComputer.makeDictionary(quartet, dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight);
+//            }
             //obtain the quartet's taxa's bipartitions
             int left_sis_1_bip_val = map_bipartitions.get(quartet.taxa_sisters_left[0]);
             int left_sis_2_bip_val = map_bipartitions.get(quartet.taxa_sisters_left[1]);
@@ -123,6 +147,7 @@ public class Bipartition_8_values {
                     break;
             }
         }
+
     }
 
     @Override

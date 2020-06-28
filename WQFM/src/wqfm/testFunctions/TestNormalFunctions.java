@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
+import java.util.function.BiFunction;
 import javafx.util.Pair;
 import wqfm.main.Main;
 import wqfm.utils.TreeHandler;
@@ -29,6 +30,60 @@ import wqfm.utils.Helper;
  * @author mahim
  */
 public class TestNormalFunctions {
+
+    public static void testMyPairClass() {
+        for (int i = 5; i <= 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                System.out.println("bins.add(new Bin(0." + i + j + "," + "0." + i + (j + 1) + "));");
+            }
+            System.out.println("bins.add(new Bin(0." + i + "9," + "0." + (i + 1) + "0));");
+        }
+
+    }
+
+    static void compareQuartets(Quartet q1, Quartet q2) {
+        System.out.println("Comparing " + q1.toString() + " , " + q2.toString() + " = " + q1.equals(q2));
+    }
+
+    public static void testMapAddQuartet() {
+
+        Quartet q1, q2, q3, q4, q5, q6, q7;
+
+        q1 = new Quartet("M", "Z", "A", "B", 22);
+        q3 = new Quartet("M", "Z", "A", "B", 31);
+        q2 = new Quartet("A", "B", "M", "Z", 22);
+        q4 = new Quartet("M", "Z", "B", "A", 10);
+        q5 = new Quartet("Z", "M", "B", "A", 100);
+        q7 = new Quartet("A", "M", "B", "Z", 22);
+
+        System.out.println("-------------------------------------------------------");
+
+        Map<Quartet, Pair<Double, Integer>> map_cuml_weight_quartets = new HashMap<>();
+        map_cuml_weight_quartets.put(q1, new Pair(q1.weight, -1));
+        System.out.println(map_cuml_weight_quartets);
+        System.out.println(map_cuml_weight_quartets.containsKey(q2));
+        System.out.println(map_cuml_weight_quartets.get(q2));
+        map_cuml_weight_quartets.put(q2, new Pair(1000, 1000));
+        System.out.println(map_cuml_weight_quartets);
+
+        System.out.println("*****************************************************************");
+        q1 = new Quartet("((7,8),(X2,9));4.0");
+        q2 = new Quartet("((7,8),(9,X2));0.0");
+
+        System.out.println(q1.equals(q2));
+        map_cuml_weight_quartets.clear();
+        System.out.println(map_cuml_weight_quartets);
+
+        map_cuml_weight_quartets.put(q1, new Pair(q1.weight, -100));
+        System.out.println(map_cuml_weight_quartets);
+        System.out.println(map_cuml_weight_quartets.containsKey(q2));
+        map_cuml_weight_quartets.put(q2, new Pair(7777, 7777));
+
+        /*
+        Comparing ((M,Z),(A,B));22.0 , ((Z,M),(B,A));100.0 = true
+        Comparing ((M,Z),(A,B));22.0 , ((A,M),(B,Z));22.0 = false
+         */
+    }
 
     public static boolean checkAllValuesIFSame(List<Boolean> list, boolean val) {
         return list.stream().noneMatch((x) -> (x != val)); //if at least one is different wrt val, then return false
@@ -356,6 +411,23 @@ public class TestNormalFunctions {
             System.out.println("Merged Tree with dummy as " + outgroup + ":>> " + mergedTree);
         }
 
+    }
+
+}
+
+class MyPair {
+
+    double v1;
+    int v2;
+
+    public MyPair(double v1, int v2) {
+        this.v1 = v1;
+        this.v2 = v2;
+    }
+
+    @Override
+    public String toString() {
+        return "MyPair{" + "v1=" + v1 + ", v2=" + v2 + '}';
     }
 
 }
