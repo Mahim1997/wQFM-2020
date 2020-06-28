@@ -36,8 +36,8 @@ public class TestNormalFunctions {
         Quartet q1, q2, q3, q4, q5, q6, q7;
         Map<Quartet, MyPair> map = new HashMap<>();
 
-        q1 = new Quartet("((7,X2),(8,9));5.0");
-        q2 = new Quartet("((8,9),(X2,7));1.0");
+        q1 = new Quartet("((5,8),(X1,10));2.0");
+        q2 = new Quartet("((10,X1),(5,8));2.0");
 
         q1.printQuartet();
         q2.printQuartet();

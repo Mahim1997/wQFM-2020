@@ -39,7 +39,7 @@ public class InitialTable { //STORED separately to have the synchronized add fun
     }
 
     public void addToListOfQuartets(Quartet q) { //maybe make this method sync ? [NO NEED]
-        System.out.println("InitTable. Quartet is added." + q);
+//        System.out.println("InitTable. Quartet is added." + q);
         this.list_quartets.add(q);
     }
 

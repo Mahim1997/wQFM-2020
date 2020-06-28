@@ -101,13 +101,13 @@ public class Bipartition_8_values {
         System.out.println("Keyset size before populating: " + dictiory_4Tax_sequence.keySet().size());
         HashSet<Quartet> set = new HashSet<>();
 
-        System.out.println("-------------------- L.104 (Bipartition_8_vals) Printing quartets at level = " + customDS.level + " ----------------------------------------");
+//        System.out.println("-------------------- L.104 (Bipartition_8_vals) Printing quartets at level = " + customDS.level + " ----------------------------------------");
         int cnt = 0;
 
         for (int idx_quartet : customDS.quartet_indices_list_unsorted) {
             Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_quartet);
             cnt++;
-            System.out.println(cnt + ": " + quartet.toString());
+//            System.out.println(cnt + ": " + quartet.toString());
 
 //            if (!set.contains(quartet)) {
 //                System.out.println("Hello, new quartet: " + quartet);

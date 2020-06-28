@@ -75,7 +75,6 @@ public class FMResultObject {
                 int commonBipartitionValue = findCommonBipartition(arr_bipartition); //find the common bipartition [i.e. whether q goes to Q_left or Q_right]
 //                System.out.println(">> FMResultObject (line 64) parent qrt = " + quartet_parent + " bip = " + mapOfBipartition);
                 Quartet newQuartetWithDummy = replaceExistingQuartetWithDummyNode(quartet_parent, arr_bipartition, commonBipartitionValue); //Find the new quartet WITH dummy node [replaces uncommon tax]
-                newQuartetWithDummy.sort_quartet_taxa_names();
                 
                 // do not add yet, first put to map with added weight eg. 1,2|5,11 and 1,2|5,15 will be 1,2|5,X with weight = w1+w2
                 if (this.map_quartet_of_dummy_with_added_weights_and_partition.containsKey(newQuartetWithDummy) == false) { //this quartet-of-dummy DOESN't exist.
@@ -90,10 +89,6 @@ public class FMResultObject {
                     this.map_quartet_of_dummy_with_added_weights_and_partition.get(newQuartetWithDummy).partition_side_val = new_pair.partition_side_val;
                     this.map_quartet_of_dummy_with_added_weights_and_partition.get(newQuartetWithDummy).weight_val = new_pair.weight_val;
 
-//                    if (this.map_quartet_of_dummy_with_added_weights_and_partition.containsKey(newQuartetWithDummy)) {
-//                        System.out.print("-->> Lev" + customDS_initial_this_level.level + "," + newQuartetWithDummy + " already exists. Updating weights. NEW qrt is ");
-//                        System.out.println(this.map_quartet_of_dummy_with_added_weights_and_partition.get(newQuartetWithDummy));
-//                    }
                 }
 
                 /// for some reason, pair doesn't seem to work hence custom-class [is there a way to do it more efficiently?]
@@ -102,19 +97,12 @@ public class FMResultObject {
 
         }
         //2. Now keep adding the corrected-weighted-quartets to initial-table
-        System.out.println("L 104. FMResultObject. Before adding, table size = " + customDS_initial_this_level.initial_table1_of_list_of_quartets.sizeTable());
-        int cnt = 1;
         for (Quartet q_with_dummy : this.map_quartet_of_dummy_with_added_weights_and_partition.keySet()) {
-            System.out.println(cnt + " -> L 91. FMResultObject. level = " + customDS_initial_this_level.level
-                    + ", adding q_with_dummy: " + q_with_dummy.toString() + " to partition " + this.map_quartet_of_dummy_with_added_weights_and_partition.get(q_with_dummy).partition_side_val
-                    + " , wt = " + this.map_quartet_of_dummy_with_added_weights_and_partition.get(q_with_dummy).weight_val);
-            cnt++;
             MyPair pair_val = this.map_quartet_of_dummy_with_added_weights_and_partition.get(q_with_dummy);
 ////            Pair<Double, Integer> pair_val = this.map_quartet_of_dummy_with_added_weights_and_partition.get(q_with_dummy);
 
-            Quartet new_quartet = new Quartet(q_with_dummy);
+            Quartet new_quartet = new Quartet(q_with_dummy.taxa_sisters_left[0], q_with_dummy.taxa_sisters_left[1], q_with_dummy.taxa_sisters_right[0], q_with_dummy.taxa_sisters_right[1], pair_val.weight_val);
             //update the weight now.
-            new_quartet.weight = pair_val.weight_val;
             //push to initial table.
             this.customDS_initial_this_level.initial_table1_of_list_of_quartets.addToListOfQuartets(new_quartet);
             //obtain the index i.e. size - 1
@@ -127,7 +115,6 @@ public class FMResultObject {
                 this.customDS_right_partition.quartet_indices_list_unsorted.add(idx_quartet_newly_added);
             }
         }
-        System.out.println("L 127. FMResultObject. AFTER adding, table size = " + customDS_initial_this_level.initial_table1_of_list_of_quartets.sizeTable());
         //finally add the references to left and right partitions.
         this.customDS_left_partition.initial_table1_of_list_of_quartets.assignByReference(this.customDS_initial_this_level.initial_table1_of_list_of_quartets);
         this.customDS_right_partition.initial_table1_of_list_of_quartets.assignByReference(this.customDS_initial_this_level.initial_table1_of_list_of_quartets);
@@ -169,7 +156,7 @@ public class FMResultObject {
             default:
                 break;
         }
-
+        q.sort_quartet_taxa_names();
         return q;
     }
 
@@ -177,6 +164,7 @@ public class FMResultObject {
 
 //// Pair<Double, Integer> for some reason is not working with hashmap.
 // Custom class for updating via reference.
+/// Problem in another file ... will update with Pair<Double, Integer> soon ...
 class MyPair {
 
     public double weight_val;

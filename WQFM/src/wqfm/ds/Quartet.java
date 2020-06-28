@@ -1,6 +1,7 @@
 package wqfm.ds;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
 import javafx.util.Pair;
 
@@ -41,7 +42,7 @@ public class Quartet {
             this.taxa_sisters_right[i] = right[i];
         }
         this.sort_quartet_taxa_names();
-        
+
         this.weight = w;
     }
 
@@ -90,6 +91,9 @@ public class Quartet {
     public void sort_quartet_taxa_names() {
         String[] left = {this.taxa_sisters_left[0], this.taxa_sisters_left[1]};
         String[] right = {this.taxa_sisters_right[0], this.taxa_sisters_right[1]};
+
+
+
         if (left[0].compareTo(right[0]) < 0) {
             for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
                 this.taxa_sisters_left[i] = left[i];
@@ -101,6 +105,9 @@ public class Quartet {
                 this.taxa_sisters_right[i] = left[i];
             }
         }
+
+        Arrays.sort(this.taxa_sisters_left);
+        Arrays.sort(this.taxa_sisters_right);
     }
 
     @Override
@@ -129,27 +136,24 @@ public class Quartet {
         other.sort_quartet_taxa_names();
 
 //        System.out.print("-->>Quartet.equals() + " + this.toString() + " , " + other.toString() + "  ");
-        
-        /*for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
-            if (this.taxa_sisters_left[i].equals(other.taxa_sisters_left[i]) == false) {
-                return false;
-            }
-        }
-        for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
-            if (this.taxa_sisters_right[i].equals(other.taxa_sisters_right[i]) == false) {
-                return false;
-            }
-        }*/
-
+//        for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
+//            if (this.taxa_sisters_left[i].equals(other.taxa_sisters_left[i]) == false) {
+//                return false;
+//            }
+//        }
+//        for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
+//            if (this.taxa_sisters_right[i].equals(other.taxa_sisters_right[i]) == false) {
+//                return false;
+//            }
+//        }
         if (!Arrays.deepEquals(this.taxa_sisters_left, other.taxa_sisters_left)) {
             return false;
         }
         if (!Arrays.deepEquals(this.taxa_sisters_right, other.taxa_sisters_right)) {
-        
+
             return false;
         }
-        
-        
+
         return true;
     }
 }
