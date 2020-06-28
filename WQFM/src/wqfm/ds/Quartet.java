@@ -54,9 +54,21 @@ public class Quartet {
         String s = "((" + this.taxa_sisters_left[0] + "," + this.taxa_sisters_left[1] + "),(" + this.taxa_sisters_right[0] + "," + this.taxa_sisters_right[1] + "));" + String.valueOf(this.weight);
         return s;
     }
+    @Override
+    public boolean equals(Object o) {
+       // if()
+        Quartet q = (Quartet)o;
+        if (  this.taxa_sisters_left[0] == q.taxa_sisters_left[0] &&
+        this.taxa_sisters_left[1] == q.taxa_sisters_left[1] &&
+        this.taxa_sisters_right[0]== q.taxa_sisters_right[0] &&
+        this.taxa_sisters_right[1] == q.taxa_sisters_right[1] && this.weight==q.weight)
+             return true;
+        else return false;
+    }
 
     public void printQuartet() {
         System.out.println(this.toString());
+        
     }
 
 }

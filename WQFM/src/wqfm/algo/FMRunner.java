@@ -143,7 +143,7 @@ public class FMRunner {
                 System.exit(-1);
             }
         }
-        FeatureComputer.Compute_Feature(initialTable.get_QuartetList());
+        //FeatureComputer.Compute_Feature(initialTable.get_QuartetList());
 
     }
 

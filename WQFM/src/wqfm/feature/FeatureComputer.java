@@ -8,6 +8,7 @@ package wqfm.feature;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,9 +27,7 @@ public class FeatureComputer {
     Double F3;
     Double F4;
     Double F5;
-    static HashMap<List<String>, List<Quartet>> dictiory_3Tax_sequence = new HashMap<List<String>, List<Quartet>>();
-    static HashMap<List<String>, List<Double>> dictiory_3Tax_sequence_weight = new HashMap<List<String>, List<Double>>();
-
+    
     public static List<String> SortTaxaWithinQuartets(String tax1, String tax2, String tax3, String tax4) {
         List<String> temp = new ArrayList<String>(4);
         temp.add(tax1);
@@ -40,23 +39,25 @@ public class FeatureComputer {
 
     }
 
+    
     public static boolean is_within_range(double v1, double v2, double threshold) {
         return (v1 - v2) / ((v1 + v2) / 2) <= threshold;
     }
 
-    public static void Compute_Feature(List<Quartet> quartets_list) {
+    public static void Compute_Feature(HashMap<List<String>, List<Quartet>> dictionary_4Tax_sequence ,  HashMap<List<String>,List<Double>> dictionary_4Tax_sequence_weight)
+{
 
-        makeDictionary(quartets_list);
+        //     makeDictionary(quartets_list);
         int features = 5;
-        //    double[},{] results_table= new double[dictiory_3Tax_sequence.keySet().size()},{features];
+        //    double[},{] results_table= new double[dictionary_4Tax_sequence.keySet().size()},{features];
 
         // int row = 0;
         List<Double> list_ratios = new ArrayList<Double>();
         int num_four_tax_seq_with_3_qrts = 0;
-        for (List<String> threeTax : dictiory_3Tax_sequence_weight.keySet()) {
-          //  System.out.println("Key: " + threeTax.get(0) + "," + threeTax.get(1) + ","
-               //     + threeTax.get(2) + "," + threeTax.get(3));
-            List<Double> weights_under_this_3_tax_seq = dictiory_3Tax_sequence_weight.get(threeTax);
+        for (List<String> threeTax : dictionary_4Tax_sequence_weight.keySet()) {
+            //  System.out.println("Key: " + threeTax.get(0) + "," + threeTax.get(1) + ","
+            //     + threeTax.get(2) + "," + threeTax.get(3));
+            List<Double> weights_under_this_3_tax_seq = dictionary_4Tax_sequence_weight.get(threeTax);
             Collections.sort(weights_under_this_3_tax_seq, Collections.reverseOrder());
 //             for(int i=0;i<weights_under_this_3_tax_seq.size();i++){
 //                 System.out.print(weights_under_this_3_tax_seq.get(i)+" ");
@@ -69,12 +70,15 @@ public class FeatureComputer {
             //  row++;
 
         }
+        System.out.println("LIST_RATIOS DONE");
+        
         double weighted_avg_bin_ratio = findInBins(list_ratios);
-        System.out.println("Ratio (beta): "+weighted_avg_bin_ratio);
+        System.out.println("Ratio (beta): " + weighted_avg_bin_ratio);
 
     }
 
     public static double findInBins(List<Double> list_ratios) {
+        
         double highest_ratio = Collections.max(list_ratios);
         // double [][] bins = {{0.5,0.6},{0.6,0.7},{0.7,0.8},{0.8,0.9},{1,highest_ratio}} ;
         List<Bin> bins = new ArrayList<Bin>();
@@ -88,6 +92,7 @@ public class FeatureComputer {
         for (int i = 0; i < bins.size(); i++) {
             dictionary_bins.put(bins.get(i), 0);
         }
+        System.out.println("initialized bins");
         for (double ratio : list_ratios) {
             for (Bin _bin : bins) {
                 double lower_lim = _bin.lower_lim;
@@ -114,41 +119,40 @@ public class FeatureComputer {
             }
         }
         double weighted_avg_bin_ratio = cumulative_weighted_mid_ratio / total_weights_to_divide_without_1;
-      //  double proportion_with_greater_than_or_equal_to_1 = dictionary_bins.get(_bin) / (total_weights_to_divide_without_1 + dictionary_bins.get(_bin));
-      return weighted_avg_bin_ratio;
+        //  double proportion_with_greater_than_or_equal_to_1 = dictionary_bins.get(_bin) / (total_weights_to_divide_without_1 + dictionary_bins.get(_bin));
+        return weighted_avg_bin_ratio;
 
     }
 
-    public static void printDictionary() {
-        for (List<String> i : dictiory_3Tax_sequence.keySet()) {
-            System.out.println("Key: " + i.get(0) + " " + i.get(1) + " " + i.get(2) + " " + i.get(3));
-            System.out.println(dictiory_3Tax_sequence.get(i));
-            System.out.println(dictiory_3Tax_sequence_weight.get(i));
+    public static void printDictionary(HashMap<List<String>, List<Quartet>> dictionary_4Tax_sequence ,  HashMap<List<String>,List<Double>> dictionary_4Tax_sequence_weight)
+  {
+        for (List<String> i : dictionary_4Tax_sequence.keySet()) {
+            System.out.print("Key: " + i.get(0) + " " + i.get(1) + " " + i.get(2) + " " + i.get(3)+" --> ");
+            System.out.print(dictionary_4Tax_sequence.get(i));
+            System.out.println("----------------------------------------------------------------------");
+         //   System.out.println(dictionary_4Tax_sequence_weight.get(i));
         }
     }
 
-    public static void makeDictionary(List<Quartet> quartets_list) {
+    public static void makeDictionary(Quartet q, HashMap<List<String>, List<Quartet>> dictionary_4Tax_sequence ,  HashMap<List<String>,List<Double>> dictionary_4Tax_sequence_weight)
+ {
 
-        for (int i = 0; i < quartets_list.size(); i++) {
-            Quartet q = quartets_list.get(i);
-            List<String> three_tax_sequence = SortTaxaWithinQuartets(q.taxa_sisters_left[0], q.taxa_sisters_left[1], q.taxa_sisters_right[0], q.taxa_sisters_right[1]);
-            if (dictiory_3Tax_sequence.get(three_tax_sequence) == null) {
-                List<Quartet> temp_list = new ArrayList<Quartet>();
-                temp_list.add(q);
-                dictiory_3Tax_sequence.put(three_tax_sequence, temp_list);
-                List<Double> temp_list_2 = new ArrayList<Double>();
-                temp_list_2.add(q.weight);
-                dictiory_3Tax_sequence_weight.put(three_tax_sequence, temp_list_2);
-            } else {
-                List<Quartet> temp_list = dictiory_3Tax_sequence.get(three_tax_sequence);
-                temp_list.add(q);
-                dictiory_3Tax_sequence.put(three_tax_sequence, temp_list);
-                List<Double> temp_list_2 = dictiory_3Tax_sequence_weight.get(three_tax_sequence);
-                temp_list_2.add(q.weight);
-                dictiory_3Tax_sequence_weight.put(three_tax_sequence, temp_list_2);
-            }
+        List<String> four_tax_sequence = SortTaxaWithinQuartets(q.taxa_sisters_left[0], q.taxa_sisters_left[1], q.taxa_sisters_right[0], q.taxa_sisters_right[1]);
+        if (dictionary_4Tax_sequence.get(four_tax_sequence) == null) {
+            List<Quartet> temp_list = new ArrayList<Quartet>();
+            temp_list.add(q);
+            dictionary_4Tax_sequence.put(four_tax_sequence, temp_list);
+            List<Double> temp_list_2 = new ArrayList<Double>();
+            temp_list_2.add(q.weight);
+            dictionary_4Tax_sequence_weight.put(four_tax_sequence, temp_list_2);
+        } else {
+            List<Quartet> temp_list = dictionary_4Tax_sequence.get(four_tax_sequence);
+            temp_list.add(q);
+            dictionary_4Tax_sequence.put(four_tax_sequence, temp_list);
+            List<Double> temp_list_2 = dictionary_4Tax_sequence_weight.get(four_tax_sequence);
+            temp_list_2.add(q.weight);
+            dictionary_4Tax_sequence_weight.put(four_tax_sequence, temp_list_2);
         }
-        //   printDictionary();
     }
 
 }
