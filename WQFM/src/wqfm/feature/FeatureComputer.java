@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import wqfm.ds.Bin;
 import wqfm.ds.Quartet;
+import wqfm.utils.WeightedPartitionScores;
 
 /**
  *
@@ -64,10 +65,17 @@ public class FeatureComputer {
             //  row++;
 
         }
-        System.out.println("LIST_RATIOS DONE");
-
-        double weighted_avg_bin_ratio = findInBins(list_ratios);
-        System.out.println("Ratio (beta): " + weighted_avg_bin_ratio);
+        // System.out.println("LIST_RATIOS DONE SIZE: "+list_ratios.size());
+        if (list_ratios.size() == 0) {
+            System.out.println("Ratio (beta): 1");
+            WeightedPartitionScores.ALPHA_PARTITION_SCORE = 1;
+            WeightedPartitionScores.BETA_PARTITION_SCORE = 1;
+        } else {
+            double weighted_avg_bin_ratio = findInBins(list_ratios);
+            System.out.println("Ratio (beta): " + weighted_avg_bin_ratio);
+            WeightedPartitionScores.ALPHA_PARTITION_SCORE = 1;
+            WeightedPartitionScores.BETA_PARTITION_SCORE = weighted_avg_bin_ratio;
+       }
 
     }
 
@@ -86,7 +94,7 @@ public class FeatureComputer {
         for (int i = 0; i < bins.size(); i++) {
             dictionary_bins.put(bins.get(i), 0);
         }
-        System.out.println("L 89. Initialized bins");
+        //  System.out.println("L 89. Initialized bins");
         for (double ratio : list_ratios) {
             for (Bin _bin : bins) {
                 double lower_lim = _bin.lower_lim;

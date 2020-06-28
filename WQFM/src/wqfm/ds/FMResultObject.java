@@ -96,7 +96,7 @@ public class FMResultObject {
         for (Quartet q_with_dummy : this.map_quartet_of_dummy_with_added_weights_and_partition.keySet()) {
             Pair<Double, Integer> pair_val = this.map_quartet_of_dummy_with_added_weights_and_partition.get(q_with_dummy);
 ////            Pair<Double, Integer> pair_val = this.map_quartet_of_dummy_with_added_weights_and_partition.get(q_with_dummy);
-            Quartet new_quartet = new Quartet(q_with_dummy.taxa_sisters_left[0], q_with_dummy.taxa_sisters_left[1], q_with_dummy.taxa_sisters_right[0], q_with_dummy.taxa_sisters_right[1], pair_val.getValue());
+            Quartet new_quartet = new Quartet(q_with_dummy.taxa_sisters_left[0], q_with_dummy.taxa_sisters_left[1], q_with_dummy.taxa_sisters_right[0], q_with_dummy.taxa_sisters_right[1], pair_val.getKey());
             //update the weight now.
             //push to initial table.
             this.customDS_initial_this_level.initial_table1_of_list_of_quartets.addToListOfQuartets(new_quartet);

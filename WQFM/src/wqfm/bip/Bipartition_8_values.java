@@ -97,17 +97,20 @@ public class Bipartition_8_values {
     public void compute8ValuesUsingAllQuartets_this_level(CustomDSPerLevel customDS, Map<String, Integer> map_bipartitions) {
         HashMap<List<String>, List<Quartet>> dictiory_4Tax_sequence = new HashMap<>();
         HashMap<List<String>, List<Double>> dictiory_4Tax_sequence_weight = new HashMap<>();
-        System.out.println("L 100. Bipartition_8_vals: BIPARTITION size : " + map_bipartitions.keySet().size());
-        System.out.println("Keyset size before populating: " + dictiory_4Tax_sequence.keySet().size());
+      //  System.out.println("L 100. Bipartition_8_vals: BIPARTITION size : " + map_bipartitions.keySet().size());
+      //  System.out.println("Keyset size before populating: " + dictiory_4Tax_sequence.keySet().size());
         HashSet<Quartet> set = new HashSet<>();
 
-//        System.out.println("-------------------- L.104 (Bipartition_8_vals) Printing quartets at level = " + customDS.level + " ----------------------------------------");
-        int cnt = 0;
+         for (int idx_quartet : customDS.quartet_indices_list_unsorted) {
+            Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_quartet);
 
+//           
+            FeatureComputer.makeDictionary(quartet, dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight);
+         }
+         FeatureComputer.Compute_Feature(dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight);
         for (int idx_quartet : customDS.quartet_indices_list_unsorted) {
             Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_quartet);
-            cnt++;
-//            System.out.println(cnt + ": " + quartet.toString());
+
 
 //            if (!set.contains(quartet)) {
 //                System.out.println("Hello, new quartet: " + quartet);
@@ -144,12 +147,6 @@ public class Bipartition_8_values {
                     break;
             }
         }
-/////  ----------------- FOR FEATURE COMPUTATION ----------------
-        System.out.println("Keyset size after populating: " + dictiory_4Tax_sequence.keySet().size());
-        System.out.println("Done making dictionary ... printing ..........");
-        FeatureComputer.printDictionary(dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight);
-        System.out.println("... DONE PRINTING ..........");
-////        FeatureComputer.Compute_Feature(dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight);
 
     }
 
