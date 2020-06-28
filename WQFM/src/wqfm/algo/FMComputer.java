@@ -28,7 +28,6 @@ import wqfm.utils.WeightedPartitionScores;
  *
  * @author mahim
  */
-
 public class FMComputer {
 
     public int level;
@@ -62,6 +61,7 @@ public class FMComputer {
             this.lockedTaxaBooleanMap.put(tax, Boolean.FALSE);
         }
     }
+
     public void run_FM_singlepass_hypothetical_swap_threaded_version() throws InterruptedException, ExecutionException {//per pass or step [per num taxa of steps].
         //Test hypothetically ...
         List<String> freeTaxList = new ArrayList<String>();
@@ -90,8 +90,8 @@ public class FMComputer {
         for (int j = 0; j < totalLoops; j++) {
             ExecutorService executorService = Executors.newFixedThreadPool(totalThreads);
 
-            List<Callable<HypotheticalGain_Object>> list = new ArrayList<Callable<HypotheticalGain_Object>>();
-           
+            List<Callable<HypotheticalGain_Object>> list = new ArrayList<>();
+
             int initialCounter = j * totalThreads;
             int finalCounter = initialCounter + totalThreads;
             for (int i = initialCounter; i < finalCounter; i++) {
@@ -100,7 +100,7 @@ public class FMComputer {
             }
 
             List<Future<HypotheticalGain_Object>> tasks = executorService.invokeAll(list);
-           
+
             for (Future<HypotheticalGain_Object> task : tasks) {
                 HypotheticalGain_Object hypotheticGain_Object = task.get();
                 if (this.mapCandidateGainsPerListTax.containsKey(hypotheticGain_Object.Gain) == false) { // this gain was not contained
@@ -118,9 +118,9 @@ public class FMComputer {
         if (remainingTax > 0) {
             ExecutorService executorService = Executors.newFixedThreadPool(remainingTax);
 
-            List<Callable<HypotheticalGain_Object>> list = new ArrayList<Callable<HypotheticalGain_Object>>();
+            List<Callable<HypotheticalGain_Object>> list = new ArrayList<>();
             for (int i = freeTaxList.size() - remainingTax; i < freeTaxList.size(); i++) {
-                
+
                 list.add(new HypotheticalGainCalcuator(freeTaxList.get(i), initialBipartition_8_values, customDS, bipartitionMap));
 
             }
@@ -140,6 +140,7 @@ public class FMComputer {
             executorService.shutdown();
         }
     }
+
     public void run_FM_singlepass_hypothetical_swap() {//per pass or step [per num taxa of steps].
         //Test hypothetically ...
         for (String taxToConsider : this.customDS.taxa_list_string) {
@@ -195,7 +196,6 @@ public class FMComputer {
                 _8_values_whole_considering_thisTax_swap.addObject(this.initialBipartition_8_values);
                 _8_values_whole_considering_thisTax_swap.addObject(_8_vals_THIS_TAX_AFTER_hypo_swap);
                 _8_values_whole_considering_thisTax_swap.subtractObject(_8_vals_THIS_TAX_before_hypo_swap);
-
 
                 if (this.mapCandidateGainsPerListTax.containsKey(gainOfThisTax) == false) { // this gain was not contained
                     //initialize the taxon(for this gain-val) list.
@@ -274,24 +274,29 @@ public class FMComputer {
         boolean areAllTaxaLocked = false; //initially this condition is false.
         while (areAllTaxaLocked == false) {
             pass++; //for debug printing....
-           if(false) run_FM_singlepass_hypothetical_swap();
-           else{ 
-               try {
-              //    //FM hypothetical single swap run
+            
+            //Either do threaded or single-thread calculation for hypothetical gain calculation
+            if (Status.THREADED_GAIN_CALCULATION_MODE == false) { //for now it is false.
+                run_FM_singlepass_hypothetical_swap();
+            } else {
+                try {
+                    //    //FM hypothetical single swap run
                     run_FM_singlepass_hypothetical_swap_threaded_version();
                 } catch (ExecutionException ex) {
-                    Logger.getLogger(FMComputer.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("-->>(L 286.) Exception while running threads in run_FM_single_iteration()");
+                    ex.printStackTrace();
                 }
-           }
+            }
+            
+            
             find_best_taxa_of_single_pass(); //Find the best-taxon for THIS swap
 
             //Debug printing.
             if (listOfPerPassStatistics.isEmpty() == false) { //AT LEAST ONE per-pass val exists.
                 StatsPerPass last_pass_stat = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
-                
+
 //                System.out.println("[Line 200]. FM-pass(box) = " + pass + " , best-taxon: " + last_pass_stat.whichTaxaWasPassed + " , MaxGain = "
 //                        + last_pass_stat.maxGainOfThisPass);
-                
                 changeParameterValuesForNextPass();//Change parameters to maintain consistency wrt next step/box/pass.
             }
             areAllTaxaLocked = Helper.checkAllValuesIFSame(this.lockedTaxaBooleanMap, true); //if ALL are true, then stop.
@@ -348,10 +353,10 @@ public class FMComputer {
         boolean willIterateMore = true;
         int iterationsFM = 0; //can have stopping criterion for 10k iterations ?
         while (true) { //stopping condition
-            if(iterationsFM > Main.MAX_ITERATIONS_LIMIT){ //another stopping criterion.
-                System.out.println("[FMComputer L258.] Thread (" + Thread.currentThread().getName() +
-                        ", " + Thread.currentThread().getId() + ") MAX_ITERATIONS_LIMIT = " + 
-                        Main.MAX_ITERATIONS_LIMIT + " is reached for level = " + this.level);
+            if (iterationsFM > Main.MAX_ITERATIONS_LIMIT) { //another stopping criterion.
+                System.out.println("[FMComputer L258.] Thread (" + Thread.currentThread().getName()
+                        + ", " + Thread.currentThread().getId() + ") MAX_ITERATIONS_LIMIT = "
+                        + Main.MAX_ITERATIONS_LIMIT + " is reached for level = " + this.level);
                 break;
             }
             iterationsFM++;
@@ -366,12 +371,11 @@ public class FMComputer {
             if (willIterateMore == false) {
                 this.bipartitionMap = map_previous_iteration; // just change as previous map
             }
-            
+
 //            System.out.println("End of Iteration " + iterationsFM
 //                    + " new bipartition =>> \n"
 //                    + Helper.getReadableMap(bipartitionMap));
 //            System.out.println("================================================================");
-            
             if (willIterateMore == false) {
                 break;
             }
@@ -381,6 +385,7 @@ public class FMComputer {
         object.createFMResultObjects(this.bipartitionMap); //pass THIS level's final-bipartition to get P_left,Q_left,P_right,Q_right
         return object;
     }
+
     ///////////////////////////// FOR DEBUGGING \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     private void printTwoMaps() {
         for (String tax : this.mapCandidateTax_vs_8vals.keySet()) {

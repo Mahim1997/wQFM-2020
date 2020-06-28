@@ -46,6 +46,7 @@ public class FMRunner {
 //        customDS.printCustomDS(); //PRINTING FOR DEBUG
 //        TreeHandler treeHandler = new TreeHandler(); // maybe static utilites functions won't cause problems
         int level = 0;
+        customDS.level = level; //for debugging issues.
         String final_tree = runner.recursiveDivideAndConquer(customDS, level, initialTable); //customDS will have (P, Q, Q_relevant etc) all the params needed.
         System.out.println("\n\n[L 49.] FMRunner: final tree return");
         System.out.println(final_tree);
@@ -58,7 +59,7 @@ public class FMRunner {
         if (level == 0) { //only do this during level 0 [at the START]
             customDS_this_level.setInitialTableReference(initialTable); //change reference of initial table.
         }
-        customDS_this_level.sortQuartetIndicesMap(); //sort the quartet-index map for initial-bipartition-computation
+        customDS_this_level.sortQuartetIndicesMap(); //sort the quartet-index map for initial-bipartition-computation [NOT set of quartets]
         customDS_this_level.fillRelevantQuartetsMap(); //fill-up the relevant quartets per taxa map
         if (level == 0) { //only do it for the initial step, other levels will be passed as parameters
             customDS_this_level.fillUpTaxaList(); //fill-up the taxa list
@@ -79,13 +80,15 @@ public class FMRunner {
         }
 
         level++; // For dummy node finding.
+        customDS_this_level.level = level; //for debugging issues.
+        
         InitialBipartition initialBip = new InitialBipartition();
         Map<String, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS_this_level);
 
 //        System.out.println("Printing Initial Bipartition for level " + level);
 //        InitialBipartition.printBipartition(mapInitialBipartition);
         Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
-        initialBip_8_vals.compute8ValuesUsingAllQuartets(customDS_this_level, mapInitialBipartition);
+        initialBip_8_vals.compute8ValuesUsingAllQuartets_this_level(customDS_this_level, mapInitialBipartition);
 
         FMComputer fmComputerObject = new FMComputer(customDS_this_level, mapInitialBipartition, initialBip_8_vals, level);
         FMResultObject fmResultObject = fmComputerObject.run_FM_Algorithm_Whole();
