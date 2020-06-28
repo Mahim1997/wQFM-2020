@@ -15,7 +15,7 @@ public class Main {
     public static int PARTITION_SCORE_MODE = Status.PARTITION_SCORE_FULL_DYNAMIC; //0->[s]-[v], 1->[s]-0.5[v], 2->[s]-[v]-[d], 3->3[s]-2[v]
     
     public static double CUT_OFF_LIMIT_BINNING = 0.1; // use 0.1 [default]
-    public static double THRESHOLD_BINNING = 0.90; // use 0.9 [default]
+    public static double THRESHOLD_BINNING = 0.9; // use 0.9 [default]
     
     public static String INPUT_FILE_NAME = "input_files/weighted_quartets_avian_biological_dataset";
 //    public static String INPUT_FILE_NAME = "input_files/wqrts_37Tax_noscale_800g_500b_R1";

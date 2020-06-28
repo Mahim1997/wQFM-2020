@@ -105,7 +105,7 @@ public class Bin {
 
         double weighted_avg_final; //this will be passed as BETA
 
-        if (Bin.proportion_left_thresh >= Main.CUT_OFF_LIMIT_BINNING) {
+        if (Bin.proportion_left_thresh >= Main.CUT_OFF_LIMIT_BINNING) { //greater than cut-off so, bin(left, thresh)
             //bin on the left side.
             double cumulative_mid_point_product_counts = 0;
             for (Bin bin : bins) {
@@ -117,14 +117,15 @@ public class Bin {
             weighted_avg_final = (cumulative_mid_point_product_counts) / (double) cnt_before_thresh;
         } //bin on the right side.
         else {
-            double cumulative_mid_point_product_counts = 0;
-            for (Bin bin : bins) {
-                if (bin.lower_limit >= Main.THRESHOLD_BINNING) { //Bin from 0.9 to 1 [right-side-bin]
-                    cumulative_mid_point_product_counts += (bin.getMidPoint() * bin.count_of_ratios);
-                }
-            }
-            //include 1*freq(>=1) whilst calculating average.
-//            weighted_avg_final = (cumulative_mid_point_product_counts + (double)cnt_after_1) / ((double) (cnt_after_thresh_before_1 + cnt_after_1));
+//            double cumulative_mid_point_product_counts = 0;
+//            for (Bin bin : bins) {
+//                if (bin.lower_limit >= Main.THRESHOLD_BINNING) {
+//                    cumulative_mid_point_product_counts += (bin.getMidPoint() * bin.count_of_ratios);
+//                }
+//            }
+//
+////            weighted_avg_final = (cumulative_mid_point_product_counts + (double)cnt_after_1) / ((double) (cnt_after_thresh_before_1 + cnt_after_1));
+            //FIX to 1 [don't bin here, doesn't give better result on binning].
             weighted_avg_final = Status.BETA_DEFAULT_VAL;
         }
         return weighted_avg_final;

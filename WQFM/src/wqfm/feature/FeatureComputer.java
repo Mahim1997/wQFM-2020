@@ -12,6 +12,7 @@ import java.util.List;
 import wqfm.ds.Quartet;
 import wqfm.bip.WeightedPartitionScores;
 import wqfm.interfaces.Status;
+import wqfm.main.Main;
 
 /**
  *
@@ -53,7 +54,7 @@ public class FeatureComputer {
         }
 
         if (list_ratios.isEmpty()) {
-            System.out.println("Empty 4-tax-seq (default ratio): 1");
+            System.out.println("Empty 4-tax-seq (default ratio): " + Status.BETA_DEFAULT_VAL);
             WeightedPartitionScores.ALPHA_PARTITION_SCORE = Status.ALPHA_DEFAULT_VAL;
             WeightedPartitionScores.BETA_PARTITION_SCORE = 1;
         } else {
@@ -61,9 +62,13 @@ public class FeatureComputer {
             
             WeightedPartitionScores.ALPHA_PARTITION_SCORE = 1;
             WeightedPartitionScores.BETA_PARTITION_SCORE = weighted_avg_bin_ratio;
-            System.out.println("Prop(0.5,thresh) = " + Bin.proportion_left_thresh + ", Prop (thresh,1) = "
-                    + Bin.proportion_after_thresh_before_1 + ", Prop(>=1) = " + Bin.proportion_greater_or_equal_1);
-            System.out.println("Ratio (beta) = " + weighted_avg_bin_ratio);
+            
+            System.out.println("\nP(0.5," + Main.THRESHOLD_BINNING + ") = " + Bin.proportion_left_thresh + 
+                    ", P(" + Main.THRESHOLD_BINNING + ",1) = "
+                    + Bin.proportion_after_thresh_before_1 + ", P(>=1) = " + Bin.proportion_greater_or_equal_1);
+            
+            System.out.println("Weighted-Avg-Bin-Ratio (to set BETA) = " + weighted_avg_bin_ratio);
+            
         }
 
     }
