@@ -22,12 +22,12 @@ public class Bin {
 
     private double lower_limit;
     private double upper_limit;
-    private double count_of_ratios; // no need for a map/dictionary
+    private double frequency; // no need for a map/dictionary
 
     public Bin(double lower_lim, double upper_lim) {
         this.lower_limit = lower_lim;
         this.upper_limit = upper_lim;
-        this.count_of_ratios = 0;
+        this.frequency = 0;
     }
 
     //Factory method to get list of bins [Mahim]
@@ -84,7 +84,7 @@ public class Bin {
             //bin's counts
             for (Bin bin : bins) {
                 if (Bin.is_within_bin(bin, ratio) == true) {
-                    bin.count_of_ratios++; //if ratio lies in this bin, increment
+                    bin.frequency++; //if ratio lies in this bin, increment
                 }
 
             }
@@ -111,7 +111,7 @@ public class Bin {
             for (Bin bin : bins) {
                 if (bin.lower_limit < Main.THRESHOLD_BINNING) { //Bin from 0.5 upto 0.9 [left-side-bin]
                     //sum the mid-point-of-class * frequency-of-class
-                    cumulative_mid_point_product_counts += (bin.getMidPoint() * bin.count_of_ratios);
+                    cumulative_mid_point_product_counts += (bin.getMidPoint() * bin.frequency);
                 }
             }
             weighted_avg_final = (cumulative_mid_point_product_counts) / (double) cnt_before_thresh;
@@ -134,7 +134,7 @@ public class Bin {
 
     @Override
     public String toString() {
-        return "Bin(" + this.lower_limit + "," + this.upper_limit + "," + this.count_of_ratios + ")";
+        return "Bin(" + this.lower_limit + "," + this.upper_limit + "," + this.frequency + ")";
     }
 
 }
