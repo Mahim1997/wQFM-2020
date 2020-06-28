@@ -32,28 +32,13 @@ import wqfm.utils.Helper;
 public class TestNormalFunctions {
 
     public static void testMyPairClass() {
-        MyPair p1, p2;
-        Quartet q1, q2, q3, q4, q5, q6, q7;
-        Map<Quartet, MyPair> map = new HashMap<>();
+        for (int i = 5; i <= 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                System.out.println("bins.add(new Bin(0." + i + j + "," + "0." + i + (j + 1) + "));");
+            }
+            System.out.println("bins.add(new Bin(0." + i + "9," + "0." + (i + 1) + "0));");
+        }
 
-        q1 = new Quartet("((5,8),(X1,10));2.0");
-        q2 = new Quartet("((10,X1),(5,8));2.0");
-
-        q1.printQuartet();
-        q2.printQuartet();
-        System.out.println(q1.equals(q2));
-
-        p1 = new MyPair(-100, -100);
-        p2 = new MyPair(7777, 7777);
-
-        map.put(q1, p1);
-        System.out.println(map);
-        System.out.println(map.containsKey(q2));
-
-        map.get(q2).v1 = 77;
-        map.get(q2).v2 = 77;
-
-        System.out.println(map);
     }
 
     static void compareQuartets(Quartet q1, Quartet q2) {

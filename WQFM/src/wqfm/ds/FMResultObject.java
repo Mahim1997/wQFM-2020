@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javafx.util.Pair;
 import wqfm.interfaces.Status;
+import wqfm.utils.CustomPair;
 import wqfm.utils.Utils;
 
 /**
@@ -18,7 +19,7 @@ public class FMResultObject {
     public final String dummyTaxonThisLevel;
     private final CustomDSPerLevel customDS_initial_this_level;
 
-    private final Map<Quartet, Pair<Double, Integer>> map_quartet_of_dummy_with_added_weights_and_partition;
+    private Map<Quartet, CustomPair> map_quartet_of_dummy_with_added_weights_and_partition;
 
     public FMResultObject(CustomDSPerLevel customDS_this_level, int level) {
         this.customDS_initial_this_level = customDS_this_level;
@@ -74,17 +75,17 @@ public class FMResultObject {
                 int commonBipartitionValue = findCommonBipartition(arr_bipartition); //find the common bipartition [i.e. whether q goes to Q_left or Q_right]
 //                System.out.println(">> FMResultObject (line 64) parent qrt = " + quartet_parent + " bip = " + mapOfBipartition);
                 Quartet newQuartetWithDummy = replaceExistingQuartetWithDummyNode(quartet_parent, arr_bipartition, commonBipartitionValue); //Find the new quartet WITH dummy node [replaces uncommon tax]
-                
+
                 // do not add yet, first put to map with added weight eg. 1,2|5,11 and 1,2|5,15 will be 1,2|5,X with weight = w1+w2
                 if (this.map_quartet_of_dummy_with_added_weights_and_partition.containsKey(newQuartetWithDummy) == false) { //this quartet-of-dummy DOESN't exist.
-                    this.map_quartet_of_dummy_with_added_weights_and_partition.put(newQuartetWithDummy, new Pair(newQuartetWithDummy.weight, commonBipartitionValue)); //initialize with 0 so that next step doesn't have to be if-else
+                    this.map_quartet_of_dummy_with_added_weights_and_partition.put(newQuartetWithDummy, new CustomPair(newQuartetWithDummy.weight, commonBipartitionValue)); //initialize with 0 so that next step doesn't have to be if-else
                 } else {
                     // else we will add weights for the Pair (value of the map_quartet_of_dummy_with_added_weights_and_partition)
-                    Pair<Double, Integer> pair_value_from_map = this.map_quartet_of_dummy_with_added_weights_and_partition.get(newQuartetWithDummy);
-                    Pair<Double, Integer> new_pair = new Pair((pair_value_from_map.getKey() + newQuartetWithDummy.weight), pair_value_from_map.getValue());
+                    CustomPair pair_value_from_map = this.map_quartet_of_dummy_with_added_weights_and_partition.get(newQuartetWithDummy);
+                    CustomPair new_pair = new CustomPair((pair_value_from_map.weight_double + newQuartetWithDummy.weight), pair_value_from_map.partition_int);
                     //this will update the added weights while maintaining the same bipartition.
                     this.map_quartet_of_dummy_with_added_weights_and_partition.put(newQuartetWithDummy, new_pair);
- 
+
                 }
 
                 /// for some reason, pair doesn't seem to work hence custom-class [is there a way to do it more efficiently?]
@@ -94,16 +95,17 @@ public class FMResultObject {
         }
         //2. Now keep adding the corrected-weighted-quartets to initial-table
         for (Quartet q_with_dummy : this.map_quartet_of_dummy_with_added_weights_and_partition.keySet()) {
-            Pair<Double, Integer> pair_val = this.map_quartet_of_dummy_with_added_weights_and_partition.get(q_with_dummy);
+            CustomPair pair_val = this.map_quartet_of_dummy_with_added_weights_and_partition.get(q_with_dummy);
 ////            Pair<Double, Integer> pair_val = this.map_quartet_of_dummy_with_added_weights_and_partition.get(q_with_dummy);
-            Quartet new_quartet = new Quartet(q_with_dummy.taxa_sisters_left[0], q_with_dummy.taxa_sisters_left[1], q_with_dummy.taxa_sisters_right[0], q_with_dummy.taxa_sisters_right[1], pair_val.getKey());
+            Quartet new_quartet = new Quartet(q_with_dummy.taxa_sisters_left[0], q_with_dummy.taxa_sisters_left[1], q_with_dummy.taxa_sisters_right[0],
+                    q_with_dummy.taxa_sisters_right[1], pair_val.weight_double);
             //update the weight now.
             //push to initial table.
             this.customDS_initial_this_level.initial_table1_of_list_of_quartets.addToListOfQuartets(new_quartet);
             //obtain the index i.e. size - 1
             int idx_quartet_newly_added = this.customDS_initial_this_level.initial_table1_of_list_of_quartets.sizeTable() - 1;
             //push to which partition depending on the pair_value's bipartition stored.
-            int bipartition_val = pair_val.getValue();
+            int bipartition_val = pair_val.partition_int;
             if (bipartition_val == Status.LEFT_PARTITION) {
                 this.customDS_left_partition.quartet_indices_list_unsorted.add(idx_quartet_newly_added);
             } else if (bipartition_val == Status.RIGHT_PARTITION) {

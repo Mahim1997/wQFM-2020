@@ -16,7 +16,7 @@ public class Main {
     public static int REROOT_MODE = Status.REROOT_USING_JAR;
     public static int PARTITION_SCORE_MODE = Status.PARITTION_SCORE_COMMAND_LINE; //0->[s]-[v], 1->[s]-0.5[v], 2->[s]-[v]-[d], 3->3[s]-2[v]
     
-    public static String INPUT_FILE_NAME = "input_files/avian_weighted_quartets";
+    public static String INPUT_FILE_NAME = "input_files/weighted_quartets_avian_biological_dataset";
 //    public static String INPUT_FILE_NAME = "input_files/wqrts_37Tax_noscale_800g_500b_R1";
 //   public static String INPUT_FILE_NAME = "input_files/wqrts_15G_100g100b_R1";
  //    public static String INPUT_FILE_NAME = "input_files/wqrts_11Tax_est_5G_R1";

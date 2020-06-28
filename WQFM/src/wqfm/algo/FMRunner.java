@@ -79,10 +79,10 @@ public class FMRunner {
 //            System.out.println("-->>RETURNING level = " + level + " , tree = " + starTree);
             return starTree;
         }
-        
+
         level++; // For dummy node finding.
         customDS_this_level.level = level; //for debugging issues.
-        
+
         InitialBipartition initialBip = new InitialBipartition();
         Map<String, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS_this_level);
 
@@ -90,8 +90,8 @@ public class FMRunner {
 //        InitialBipartition.printBipartition(mapInitialBipartition);
         Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
         initialBip_8_vals.compute8ValuesUsingAllQuartets_this_level(customDS_this_level, mapInitialBipartition);
-        System.out.println("LEVEL: "+level+"ALPHA: "+WeightedPartitionScores.ALPHA_PARTITION_SCORE+"BETA: "+WeightedPartitionScores.BETA_PARTITION_SCORE);
-        
+        System.out.println("(Full Dynamic) LEVEL: " + level + ", ALPHA: " + WeightedPartitionScores.ALPHA_PARTITION_SCORE + ", BETA: " + WeightedPartitionScores.BETA_PARTITION_SCORE);
+
         FMComputer fmComputerObject = new FMComputer(customDS_this_level, mapInitialBipartition, initialBip_8_vals, level);
         FMResultObject fmResultObject = fmComputerObject.run_FM_Algorithm_Whole();
 
