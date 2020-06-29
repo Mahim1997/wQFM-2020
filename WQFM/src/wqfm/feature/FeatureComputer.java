@@ -61,6 +61,10 @@ public class FeatureComputer {
             System.out.println("Empty list of 4-tax-seq with 3-quartet-config. (default ratio): " + Status.BETA_DEFAULT_VAL);
             WeightedPartitionScores.ALPHA_PARTITION_SCORE = Status.ALPHA_DEFAULT_VAL;
             WeightedPartitionScores.BETA_PARTITION_SCORE = 1;
+            if (level == 1) {
+                System.out.println("ZERO 4-tax-seq exists with 3-qrt-config. DONT'T BIN FURTHER.");
+                Bin.WILL_DO_DYNAMIC = false;
+            }
 
         } else { //calculate bins [list-ratios do exist]
 
@@ -72,16 +76,18 @@ public class FeatureComputer {
                 weighted_avg_bin_ratio = Bin.calculateBinsAndFormScores(list_ratios); //forms bins and calculates scores..
 
             }
+
             if (level == 1) { //check on level == 1 and set accordingly.
-                if (Bin.proportion_left_thresh < Main.CUT_OFF_LIMIT_BINNING) { //level == 0 has no good distribution ... so do no more.
+                if (Bin.proportion_left_thresh < Main.CUT_OFF_LIMIT_BINNING) { //level == 1 has no good distribution ... so do no more.
                     //stop ... don't bin on any levels. set to 1.
-//                    Bin.WILL_DO_DYNAMIC = false; //DEBUGGING FOR NOW
-                    System.out.println("Don't bin on further levels. Level 0 has good distribution above threshold = " + Main.THRESHOLD_BINNING
+                    Bin.WILL_DO_DYNAMIC = false; //DEBUGGING FOR NOW
+                    System.out.println(">> DON'T BIN ON NEXT LEVELS. Level 1 has good distribution above threshold = " + Main.THRESHOLD_BINNING
                             + " set BETA = " + Status.BETA_DEFAULT_VAL);
+                    WeightedPartitionScores.BETA_PARTITION_SCORE = Status.BETA_DEFAULT_VAL; // set to 1 
                 }
-                WeightedPartitionScores.BETA_PARTITION_SCORE = Status.BETA_DEFAULT_VAL; // set to 1 
             }
             if (Bin.WILL_DO_DYNAMIC == true) { //only bin on true conditions.
+                //set p.score as ratio.
                 WeightedPartitionScores.BETA_PARTITION_SCORE = weighted_avg_bin_ratio;
                 System.out.println("\nP(0.5," + Main.THRESHOLD_BINNING + ") = " + Bin.proportion_left_thresh
                         + ", P(" + Main.THRESHOLD_BINNING + ",1) = "

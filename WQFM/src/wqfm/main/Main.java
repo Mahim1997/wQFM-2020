@@ -34,6 +34,7 @@ public class Main {
     public static double SMALLEPSILON = 0.00001; //if cumulative gain of iteration < this_num then stop
     public static int MAX_ITERATIONS_LIMIT = 1000000; //can we keep it as another stopping-criterion ? [100k]
     public static double STEP_SIZE_BINNING = 0.01; //always used 0.01 for experiments (default)
+    public static boolean SET_RIGHT_TO_1 = false; //false: dual-bin, true: right will be set to 1.
 
     public static void main(String[] args) {
         System.out.println("================= **** ======================== **** ====================");
