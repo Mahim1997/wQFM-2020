@@ -68,13 +68,13 @@ public class FeatureComputer {
 
             }
             if (level == 1) { //check on level == 1 and set accordingly.
-                if (Bin.proportion_left_thresh < Main.CUT_OFF_LIMIT_BINNING) { //level == 0 has no good distribution ... so do no more.
-                    //stop ... don't bin on any levels. set to 1.
-                    Bin.WILL_DO_DYNAMIC = false;
-                    System.out.println("Don't bin further. Level 0 has good distribution above threshold = " + Main.THRESHOLD_BINNING
-                            + " set BETA = " + Status.BETA_DEFAULT_VAL);
-                }
-                WeightedPartitionScores.BETA_PARTITION_SCORE = Status.BETA_DEFAULT_VAL; // set to 1 
+//                if (Bin.proportion_left_thresh < Main.CUT_OFF_LIMIT_BINNING) { //level == 0 has no good distribution ... so do no more.
+//                    //stop ... don't bin on any levels. set to 1.
+////                    Bin.WILL_DO_DYNAMIC = false; //DEBUGGING FOR NOW
+//                    System.out.println("[NOT FOR NOW] Don't bin further. Level 0 has good distribution above threshold = " + Main.THRESHOLD_BINNING
+//                            + " set BETA = " + Status.BETA_DEFAULT_VAL);
+//                }
+//                WeightedPartitionScores.BETA_PARTITION_SCORE = Status.BETA_DEFAULT_VAL; // set to 1 
             }
             if (Bin.WILL_DO_DYNAMIC == true) { //only bin on true conditions.
                 WeightedPartitionScores.BETA_PARTITION_SCORE = weighted_avg_bin_ratio;

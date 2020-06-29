@@ -75,7 +75,7 @@ public class FMRunner {
 
         Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
         initialBip_8_vals.compute8ValuesUsingAllQuartets_this_level(customDS_this_level, mapInitialBipartition);
-        System.out.println("(Full Dynamic Left-Binning-Right-Fixing) LEVEL: " + level + ", ALPHA: " + WeightedPartitionScores.ALPHA_PARTITION_SCORE + ", BETA: " + WeightedPartitionScores.BETA_PARTITION_SCORE);
+        System.out.println("(Full Dynamic Left-Binning-Right-Binning) LEVEL: " + level + ", ALPHA: " + WeightedPartitionScores.ALPHA_PARTITION_SCORE + ", BETA: " + WeightedPartitionScores.BETA_PARTITION_SCORE);
 
         FMComputer fmComputerObject = new FMComputer(customDS_this_level, mapInitialBipartition, initialBip_8_vals, level);
         FMResultObject fmResultObject = fmComputerObject.run_FM_Algorithm_Whole();

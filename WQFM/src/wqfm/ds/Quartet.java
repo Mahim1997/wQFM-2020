@@ -91,8 +91,7 @@ public class Quartet {
     public void sort_quartet_taxa_names() {
         String[] left = {this.taxa_sisters_left[0], this.taxa_sisters_left[1]};
         String[] right = {this.taxa_sisters_right[0], this.taxa_sisters_right[1]};
-
-
+        
         Arrays.sort(left);
         Arrays.sort(right);
 

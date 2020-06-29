@@ -116,16 +116,16 @@ public class Bin {
             weighted_avg_final = (cumulative_mid_point_product_counts) / (double) cnt_before_thresh;
         } //bin on the right side.
         else {
-//            double cumulative_mid_point_product_counts = 0;
-//            for (Bin bin : bins) {
-//                if (bin.lower_limit >= Main.THRESHOLD_BINNING) {
-//                    cumulative_mid_point_product_counts += (bin.getMidPoint() * bin.count_of_ratios);
-//                }
-//            }
-//
-////            weighted_avg_final = (cumulative_mid_point_product_counts + (double)cnt_after_1) / ((double) (cnt_after_thresh_before_1 + cnt_after_1));
+            double cumulative_mid_point_product_counts = 0;
+            for (Bin bin : bins) {
+                if (bin.lower_limit >= Main.THRESHOLD_BINNING) {
+                    cumulative_mid_point_product_counts += (bin.getMidPoint() * bin.frequency);
+                }
+            }
+            // compute using both bins.
+            weighted_avg_final = (cumulative_mid_point_product_counts + (double) cnt_after_1) / ((double) (cnt_after_thresh_before_1 + cnt_after_1));
             //FIX to 1 [don't bin here, doesn't give better result on binning].
-            weighted_avg_final = Status.BETA_DEFAULT_VAL;
+//            weighted_avg_final = Status.BETA_DEFAULT_VAL;
         }
         return weighted_avg_final;
 
