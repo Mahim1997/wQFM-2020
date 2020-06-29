@@ -42,8 +42,11 @@ of wQMC and ASTRAL.
 1. For generating embedded weighted quartets, use the "quartet-controller.sh" as discussed above.
    <!-- UL -->
    Use ./quartet-controller.sh <input-gene-tree-file-name> <output-quartet-file-name>
+   
    Make sure "quartet_count.sh" and "summarize_quartets_stdin.pl" are all in the same directory as "quartet-controller.sh"
+   
    Make sure "quartet_count.sh" contains the correct directory for "triplets.soda2103"
+   
    <!-- Code Blocks -->
 
      ```bash
