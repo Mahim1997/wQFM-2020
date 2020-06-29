@@ -93,21 +93,20 @@ public class Quartet {
         String[] right = {this.taxa_sisters_right[0], this.taxa_sisters_right[1]};
 
 
+        Arrays.sort(left);
+        Arrays.sort(right);
 
-        if (left[0].compareTo(right[0]) < 0) {
+        if (left[0].compareTo(right[0]) < 0) { //don't swap two sides
             for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
                 this.taxa_sisters_left[i] = left[i];
                 this.taxa_sisters_right[i] = right[i];
             }
-        } else {
+        } else {  // swap two sides
             for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
                 this.taxa_sisters_left[i] = right[i];
                 this.taxa_sisters_right[i] = left[i];
             }
         }
-
-        Arrays.sort(this.taxa_sisters_left);
-        Arrays.sort(this.taxa_sisters_right);
     }
 
     @Override
