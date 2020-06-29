@@ -22,9 +22,9 @@ public class Main {
 
 //    public static String INPUT_FILE_NAME = "input_files/best_weighted_quartets_avian_2X_R1_est";
     
-//    public static String INPUT_FILE_NAME = "input_files/weighted_quartets_avian_biological_dataset";
+    public static String INPUT_FILE_NAME = "input_files/weighted_quartets_avian_biological_dataset";
 //    public static String INPUT_FILE_NAME = "input_files/wqrts_37Tax_noscale_800g_500b_R1";
-   public static String INPUT_FILE_NAME = "input_files/wqrts_15G_100g100b_R1";
+//   public static String INPUT_FILE_NAME = "input_files/wqrts_15G_100g100b_R1";
 //    public static String INPUT_FILE_NAME = "input_files/wqrts_11Tax_est_5G_R1";
 //    public static String INPUT_FILE_NAME = "input_files/wqrts_toy_dataset_QFM_paper";
 
@@ -39,7 +39,7 @@ public class Main {
         System.out.println("================= **** ======================== **** ====================");
         Helper.findOptionsUsingCommandLineArgs(args); //initial arguments processing
         long time_1 = System.currentTimeMillis(); //calculate starting time
-        Bin.WILL_DO_DYNAMIC = true; //set to dynamic=true (will not do on further levels IF level 0 gives bad distribution)
+        Bin.WILL_DO_DYNAMIC = true; //set to dynamic=true //SHOULD BE KEPT TRUE.
         Main.testIfRerootWorks();
 
         FMRunner.runFunctions(); //main functions for wQFM

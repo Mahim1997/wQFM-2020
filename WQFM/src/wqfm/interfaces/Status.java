@@ -59,6 +59,9 @@ public interface Status {
     public static double ALPHA_DEFAULT_VAL = 1.0;
     public static double BETA_DEFAULT_VAL = 1.0;
     
+    // not important.
+//    public static int EARLY_STOP_NUM_TAXA = 5; //just experimentation purposes.
+    
     //Helper method for printing quartet's status
     public static String GET_QUARTET_STATUS(int status) {
         switch (status) {
@@ -76,7 +79,8 @@ public interface Status {
         return "NULL";
     }
 
-    public static String GET_PARTITION_SCORE_PRINT(int mode) {
+    public static String GET_PARTITION_SCORE_PRINT() {
+        int mode = Main.PARTITION_SCORE_MODE;
         switch (mode) {
             case Status.PARTITION_SCORE_MODE_0:
                 return "mode = " + mode + ", [ws - wv]";
@@ -97,7 +101,7 @@ public interface Status {
             case Status.PARITTION_SCORE_COMMAND_LINE:
                 return "mode = Command line [" + WeightedPartitionScores.ALPHA_PARTITION_SCORE + "*ws - " + WeightedPartitionScores.BETA_PARTITION_SCORE + "*wv]";
             case Status.PARTITION_SCORE_FULL_DYNAMIC:
-                return "mode: FULL DYNAMIC [Left-Bin-Right-Set-to-1]. Threshold = " + Main.THRESHOLD_BINNING + " , Cut-off = " + Main.CUT_OFF_LIMIT_BINNING;
+                return "mode: FULL DYNAMIC [Left-Bin-Right-Bin]. Threshold = " + Main.THRESHOLD_BINNING + " , Cut-off = " + Main.CUT_OFF_LIMIT_BINNING;
             default:
                 return "default partition score mode = " + mode + ", [ws - wv]";
         }

@@ -14,6 +14,7 @@ import wqfm.interfaces.Status;
 import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.Quartet;
 import wqfm.feature.FeatureComputer;
+import wqfm.main.Main;
 import wqfm.utils.Utils;
 
 /**
@@ -100,15 +101,18 @@ public class Bipartition_8_values {
         //  System.out.println("L 100. Bipartition_8_vals: BIPARTITION size : " + map_bipartitions.keySet().size());
         //  System.out.println("Keyset size before populating: " + dictiory_4Tax_sequence.keySet().size());
         //for feature computation
-        for (int idx_quartet : customDS.quartet_indices_list_unsorted) {
-            Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_quartet);
-            FeatureComputer.makeDictionary(quartet, dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight);
+
+        if (Main.PARTITION_SCORE_MODE == Status.PARTITION_SCORE_FULL_DYNAMIC) {
+/////                || (customDS.taxa_list_string.size() >= Status.EARLY_STOP_NUM_TAXA)) { //(not used) early stop condition.
+/////            System.out.println("EARLY STOP AT |P| < " + Status.EARLY_STOP_NUM_TAXA);
+            for (int idx_quartet : customDS.quartet_indices_list_unsorted) {
+                Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_quartet);
+                FeatureComputer.makeDictionary(quartet, dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight);
+            }
+            //for computing the feature.
+            FeatureComputer.computeBinningFeature(dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight, customDS.level);
         }
 
-        //for computing the feature.
-        FeatureComputer.computeBinningFeature(dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight, customDS.level);
-        
-        
         for (int idx_quartet : customDS.quartet_indices_list_unsorted) {
             Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_quartet);
 

@@ -43,8 +43,7 @@ public class Helper {
     public static void printUsageAndExitSystem() {
 //        System.out.println("java -jar wQFM.jar -i <input-file-name> -o <output-file-name> [-p 0/1 <partition-score-mode>]");
         System.out.println("USAGE: java -jar wQFM.jar <input-file> <output-file> <partition-score-alpha> <partition-score-beta>\n"
-                + "Or, java -jar wQFM.jar <input-file> <output-file> <partition-score-mode>\n"
-                + "Partition Score modes are: (0:s-v, 1:s-0.5*v, 2:s-v-d, 3:3s-2d)");
+                + "Or, java -jar wQFM.jar <input-file> <output-file> {this uses dynamic partitioning threhs=0.9, cut-off=0.1}\n");
         System.out.println("Exiting System (arguments not used according to usage)");
         System.exit(-1);
     }
@@ -63,23 +62,24 @@ public class Helper {
             Main.INPUT_FILE_NAME = args[0];
             return;
         }
-        if (args.length > 4) {
+        if ((args.length != 4) || (args.length != 2)) {
             printUsageAndExitSystem();
         }
+
         Main.INPUT_FILE_NAME = args[0];
         Main.OUTPUT_FILE_NAME = args[1];
-        if (args.length == 3) {
-            //partition-score argument given.
-            int partition_score_argument = Integer.parseInt(args[2]);
-            Main.PARTITION_SCORE_MODE = partition_score_argument;
+        if (args.length == 2) {
+            Main.PARTITION_SCORE_MODE = Status.PARTITION_SCORE_FULL_DYNAMIC;
         }
-        if (args.length == 4) {
+        else if (args.length == 4) {
             //partition-score argument not given. [to do feature selection] //default is [s] - [v]
             double alpha = Double.parseDouble(args[2]);
             double beta = Double.parseDouble(args[3]);
             WeightedPartitionScores.ALPHA_PARTITION_SCORE = alpha;
             WeightedPartitionScores.BETA_PARTITION_SCORE = beta;
+            Main.PARTITION_SCORE_MODE = Status.PARITTION_SCORE_COMMAND_LINE;
         }
+        System.out.println("-->>Helper.end Main.PARTITION_SCORE_MODE = " + Main.PARTITION_SCORE_MODE);
     }
 
     public static int sumArray(int[] arr) {

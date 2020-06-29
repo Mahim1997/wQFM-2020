@@ -37,7 +37,7 @@ public class FMRunner {
         runner.readFileAndPopulateInitialTables(Main.INPUT_FILE_NAME, customDS, initialTable);
         System.out.println("Reading from file <" + Main.INPUT_FILE_NAME + "> done."
                 + "\nInitial-Num-Quartets = " + initialTable.sizeTable());
-        System.out.println("Running with partition score " + Status.GET_PARTITION_SCORE_PRINT(Main.PARTITION_SCORE_MODE));
+        System.out.println("Running with partition score " + Status.GET_PARTITION_SCORE_PRINT());
         int level = 0;
         customDS.level = level; //for debugging issues.
         String final_tree = runner.recursiveDivideAndConquer(customDS, level, initialTable); //customDS will have (P, Q, Q_relevant etc) all the params needed.
@@ -75,7 +75,7 @@ public class FMRunner {
 
         Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
         initialBip_8_vals.compute8ValuesUsingAllQuartets_this_level(customDS_this_level, mapInitialBipartition);
-        System.out.println("(Full Dynamic Left-Binning-Right-Binning) LEVEL: " + level + ", ALPHA: " + WeightedPartitionScores.ALPHA_PARTITION_SCORE + ", BETA: " + WeightedPartitionScores.BETA_PARTITION_SCORE);
+        System.out.println(Status.GET_PARTITION_SCORE_PRINT() + " LEVEL: " + level + ", ALPHA: " + WeightedPartitionScores.ALPHA_PARTITION_SCORE + ", BETA: " + WeightedPartitionScores.BETA_PARTITION_SCORE);
 
         FMComputer fmComputerObject = new FMComputer(customDS_this_level, mapInitialBipartition, initialBip_8_vals, level);
         FMResultObject fmResultObject = fmComputerObject.run_FM_Algorithm_Whole();

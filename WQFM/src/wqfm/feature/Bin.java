@@ -17,7 +17,7 @@ public class Bin {
     public static double proportion_left_thresh;
     public static double proportion_after_thresh_before_1;
     public static double proportion_greater_or_equal_1;
-    public static boolean WILL_DO_DYNAMIC;
+    public static boolean WILL_DO_DYNAMIC = true;
 
     private double lower_limit;
     private double upper_limit;
