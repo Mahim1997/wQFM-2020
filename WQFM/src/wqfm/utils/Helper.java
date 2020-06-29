@@ -49,7 +49,7 @@ public class Helper {
     }
 
     public static void findOptionsUsingCommandLineArgs(String[] args) {
-        System.out.println("Command line args are -> " + Arrays.toString(args));
+        System.out.println("Command line args" + args.length + " are -> " + Arrays.toString(args));
         if (args.length == 0) {
             if (Main.DEBUG_MODE_TESTING == false) {
                 Helper.printUsageAndExitSystem();
@@ -62,7 +62,7 @@ public class Helper {
             Main.INPUT_FILE_NAME = args[0];
             return;
         }
-        if ((args.length != 4) || (args.length != 2)) {
+        if (((args.length == 4) || (args.length == 2)) == false) {
             printUsageAndExitSystem();
         }
 
@@ -70,8 +70,7 @@ public class Helper {
         Main.OUTPUT_FILE_NAME = args[1];
         if (args.length == 2) {
             Main.PARTITION_SCORE_MODE = Status.PARTITION_SCORE_FULL_DYNAMIC;
-        }
-        else if (args.length == 4) {
+        } else if (args.length == 4) {
             //partition-score argument not given. [to do feature selection] //default is [s] - [v]
             double alpha = Double.parseDouble(args[2]);
             double beta = Double.parseDouble(args[3]);

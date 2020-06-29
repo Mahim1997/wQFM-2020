@@ -45,13 +45,15 @@ public class FeatureComputer {
             HashMap<List<String>, List<Double>> dictionary_4Tax_sequence_weight, int level) {
         //check on level==0 if is on the right side, don't bin further ...
         List<Double> list_ratios = new ArrayList<>();
-        int num_four_tax_seq_with_3_qrts = 0;
         for (List<String> threeTax : dictionary_4Tax_sequence_weight.keySet()) {
             List<Double> weights_under_this_3_tax_seq = dictionary_4Tax_sequence_weight.get(threeTax);
             Collections.sort(weights_under_this_3_tax_seq, Collections.reverseOrder());
             if (weights_under_this_3_tax_seq.size() == 3) {
                 list_ratios.add(weights_under_this_3_tax_seq.get(0) / (weights_under_this_3_tax_seq.get(1) + weights_under_this_3_tax_seq.get(2)));
-                num_four_tax_seq_with_3_qrts++;
+            }
+            if (weights_under_this_3_tax_seq.size() > 3) {
+                System.out.println("-->>L 57. FeatureComputer. ratios.size exceeded 3. Check inputs.");
+                System.out.println("Printing this ratios, and sequences." + weights_under_this_3_tax_seq + " , " + threeTax);
             }
         }
 
@@ -61,24 +63,23 @@ public class FeatureComputer {
             WeightedPartitionScores.BETA_PARTITION_SCORE = 1;
 
         } else { //calculate bins [list-ratios do exist]
-            
+
 //            System.out.println("List-ratios not empty, printing dictionary.");
 //            printDictionary(dictionary_4Tax_sequence, dictionary_4Tax_sequence_weight);
-            
             double weighted_avg_bin_ratio = Status.BETA_DEFAULT_VAL;
-            
+
             if (Bin.WILL_DO_DYNAMIC == true) { //only compute on Bin.true
                 weighted_avg_bin_ratio = Bin.calculateBinsAndFormScores(list_ratios); //forms bins and calculates scores..
 
             }
             if (level == 1) { //check on level == 1 and set accordingly.
-//                if (Bin.proportion_left_thresh < Main.CUT_OFF_LIMIT_BINNING) { //level == 0 has no good distribution ... so do no more.
-//                    //stop ... don't bin on any levels. set to 1.
-////                    Bin.WILL_DO_DYNAMIC = false; //DEBUGGING FOR NOW
-//                    System.out.println("[NOT FOR NOW] Don't bin further. Level 0 has good distribution above threshold = " + Main.THRESHOLD_BINNING
-//                            + " set BETA = " + Status.BETA_DEFAULT_VAL);
-//                }
-//                WeightedPartitionScores.BETA_PARTITION_SCORE = Status.BETA_DEFAULT_VAL; // set to 1 
+                if (Bin.proportion_left_thresh < Main.CUT_OFF_LIMIT_BINNING) { //level == 0 has no good distribution ... so do no more.
+                    //stop ... don't bin on any levels. set to 1.
+//                    Bin.WILL_DO_DYNAMIC = false; //DEBUGGING FOR NOW
+                    System.out.println("Don't bin on further levels. Level 0 has good distribution above threshold = " + Main.THRESHOLD_BINNING
+                            + " set BETA = " + Status.BETA_DEFAULT_VAL);
+                }
+                WeightedPartitionScores.BETA_PARTITION_SCORE = Status.BETA_DEFAULT_VAL; // set to 1 
             }
             if (Bin.WILL_DO_DYNAMIC == true) { //only bin on true conditions.
                 WeightedPartitionScores.BETA_PARTITION_SCORE = weighted_avg_bin_ratio;
@@ -94,7 +95,7 @@ public class FeatureComputer {
 
     }
 
-    public static void printDictionary(HashMap<List<String>, List<Quartet>> dictionary_4Tax_sequence, 
+    public static void printDictionary(HashMap<List<String>, List<Quartet>> dictionary_4Tax_sequence,
             HashMap<List<String>, List<Double>> dictionary_4Tax_sequence_weight) {
         for (List<String> i : dictionary_4Tax_sequence.keySet()) {
             System.out.print("Key: " + i.get(0) + " " + i.get(1) + " " + i.get(2) + " " + i.get(3) + " --> ");
