@@ -99,14 +99,13 @@ public class Bipartition_8_values {
         HashMap<List<String>, List<Double>> dictiory_4Tax_sequence_weight = new HashMap<>();
         //  System.out.println("L 100. Bipartition_8_vals: BIPARTITION size : " + map_bipartitions.keySet().size());
         //  System.out.println("Keyset size before populating: " + dictiory_4Tax_sequence.keySet().size());
-        HashSet<Quartet> set = new HashSet<>();
-
+        //for feature computation
         for (int idx_quartet : customDS.quartet_indices_list_unsorted) {
             Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_quartet);
             FeatureComputer.makeDictionary(quartet, dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight);
         }
 
-        //compute the feature.
+        //for computing the feature.
         FeatureComputer.computeBinningFeature(dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight, customDS.level);
         
         

@@ -56,13 +56,17 @@ public class FeatureComputer {
         }
 
         if (list_ratios.isEmpty()) {
-            System.out.println("Empty 4-tax-seq (default ratio): " + Status.BETA_DEFAULT_VAL);
+            System.out.println("Empty list of 4-tax-seq with 3-quartet-config. (default ratio): " + Status.BETA_DEFAULT_VAL);
             WeightedPartitionScores.ALPHA_PARTITION_SCORE = Status.ALPHA_DEFAULT_VAL;
             WeightedPartitionScores.BETA_PARTITION_SCORE = 1;
 
-        } else { //calculate bins
+        } else { //calculate bins [list-ratios do exist]
+            
+//            System.out.println("List-ratios not empty, printing dictionary.");
+//            printDictionary(dictionary_4Tax_sequence, dictionary_4Tax_sequence_weight);
+            
             double weighted_avg_bin_ratio = Status.BETA_DEFAULT_VAL;
-
+            
             if (Bin.WILL_DO_DYNAMIC == true) { //only compute on Bin.true
                 weighted_avg_bin_ratio = Bin.calculateBinsAndFormScores(list_ratios); //forms bins and calculates scores..
 
@@ -90,7 +94,8 @@ public class FeatureComputer {
 
     }
 
-    public static void printDictionary(HashMap<List<String>, List<Quartet>> dictionary_4Tax_sequence, HashMap<List<String>, List<Double>> dictionary_4Tax_sequence_weight) {
+    public static void printDictionary(HashMap<List<String>, List<Quartet>> dictionary_4Tax_sequence, 
+            HashMap<List<String>, List<Double>> dictionary_4Tax_sequence_weight) {
         for (List<String> i : dictionary_4Tax_sequence.keySet()) {
             System.out.print("Key: " + i.get(0) + " " + i.get(1) + " " + i.get(2) + " " + i.get(3) + " --> ");
             System.out.print("Size: " + dictionary_4Tax_sequence.get(i).size() + "---> " + dictionary_4Tax_sequence.get(i));

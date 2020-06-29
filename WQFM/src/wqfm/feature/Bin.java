@@ -54,6 +54,7 @@ public class Bin {
     }
 
     public static double calculateBinsAndFormScores(List<Double> list_ratios) {
+        
         int cnt_before_thresh = 0;
         int cnt_after_thresh_before_1 = 0;
         int cnt_after_1 = 0;
