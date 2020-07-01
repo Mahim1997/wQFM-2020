@@ -25,13 +25,17 @@ of wQMC and ASTRAL.
 
 ## Execution dependencies
 <!-- OL -->
-1. Please change the paths in the file "quartet_count.sh".
-   The path in "quartet_count.sh" file must be changed to where the tool "triplets.soda2103" is kept.
+1. For now, "triplets.soda2103" must be in the same directory as "quartet_count.sh".
+  If you want to change the path, then please change the paths in the file "quartet_count.sh".
+  The path in "quartet_count.sh" file must be changed to where the tool "triplets.soda2103" is kept.
    <!-- Code Blocks -->
    ```bash
-   # Eg. In line 10, the triplets.soda2103 is kept in the directory "/home/mahim/gene-tree-tools/"
-   # Change it accordingly into where triplets.soda2103 is kept in your directory structure.
+  # Eg. In line 10, the triplets.soda2103 is kept in the directory "/home/mahim/gene-tree-tools/"
+  # Change it accordingly into where triplets.soda2103 is kept in your directory structure.
       cat $1| xargs -I@ sh -c 'echo -n "@" >'$tmp'; /home/mahim/gene-tree-tools/triplets.soda2103 printQuartets '$tmp';'|sed 's/.*: //'| sed 's/^/\(\(/'| sed 's/$/\)\)\;/'| sed 's/ | /\),\(/'| sed 's/ /\,/g'
+
+  # If you want to keep "triplets.soda2103" in the same directory and run, then don't change the paths. It should look like this now [with no absolute paths].
+      cat $1| xargs -I@ sh -c 'echo -n "@" >'$tmp'; ./triplets.soda2103 printQuartets '$tmp';'|sed 's/.*: //'| sed 's/^/\(\(/'| sed 's/$/\)\)\;/'| sed 's/ | /\),\(/'| sed 's/ /\,/g'
    ```
 
 2. Need to have "lib" folder in same path as jar file. (Check github/astral at https://github.com/smirarab/ASTRAL for more details on lib [uses phylonet package])
