@@ -1,5 +1,5 @@
 #Author: Md. Shamsuzzoha Bayzid
-#!/bin/sh
+#!/bin/bash
 
 # sh quartet_count.sh $1 | perl summarize_quartets_stdin.pl > $2
 
@@ -17,5 +17,16 @@ then
   usage
 fi
 
-rm -f $2 	#To remove the output file just in case 
-sh quartet_count.sh $1 $PWD| perl summarize_quartets_stdin.pl > $2 	#To pass the PATH as parameter to the shell script quartet_count.sh
+rm -f $2 	#To remove the output file just in case
+
+start=`date +%s`
+
+# sh quartet_count.sh $1 | perl summarize_quartets_stdin.pl > $2 	#To pass the PATH as parameter to the shell script quartet_count.sh
+
+./quartet_count.sh $1 | python3 summarize-quartet-counts.py $2 	#To pass the PATH as parameter to the shell script quartet_count.sh
+
+end=`date +%s`
+
+runtime=$((end-start))
+
+echo "Run time took $runtime seconds"

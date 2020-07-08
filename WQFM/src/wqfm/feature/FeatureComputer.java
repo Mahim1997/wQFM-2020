@@ -111,9 +111,12 @@ public class FeatureComputer {
         }
     }
 
-    public static void makeDictionary(Quartet q, HashMap<List<String>, List<Quartet>> dictionary_4Tax_sequence, HashMap<List<String>, List<Double>> dictionary_4Tax_sequence_weight) {
+    public static void makeDictionary(Quartet q, HashMap<List<String>, List<Quartet>> dictionary_4Tax_sequence,
+            HashMap<List<String>, List<Double>> dictionary_4Tax_sequence_weight) {
 
-        List<String> four_tax_sequence = sortTaxaWithinQuartets(q.taxa_sisters_left[0], q.taxa_sisters_left[1], q.taxa_sisters_right[0], q.taxa_sisters_right[1]);
+        List<String> four_tax_sequence = sortTaxaWithinQuartets(q.taxa_sisters_left[0], q.taxa_sisters_left[1],
+                q.taxa_sisters_right[0], q.taxa_sisters_right[1]);
+
         if (dictionary_4Tax_sequence.get(four_tax_sequence) == null) {
             List<Quartet> temp_list = new ArrayList<>();
             temp_list.add(q);

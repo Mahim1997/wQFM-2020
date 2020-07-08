@@ -75,8 +75,7 @@ public class Bin {
             //proportion counts ..
             if (Bin.does_lie_within(0.5, Main.THRESHOLD_BINNING, ratio)) {
                 cnt_before_thresh++;
-            }
-            else if (Bin.does_lie_within(Main.THRESHOLD_BINNING, upper_limit_of_highest_bin, ratio)) {
+            } else if (Bin.does_lie_within(Main.THRESHOLD_BINNING, upper_limit_of_highest_bin, ratio)) {
                 cnt_after_thresh_before_1++;
             } else { // >= 1
                 cnt_after_1++;
@@ -86,7 +85,6 @@ public class Bin {
                 if (Bin.is_within_bin(bin, ratio) == true) {
                     bin.frequency++; //if ratio lies in this bin, increment
                 }
-
             }
         }
 
