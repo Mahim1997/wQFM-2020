@@ -1,10 +1,7 @@
 package wqfm.feature;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import wqfm.interfaces.Status;
 import wqfm.main.Main;
 
@@ -130,6 +127,7 @@ public class Bin {
 ///            FIX to 1 [don't bin here, doesn't give better result on binning].
 
         }
+        bins.clear(); ///clear for gc to collect [WILL have to be more efficient than this]
         return weighted_avg_final;
 
     }

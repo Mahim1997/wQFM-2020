@@ -1,9 +1,6 @@
 package wqfm.ds;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
-import javafx.util.Pair;
 
 /**
  *
@@ -12,7 +9,8 @@ import javafx.util.Pair;
 public class Quartet {
 
     public static int NUM_TAXA_PER_PARTITION = 2;
-
+    public static String TEMP_STRING;
+    
     public String[] taxa_sisters_left;// = new String[NUM_TAXA_PER_PARTITION];
     public String[] taxa_sisters_right;// = new String[NUM_TAXA_PER_PARTITION];
     public double weight;
@@ -33,21 +31,19 @@ public class Quartet {
         this.taxa_sisters_left = new String[NUM_TAXA_PER_PARTITION];
         this.taxa_sisters_right = new String[NUM_TAXA_PER_PARTITION];
 
-        String[] left = {a, b};
-        String[] right = {c, d};
-        Arrays.sort(left);
-        Arrays.sort(right);
-        for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
-            this.taxa_sisters_left[i] = left[i];
-            this.taxa_sisters_right[i] = right[i];
-        }
+        this.taxa_sisters_left[0] = a;
+        this.taxa_sisters_left[1] = b;
+        this.taxa_sisters_right[0] = c;
+        this.taxa_sisters_right[1] = d;
+        this.weight = w;
+
         this.sort_quartet_taxa_names();
 
-        this.weight = w;
     }
 
     public Quartet(Quartet q) {
-        initialiseQuartet(q.taxa_sisters_left[0], q.taxa_sisters_left[1], q.taxa_sisters_right[0], q.taxa_sisters_right[1], q.weight);
+        initialiseQuartet(q.taxa_sisters_left[0], q.taxa_sisters_left[1],
+                q.taxa_sisters_right[0], q.taxa_sisters_right[1], q.weight);
     }
 
     public Quartet(String a, String b, String c, String d, double w) {
@@ -62,6 +58,7 @@ public class Quartet {
         s = s.replace(")", ""); // Finally end up with A,B,C,D,41.0
         String[] arr = s.split(",");
         initialiseQuartet(arr[0], arr[1], arr[2], arr[3], Double.parseDouble(arr[4]));
+
     }
 
     @Override
@@ -89,21 +86,19 @@ public class Quartet {
     }
      */
     public void sort_quartet_taxa_names() {
-        String[] left = {this.taxa_sisters_left[0], this.taxa_sisters_left[1]};
-        String[] right = {this.taxa_sisters_right[0], this.taxa_sisters_right[1]};
-        
-        Arrays.sort(left);
-        Arrays.sort(right);
+//        String[] left = {this.taxa_sisters_left[0], this.taxa_sisters_left[1]};
+//        String[] right = {this.taxa_sisters_right[0], this.taxa_sisters_right[1]};
 
-        if (left[0].compareTo(right[0]) < 0) { //don't swap two sides
-            for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
-                this.taxa_sisters_left[i] = left[i];
-                this.taxa_sisters_right[i] = right[i];
-            }
+        Arrays.sort(this.taxa_sisters_left);
+        Arrays.sort(this.taxa_sisters_right);
+
+        if (this.taxa_sisters_left[0].compareTo(this.taxa_sisters_right[0]) < 0) { //don't swap two sides
+            //no need to swap
         } else {  // swap two sides
             for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
-                this.taxa_sisters_left[i] = right[i];
-                this.taxa_sisters_right[i] = left[i];
+                Quartet.TEMP_STRING = this.taxa_sisters_left[i];
+                this.taxa_sisters_left[i] = this.taxa_sisters_right[i];
+                this.taxa_sisters_right[i] = Quartet.TEMP_STRING;
             }
         }
     }

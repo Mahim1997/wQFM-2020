@@ -41,8 +41,7 @@ public class FeatureComputer {
         return (v1 - v2) / ((v1 + v2) / 2) <= threshold;
     }
 
-    public static void computeBinningFeature(HashMap<List<String>, List<Quartet>> dictionary_4Tax_sequence,
-            HashMap<List<String>, List<Double>> dictionary_4Tax_sequence_weight, int level) {
+    public static void computeBinningFeature(HashMap<List<String>, List<Double>> dictionary_4Tax_sequence_weight, int level) {
         //check on level==0 if is on the right side, don't bin further ...
         List<Double> list_ratios = new ArrayList<>();
         for (List<String> threeTax : dictionary_4Tax_sequence_weight.keySet()) {

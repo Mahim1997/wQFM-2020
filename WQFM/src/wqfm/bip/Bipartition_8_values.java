@@ -102,19 +102,12 @@ public class Bipartition_8_values {
         //  System.out.println("Keyset size before populating: " + dictiory_4Tax_sequence.keySet().size());
         //for feature computation
 
-        if (Main.PARTITION_SCORE_MODE == Status.PARTITION_SCORE_FULL_DYNAMIC) {
-/////                || (customDS.taxa_list_string.size() >= Status.EARLY_STOP_NUM_TAXA)) { //(not used) early stop condition.
-/////            System.out.println("EARLY STOP AT |P| < " + Status.EARLY_STOP_NUM_TAXA);
-            for (int idx_quartet : customDS.quartet_indices_list_unsorted) {
-                Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_quartet);
-                FeatureComputer.makeDictionary(quartet, dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight);
-            }
-            //for computing the feature.
-            FeatureComputer.computeBinningFeature(dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight, customDS.level);
-        }
-
         for (int idx_quartet : customDS.quartet_indices_list_unsorted) {
             Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_quartet);
+
+            if (Main.PARTITION_SCORE_MODE == Status.PARTITION_SCORE_FULL_DYNAMIC) {
+                FeatureComputer.makeDictionary(quartet, dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight);
+            }
 
             //obtain the quartet's taxa's bipartitions
             int left_sis_1_bip_val = map_bipartitions.get(quartet.taxa_sisters_left[0]);
@@ -144,6 +137,9 @@ public class Bipartition_8_values {
                 default:
                     break;
             }
+        }
+        if (Main.PARTITION_SCORE_MODE == Status.PARTITION_SCORE_FULL_DYNAMIC) {
+            FeatureComputer.computeBinningFeature(dictiory_4Tax_sequence_weight, customDS.level);
         }
 
     }
