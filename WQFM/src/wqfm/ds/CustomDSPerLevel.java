@@ -19,9 +19,10 @@ public class CustomDSPerLevel {
     
     //Will mutate per level
     public List<Integer> quartet_indices_list_unsorted;
-    public Map<String, List<Integer>> map_taxa_relevant_quartet_indices; //releveant quartets map, key: taxa & val:list<indices>
+    public Map<Integer, List<Integer>> map_taxa_relevant_quartet_indices; //releveant quartets map, key: taxa & val:list<indices>
     public Map<Double, List<Integer>> sorted_quartets_weight_list_indices_map;
-    public List<String> taxa_list_string;
+    
+    public List<Integer> taxa_list_int;
 
     public void setInitialTableReference(InitialTable initTable) {
         this.initial_table1_of_list_of_quartets = initTable;
@@ -31,7 +32,7 @@ public class CustomDSPerLevel {
         this.quartet_indices_list_unsorted = new ArrayList<>();
         this.map_taxa_relevant_quartet_indices = new HashMap<>();
         this.sorted_quartets_weight_list_indices_map = new TreeMap<>(Collections.reverseOrder());
-        this.taxa_list_string = new ArrayList<>();
+        this.taxa_list_int = new ArrayList<>();
     }
 
     private void printTable1() {
@@ -43,7 +44,7 @@ public class CustomDSPerLevel {
 
     private void printMap_RelevantQuartetsIndicesPerTaxa() {
         System.out.println("----------- Printing Map <Taxa,RelevantQrtIndex> ---------");
-        for (String key_taxa : map_taxa_relevant_quartet_indices.keySet()) {
+        for (int key_taxa : map_taxa_relevant_quartet_indices.keySet()) {
             List<Integer> list_relevant_qrts_indices = map_taxa_relevant_quartet_indices.get(key_taxa);
             System.out.print("Taxa:<" + key_taxa + ">: Length: " + list_relevant_qrts_indices.size() + "  ==>> ");
             for (int i = 0; i < list_relevant_qrts_indices.size(); i++) {
@@ -55,7 +56,7 @@ public class CustomDSPerLevel {
 
     private void printMap_RelevantQuartetsPeraTaxa() {
         System.out.println("----------- Printing Map <Taxa,RelevantQrts> ---------");
-        for (String key_taxa : map_taxa_relevant_quartet_indices.keySet()) {
+        for (int key_taxa : map_taxa_relevant_quartet_indices.keySet()) {
             List<Integer> list_relevant_qrts_indices = map_taxa_relevant_quartet_indices.get(key_taxa);
             System.out.print("Taxa:<" + key_taxa + ">: Length: " + list_relevant_qrts_indices.size() + "  ==>> ");
             for (int i = 0; i < list_relevant_qrts_indices.size(); i++) {
@@ -89,14 +90,14 @@ public class CustomDSPerLevel {
             int index_qrt = this.quartet_indices_list_unsorted.get(itr);
             Quartet q = this.initial_table1_of_list_of_quartets.get(index_qrt);
             for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) { // Do for left-sisters ... push to map THIS quartet's row,col
-                String taxon = q.taxa_sisters_left[i];
+                int taxon = q.taxa_sisters_left[i];
                 if (this.map_taxa_relevant_quartet_indices.containsKey(taxon) == false) { //map doesn't have an entry yet for THIS taxon
                     this.map_taxa_relevant_quartet_indices.put(taxon, new ArrayList<>()); // initialize for THIS taxon
                 }
                 this.map_taxa_relevant_quartet_indices.get(taxon).add(index_qrt);
             }
             for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) { // Repeat the same for right-sisters
-                String taxon = q.taxa_sisters_right[i];
+                int taxon = q.taxa_sisters_right[i];
                 if (this.map_taxa_relevant_quartet_indices.containsKey(taxon) == false) { //map doesn't have an entry yet for THIS taxon
                     this.map_taxa_relevant_quartet_indices.put(taxon, new ArrayList<>()); // initialize for THIS taxon
                 }
@@ -107,7 +108,7 @@ public class CustomDSPerLevel {
 
     public void fillUpTaxaList() {
         this.map_taxa_relevant_quartet_indices.keySet().forEach((tax) -> {
-            this.taxa_list_string.add(tax);
+            this.taxa_list_int.add(tax);
         });
     }
 

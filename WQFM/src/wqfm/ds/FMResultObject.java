@@ -15,7 +15,7 @@ public class FMResultObject {
     public CustomDSPerLevel customDS_left_partition;
     public CustomDSPerLevel customDS_right_partition;
 
-    public final String dummyTaxonThisLevel;
+    public final int dummyTaxonThisLevel;
     private final CustomDSPerLevel customDS_initial_this_level;
 
     private Map<Quartet, CustomPair> map_quartet_of_dummy_with_added_weights_and_partition;
@@ -34,19 +34,19 @@ public class FMResultObject {
         this.map_quartet_of_dummy_with_added_weights_and_partition = new HashMap<>();
     }
 
-    public void createFMResultObjects(Map<String, Integer> mapOfBipartition) {
+    public void createFMResultObjects(Map<Integer, Integer> mapOfBipartition) {
         //Initially just transfer all to P_left and P_right. [Then for quartets-with-dummy, just pass the dummy node] 
-        for (String key_taxon : mapOfBipartition.keySet()) {
+        for (int key_taxon : mapOfBipartition.keySet()) {
             if (mapOfBipartition.get(key_taxon) == Status.LEFT_PARTITION) {
-                this.customDS_left_partition.taxa_list_string.add(key_taxon);
+                this.customDS_left_partition.taxa_list_int.add(key_taxon);
             } else if (mapOfBipartition.get(key_taxon) == Status.RIGHT_PARTITION) {
-                this.customDS_right_partition.taxa_list_string.add(key_taxon);
+                this.customDS_right_partition.taxa_list_int.add(key_taxon);
             }
         }
 
         //Add dummy taxon to both partitions.
-        this.customDS_left_partition.taxa_list_string.add(dummyTaxonThisLevel);
-        this.customDS_right_partition.taxa_list_string.add(dummyTaxonThisLevel);
+        this.customDS_left_partition.taxa_list_int.add(dummyTaxonThisLevel);
+        this.customDS_right_partition.taxa_list_int.add(dummyTaxonThisLevel);
 
         //1. Traverse each quartet, find the deferred and blank quartets and pass to next.
         for (int itr = 0; itr < this.customDS_initial_this_level.quartet_indices_list_unsorted.size(); itr++) {

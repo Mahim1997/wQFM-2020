@@ -2,6 +2,7 @@ package wqfm.utils;
 
 import java.util.List;
 import java.util.Map;
+import wqfm.ds.InitialTable;
 import wqfm.interfaces.Status;
 import wqfm.main.Main;
 
@@ -10,15 +11,18 @@ import wqfm.main.Main;
  * @author mahim
  */
 public class Utils {
+//    public static String getDummyTaxonName(int level) {
+//        if (Main.DEBUG_DUMMY_NAME == true) {
+//            String dummyTax = "X" + String.valueOf(level); //debug
+//            return dummyTax;
+//        } else {
+//            String dummyTax = "DUMMY_MZCR_" + String.valueOf(level); //arbitrary names so as to not get mixed up with actual names
+//            return dummyTax;
+//        }
+//    }
 
-    public static String getDummyTaxonName(int level) {
-        if (Main.DEBUG_DUMMY_NAME == true) {
-            String dummyTax = "X" + String.valueOf(level); //debug
-            return dummyTax;
-        } else {
-            String dummyTax = "DUMMY_MZCR_" + String.valueOf(level); //arbitrary names so as to not get mixed up with actual names
-            return dummyTax;
-        }
+    public static int getDummyTaxonName(int level) {
+        return (InitialTable.TAXA_COUNTER + level); //0->47 [original tax], then 48 and above ar DUMMY taxa
     }
 
     //Returns true if there is 1 taxa on either side, OR zero taxa on either side.[for pairwise swapping maybe needed]
@@ -29,7 +33,7 @@ public class Utils {
         //eg. -1,+1, +1,+1,+1,+1  --> so, two terms will lead to 0, rest sum will be length - 2
     }
 
-    public static boolean isThisSingletonBipartition(Map<String, Integer> mapInitialBip) {
+    public static boolean isThisSingletonBipartition(Map<Integer, Integer> mapInitialBip) {
         int len = mapInitialBip.keySet().size();
         int sum = Helper.sumMapValuesInteger(mapInitialBip);
 

@@ -6,9 +6,11 @@
 package wqfm.feature;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import wqfm.ds.Quartet;
 import wqfm.bip.WeightedPartitionScores;
 import wqfm.interfaces.Status;
@@ -20,39 +22,29 @@ import wqfm.main.Main;
  */
 public class FeatureComputer {
 
-    Double F1;
-    Double F2;
-    Double F3;
-    Double F4;
-    Double F5;
-
-    public static List<String> sortTaxaWithinQuartets(String tax1, String tax2, String tax3, String tax4) {
-        List<String> temp = new ArrayList<>(4);
-        temp.add(tax1);
-        temp.add(tax2);
-        temp.add(tax3);
-        temp.add(tax4);
-        Collections.sort(temp);
-        return temp;
-
+    public static int[] sortTaxaWithinQuartets(int tax1, int tax2, int tax3, int tax4) {
+        int[] arr = {tax1, tax2, tax3, tax4};
+        Arrays.sort(arr);
+        return arr;
     }
 
     public static boolean is_within_range(double v1, double v2, double threshold) {
         return (v1 - v2) / ((v1 + v2) / 2) <= threshold;
     }
 
-    public static void computeBinningFeature(HashMap<List<String>, List<Double>> dictionary_4Tax_sequence_weight, int level) {
+    public static void computeBinningFeature(Map<int[], List<Double>> dictionary_4Tax_sequence_weight, int level) {
         //check on level==0 if is on the right side, don't bin further ...
         List<Double> list_ratios = new ArrayList<>();
-        for (List<String> threeTax : dictionary_4Tax_sequence_weight.keySet()) {
-            List<Double> weights_under_this_3_tax_seq = dictionary_4Tax_sequence_weight.get(threeTax);
+
+        for (int[] four_tax_seq : dictionary_4Tax_sequence_weight.keySet()) {
+            List<Double> weights_under_this_3_tax_seq = dictionary_4Tax_sequence_weight.get(four_tax_seq);
             Collections.sort(weights_under_this_3_tax_seq, Collections.reverseOrder());
             if (weights_under_this_3_tax_seq.size() == 3) {
                 list_ratios.add(weights_under_this_3_tax_seq.get(0) / (weights_under_this_3_tax_seq.get(1) + weights_under_this_3_tax_seq.get(2)));
             }
             if (weights_under_this_3_tax_seq.size() > 3) {
                 System.out.println("-->>L 57. FeatureComputer. ratios.size exceeded 3. Check inputs.");
-                System.out.println("Printing this ratios, and sequences." + weights_under_this_3_tax_seq + " , " + threeTax);
+                System.out.println("Printing this ratios, and sequences." + weights_under_this_3_tax_seq + " , " + Arrays.toString(four_tax_seq));
             }
         }
 
@@ -110,27 +102,36 @@ public class FeatureComputer {
         }
     }
 
-    public static void makeDictionary(Quartet q, HashMap<List<String>, List<Quartet>> dictionary_4Tax_sequence,
-            HashMap<List<String>, List<Double>> dictionary_4Tax_sequence_weight) {
+    public static void makeDictionary(Quartet q, Map<int[], List<Double>> map_weights_four_tax_seq) {
 
-        List<String> four_tax_sequence = sortTaxaWithinQuartets(q.taxa_sisters_left[0], q.taxa_sisters_left[1],
+        int[] four_tax_sequence = sortTaxaWithinQuartets(q.taxa_sisters_left[0], q.taxa_sisters_left[1],
                 q.taxa_sisters_right[0], q.taxa_sisters_right[1]);
-
-        if (dictionary_4Tax_sequence.get(four_tax_sequence) == null) {
+/*
+        if (map_4_tax_seq_quartets.get(four_tax_sequence) == null) {
             List<Quartet> temp_list = new ArrayList<>();
             temp_list.add(q);
-            dictionary_4Tax_sequence.put(four_tax_sequence, temp_list);
+            map_4_tax_seq_quartets.put(four_tax_sequence, temp_list);
             List<Double> temp_list_2 = new ArrayList<>();
             temp_list_2.add(q.weight);
-            dictionary_4Tax_sequence_weight.put(four_tax_sequence, temp_list_2);
+            map_weights_four_tax_seq.put(four_tax_sequence, temp_list_2);
         } else {
-            List<Quartet> temp_list = dictionary_4Tax_sequence.get(four_tax_sequence);
+            List<Quartet> temp_list = map_4_tax_seq_quartets.get(four_tax_sequence);
             temp_list.add(q);
-            dictionary_4Tax_sequence.put(four_tax_sequence, temp_list);
-            List<Double> temp_list_2 = dictionary_4Tax_sequence_weight.get(four_tax_sequence);
+            map_4_tax_seq_quartets.put(four_tax_sequence, temp_list);
+            List<Double> temp_list_2 = map_weights_four_tax_seq.get(four_tax_sequence);
             temp_list_2.add(q.weight);
-            dictionary_4Tax_sequence_weight.put(four_tax_sequence, temp_list_2);
+            map_weights_four_tax_seq.put(four_tax_sequence, temp_list_2);
         }
+*/
+        if(map_weights_four_tax_seq.containsKey(four_tax_sequence) == false){ // this 4-tax-seq has no quartet-weights.
+            List<Double> list_weights = new ArrayList<>();
+            list_weights.add(q.weight);
+            map_weights_four_tax_seq.put(four_tax_sequence, list_weights);
+        }else{
+            map_weights_four_tax_seq.get(four_tax_sequence).add(q.weight);
+        }
+
+
     }
 
 }

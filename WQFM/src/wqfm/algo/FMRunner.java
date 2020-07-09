@@ -40,6 +40,12 @@ public class FMRunner {
         System.out.println("Running with partition score " + Status.GET_PARTITION_SCORE_PRINT());
         int level = 0;
         customDS.level = level; //for debugging issues.
+
+        System.out.println(InitialTable.TAXA_COUNTER);
+
+        System.out.println(InitialTable.map_of_str_vs_int_tax_list);
+        System.out.println(InitialTable.map_of_int_vs_str_tax_list);
+
         String final_tree = runner.recursiveDivideAndConquer(customDS, level, initialTable); //customDS will have (P, Q, Q_relevant etc) all the params needed.
         System.out.println("\n\n[L 49.] FMRunner: final tree return");
         System.out.println(final_tree);
@@ -56,14 +62,14 @@ public class FMRunner {
         customDS_this_level.fillRelevantQuartetsMap(); //fill-up the relevant quartets per taxa map
         if (level == 0) { //only do it for the initial step, other levels will be passed as parameters
             customDS_this_level.fillUpTaxaList(); //fill-up the taxa list
-            System.out.println("Total Num-Taxa = " + customDS_this_level.taxa_list_string.size());
+            System.out.println("Total Num-Taxa = " + customDS_this_level.taxa_list_int.size());
         }
 
         /////////////////// TERMINATING CONDITIONS \\\\\\\\\\\\\\\\\\\\\\\\
         // |P| <= 3 OR |Q|.isEmpty() ... return star over taxa list{P}
-        if ((customDS_this_level.taxa_list_string.size() <= 3)
+        if ((customDS_this_level.taxa_list_int.size() <= 3)
                 || (customDS_this_level.quartet_indices_list_unsorted.isEmpty())) {
-            String starTree = TreeHandler.getStarTree(customDS_this_level.taxa_list_string); //depth-one tree
+            String starTree = TreeHandler.getStarTree(customDS_this_level.taxa_list_int); //depth-one tree
             return starTree;
         }
 
@@ -71,7 +77,7 @@ public class FMRunner {
         customDS_this_level.level = level; //for debugging issues.
 
         InitialBipartition initialBip = new InitialBipartition();
-        Map<String, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS_this_level);
+        Map<Integer, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS_this_level);
 
         Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
         initialBip_8_vals.compute8ValuesUsingAllQuartets_this_level(customDS_this_level, mapInitialBipartition);
@@ -86,18 +92,18 @@ public class FMRunner {
         //Debug printing begin
         //        System.out.println("-------------- After Level " + level + " LEFT Quartets -------------------- ");
         //        System.out.println(customDS_left.onlyQuartetIndices());
-        //        System.out.println(customDS_left.taxa_list_string);
+        //        System.out.println(customDS_left.taxa_list_int);
         //        System.out.println("============== After Level " + level + " RIGHT Quartets ==================== ");
         //        System.out.println(customDS_right.onlyQuartetIndices());
-        //        System.out.println(customDS_right.taxa_list_string);
+        //        System.out.println(customDS_right.taxa_list_int);
         //        System.out.println("++++++++++++++ After Level " + level + " Quartet lists ++++++++++++++++++++ ");
         //        customDS_this_level.initial_table1_of_list_of_quartets.printQuartetList();
         //Debug printing end
         /////////////////// Beginning of Recursion \\\\\\\\\\\\\\\\\\\\\\\\\\\
-        String dummyTaxon = fmResultObject.dummyTaxonThisLevel;
+        int dummyTaxon = fmResultObject.dummyTaxonThisLevel;
         String left_tree_unrooted = recursiveDivideAndConquer(customDS_left, level, initialTable);
         String right_tree_unrooted = recursiveDivideAndConquer(customDS_right, level, initialTable);
-        String merged_tree = TreeHandler.mergeUnrootedTrees(left_tree_unrooted, right_tree_unrooted, dummyTaxon);
+        String merged_tree = TreeHandler.mergeUnrootedTrees(left_tree_unrooted, right_tree_unrooted, String.valueOf(dummyTaxon));
         return merged_tree;
     }
 

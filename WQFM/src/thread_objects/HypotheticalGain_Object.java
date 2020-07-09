@@ -13,11 +13,11 @@ import wqfm.bip.Bipartition_8_values;
  */
 public class HypotheticalGain_Object {
 
-    public String taxToConsider;
+    public int taxToConsider;
     public Bipartition_8_values _8_values_whole_considering_thisTax_swap;
     public double Gain;
 
-    public HypotheticalGain_Object(String taxToConsider, Bipartition_8_values _8_values_whole_considering_thisTax_swap, double Gain) {
+    public HypotheticalGain_Object(int taxToConsider, Bipartition_8_values _8_values_whole_considering_thisTax_swap, double Gain) {
         this.taxToConsider = taxToConsider;
         this._8_values_whole_considering_thisTax_swap = _8_values_whole_considering_thisTax_swap;
         this.Gain = Gain;

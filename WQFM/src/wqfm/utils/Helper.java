@@ -95,17 +95,23 @@ public class Helper {
         return sum;
     }
 
-    public static int sumMapValuesInteger(Map<String, Integer> mapInitialBip) {
+    public static int sumMapValuesInteger(Map<Integer, Integer> mapInitialBip) {
         int sum = 0;
         sum = mapInitialBip.keySet().stream().map((key) -> mapInitialBip.get(key)).reduce(sum, Integer::sum);
         return sum;
     }
 
+//    public static int sumMapValuesInteger(Map<String, Integer> mapInitialBip) {
+//        int sum = 0;
+//        sum = mapInitialBip.keySet().stream().map((key) -> mapInitialBip.get(key)).reduce(sum, Integer::sum);
+//        return sum;
+//    }
+
     public static boolean checkAllValuesIFSame(List<Boolean> list, boolean val) {
         return list.stream().noneMatch((x) -> (x != val)); //if at least one is different wrt val, then return false
     }
 
-    public static boolean checkAllValuesIFSame(Map<String, Boolean> map, boolean val) {
+    public static boolean checkAllValuesIFSame(Map<Integer, Boolean> map, boolean val) {
         if (map.isEmpty()) {
             return true;
         }

@@ -21,16 +21,15 @@ import wqfm.bip.WeightedPartitionScores;
  *
  * @author Zahin
  */
-
-
 public class HypotheticalGainCalcuator implements Callable<HypotheticalGain_Object> {
 
-    private String taxToConsider;
+    private int taxToConsider;
     private Bipartition_8_values initialBipartition_8_values;
     private final CustomDSPerLevel customDS;
-    private Map<String, Integer> bipartitionMap;
+    private Map<Integer, Integer> bipartitionMap;
 
-    public HypotheticalGainCalcuator(String taxToConsider, Bipartition_8_values initialBipartition_8_values, CustomDSPerLevel customDS, Map<String, Integer> bipartitionMap) {
+    public HypotheticalGainCalcuator(int taxToConsider, Bipartition_8_values initialBipartition_8_values,
+            CustomDSPerLevel customDS, Map<Integer, Integer> bipartitionMap) {
         this.taxToConsider = taxToConsider;
         this.initialBipartition_8_values = initialBipartition_8_values;
         this.customDS = customDS;
@@ -42,9 +41,9 @@ public class HypotheticalGainCalcuator implements Callable<HypotheticalGain_Obje
 
         int taxPartValBeforeHypoSwap = this.bipartitionMap.get(taxToConsider);
         //First check IF moving this will lead to a singleton bipartition ....
-        Map<String, Integer> newMap = new HashMap<>(this.bipartitionMap);
+        Map<Integer, Integer> newMap = new HashMap<>(this.bipartitionMap);
         newMap.put(taxToConsider, Utils.getOppositePartition(taxPartValBeforeHypoSwap)); //hypothetically make the swap.
-     //   System.out.println(taxToConsider);
+        //   System.out.println(taxToConsider);
         List<Integer> relevantQuartetsBeforeHypoMoving = customDS.map_taxa_relevant_quartet_indices.get(taxToConsider);
         Bipartition_8_values _8_vals_THIS_TAX_before_hypo_swap = new Bipartition_8_values(); // all initialized to 0
         Bipartition_8_values _8_vals_THIS_TAX_AFTER_hypo_swap = new Bipartition_8_values(); // all initialized to 0
@@ -79,7 +78,7 @@ public class HypotheticalGainCalcuator implements Callable<HypotheticalGain_Obje
         double ps_before_reduced = WeightedPartitionScores.calculatePartitionScoreReduced(_8_vals_THIS_TAX_before_hypo_swap);
         double ps_after_reduced = WeightedPartitionScores.calculatePartitionScoreReduced(_8_vals_THIS_TAX_AFTER_hypo_swap);
         double gainOfThisTax = ps_after_reduced - ps_before_reduced; //correct calculation
-      //  System.out.println(taxToConsider);
+        //  System.out.println(taxToConsider);
         Bipartition_8_values _8_values_whole_considering_thisTax_swap = new Bipartition_8_values();
         /*AfterHypoSwap.Whole_8Vals - BeforeHypoSwap.Whole_8Vals = AfterHypoSwap.OneTax.8Vals - BeforeHypoSwap.OneTax.8vals //vector rules of distance addition*/
         //So, AfterHypoSwap.Whole_8Vals = BeforeHypoSwap.Whole_8Vals + AfterHypoSwap.OneTax.8Vals - BeforeHypoSwap.OneTax.8vals

@@ -174,15 +174,15 @@ public class TreeHandler {
     }
 
     //eg: a b c d
-    public static String getStarTree(List<String> taxa_list_string) {
-        if (taxa_list_string.isEmpty()) {
+    public static String getStarTree(List<Integer> taxa_list_int) {
+        if (taxa_list_int.isEmpty()) {
             return "();";
         }
         String s = "";
         s += "(";
-        for (int i = 0; i < taxa_list_string.size(); i++) {
-            s += taxa_list_string.get(i);
-            if (i != taxa_list_string.size() - 1) {
+        for (int i = 0; i < taxa_list_int.size(); i++) {
+            s += taxa_list_int.get(i);
+            if (i != taxa_list_int.size() - 1) {
                 s += ","; //do not add comma for the last taxon
             }
         }

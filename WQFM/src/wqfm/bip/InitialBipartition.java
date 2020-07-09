@@ -30,11 +30,13 @@ public class InitialBipartition {
         System.out.println("");
     }
 
-    public Map<String, Integer> getInitialBipartitionMap(CustomDSPerLevel customDS) {
-        Map<String, Integer> map_partition = new HashMap<>(); //return this map
-        for (String tax : customDS.taxa_list_string) { //initially assign all as 0/unassigned
+    public Map<Integer, Integer> getInitialBipartitionMap(CustomDSPerLevel customDS) {
+        Map<Integer, Integer> map_partition = new HashMap<>(); //return this map
+
+        for (int tax : customDS.taxa_list_int) { //initially assign all as 0/unassigned
             map_partition.put(tax, Status.UNASSIGNED_PARTITION);
         }
+
         int count_taxa_left_partition = 0;
         int count_taxa_right_partition = 0;
 
@@ -44,11 +46,11 @@ public class InitialBipartition {
                 int quartet_index = list_quartets_with_this_weight.get(j);//Mahim
                 Quartet quartet_under_consideration = customDS.initial_table1_of_list_of_quartets.get(quartet_index);//Mahim
 
-                String q1 = quartet_under_consideration.taxa_sisters_left[0];
-                String q2 = quartet_under_consideration.taxa_sisters_left[1];
-                String q3 = quartet_under_consideration.taxa_sisters_right[0];
-                String q4 = quartet_under_consideration.taxa_sisters_right[1];
-                
+                int q1 = quartet_under_consideration.taxa_sisters_left[0];
+                int q2 = quartet_under_consideration.taxa_sisters_left[1];
+                int q3 = quartet_under_consideration.taxa_sisters_right[0];
+                int q4 = quartet_under_consideration.taxa_sisters_right[1];
+
                 int status_q1, status_q2, status_q3, status_q4; //status of q1,q2,q3,q4 respectively
                 status_q1 = map_partition.get(q1);
                 status_q2 = map_partition.get(q2);
@@ -165,7 +167,7 @@ public class InitialBipartition {
 
         //now assign remaining taxa randomly step4
         int flag_for_random_assignment = 0;
-        for (String key_tax : map_partition.keySet()) {
+        for (int key_tax : map_partition.keySet()) {
             if (map_partition.get(key_tax) == Status.UNASSIGNED_PARTITION) {
                 if (count_taxa_left_partition < count_taxa_right_partition) {
                     flag_for_random_assignment = 2;

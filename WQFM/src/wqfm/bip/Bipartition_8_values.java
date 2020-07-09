@@ -95,9 +95,9 @@ public class Bipartition_8_values {
         addRespectiveValue(q.weight, status);
     }
 
-    public void compute8ValuesUsingAllQuartets_this_level(CustomDSPerLevel customDS, Map<String, Integer> map_bipartitions) {
-        HashMap<List<String>, List<Quartet>> dictiory_4Tax_sequence = new HashMap<>();
-        HashMap<List<String>, List<Double>> dictiory_4Tax_sequence_weight = new HashMap<>();
+    public void compute8ValuesUsingAllQuartets_this_level(CustomDSPerLevel customDS, Map<Integer, Integer> map_bipartitions) {
+
+        Map<int[], List<Double>> map_four_tax_seq_weights_list = new HashMap<>();
         //  System.out.println("L 100. Bipartition_8_vals: BIPARTITION size : " + map_bipartitions.keySet().size());
         //  System.out.println("Keyset size before populating: " + dictiory_4Tax_sequence.keySet().size());
         //for feature computation
@@ -106,7 +106,7 @@ public class Bipartition_8_values {
             Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_quartet);
 
             if (Main.PARTITION_SCORE_MODE == Status.PARTITION_SCORE_FULL_DYNAMIC) {
-                FeatureComputer.makeDictionary(quartet, dictiory_4Tax_sequence, dictiory_4Tax_sequence_weight);
+                FeatureComputer.makeDictionary(quartet, map_four_tax_seq_weights_list);
             }
 
             //obtain the quartet's taxa's bipartitions
@@ -139,7 +139,7 @@ public class Bipartition_8_values {
             }
         }
         if (Main.PARTITION_SCORE_MODE == Status.PARTITION_SCORE_FULL_DYNAMIC) {
-            FeatureComputer.computeBinningFeature(dictiory_4Tax_sequence_weight, customDS.level);
+            FeatureComputer.computeBinningFeature(map_four_tax_seq_weights_list, customDS.level);
         }
 
     }

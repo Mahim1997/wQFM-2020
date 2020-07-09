@@ -9,10 +9,10 @@ import java.util.Arrays;
 public class Quartet {
 
     public static int NUM_TAXA_PER_PARTITION = 2;
-    public static String TEMP_STRING;
-    
-    public String[] taxa_sisters_left;// = new String[NUM_TAXA_PER_PARTITION];
-    public String[] taxa_sisters_right;// = new String[NUM_TAXA_PER_PARTITION];
+    public static int TEMP_TAX_TO_SWAP;
+
+    public int[] taxa_sisters_left;// = new String[NUM_TAXA_PER_PARTITION];
+    public int[] taxa_sisters_right;// = new String[NUM_TAXA_PER_PARTITION];
     public double weight;
 
     public Quartet() {
@@ -25,11 +25,11 @@ public class Quartet {
         Same with (c,d) for taxa_sisters_right.
         FOR NOW, NOT DOING ABOVE THING
      */
-    public final void initialiseQuartet(String a, String b, String c, String d, double w) {
+    public final void initialiseQuartet(int a, int b, int c, int d, double w) {
         //sorting.
 
-        this.taxa_sisters_left = new String[NUM_TAXA_PER_PARTITION];
-        this.taxa_sisters_right = new String[NUM_TAXA_PER_PARTITION];
+        this.taxa_sisters_left = new int[NUM_TAXA_PER_PARTITION];
+        this.taxa_sisters_right = new int[NUM_TAXA_PER_PARTITION];
 
         this.taxa_sisters_left[0] = a;
         this.taxa_sisters_left[1] = b;
@@ -46,19 +46,55 @@ public class Quartet {
                 q.taxa_sisters_right[0], q.taxa_sisters_right[1], q.weight);
     }
 
-    public Quartet(String a, String b, String c, String d, double w) {
+    public Quartet(int a, int b, int c, int d, double w) {
         initialiseQuartet(a, b, c, d, w);
     }
 
-    public Quartet(String newickQuartet) {
-        String s = newickQuartet;
+    public Quartet(String s) {
+        //ADDITIONALLY append to the map and reverse map.
         s = s.replace(" ", "");
         s = s.replace(";", ",");
         s = s.replace("(", "");
         s = s.replace(")", ""); // Finally end up with A,B,C,D,41.0
         String[] arr = s.split(",");
-        initialiseQuartet(arr[0], arr[1], arr[2], arr[3], Double.parseDouble(arr[4]));
+        int a, b, c, d;
+        if (InitialTable.map_of_str_vs_int_tax_list.containsKey(arr[0]) == true) {
+            a = InitialTable.map_of_str_vs_int_tax_list.get(arr[0]);
+        } else { //THIS taxon doesn't exist.
+            a = InitialTable.TAXA_COUNTER;
+            InitialTable.TAXA_COUNTER++;
+            InitialTable.map_of_str_vs_int_tax_list.put(arr[0], a);
+            InitialTable.map_of_int_vs_str_tax_list.put(a, arr[0]);
+        }
 
+        if (InitialTable.map_of_str_vs_int_tax_list.containsKey(arr[1]) == true) {
+            b = InitialTable.map_of_str_vs_int_tax_list.get(arr[1]);
+        } else { //THIS taxon doesn't exist.
+            b = InitialTable.TAXA_COUNTER;
+            InitialTable.TAXA_COUNTER++;
+            InitialTable.map_of_str_vs_int_tax_list.put(arr[1], b);
+            InitialTable.map_of_int_vs_str_tax_list.put(b, arr[1]);
+        }
+        if (InitialTable.map_of_str_vs_int_tax_list.containsKey(arr[2]) == true) {
+            c = InitialTable.map_of_str_vs_int_tax_list.get(arr[2]);
+        } else { //THIS taxon doesn't exist.
+            c = InitialTable.TAXA_COUNTER;
+            InitialTable.TAXA_COUNTER++;
+            InitialTable.map_of_str_vs_int_tax_list.put(arr[2], c);
+            InitialTable.map_of_int_vs_str_tax_list.put(c, arr[2]);
+        }
+        if (InitialTable.map_of_str_vs_int_tax_list.containsKey(arr[3]) == true) {
+            d = InitialTable.map_of_str_vs_int_tax_list.get(arr[3]);
+        } else { //THIS taxon doesn't exist.
+            d = InitialTable.TAXA_COUNTER;
+            InitialTable.TAXA_COUNTER++;
+            InitialTable.map_of_str_vs_int_tax_list.put(arr[3], d);
+            InitialTable.map_of_int_vs_str_tax_list.put(d, arr[3]);
+        }
+        
+        initialiseQuartet(a, b, c, d, Double.parseDouble(arr[4]));
+        
+//        initialiseQuartet(arr[0], arr[1], arr[2], arr[3], Double.parseDouble(arr[4]));
     }
 
     @Override
@@ -92,29 +128,27 @@ public class Quartet {
         Arrays.sort(this.taxa_sisters_left);
         Arrays.sort(this.taxa_sisters_right);
 
-        if (this.taxa_sisters_left[0].compareTo(this.taxa_sisters_right[0]) < 0) { //don't swap two sides
+        if (this.taxa_sisters_left[0] < this.taxa_sisters_right[0]) { //don't swap two sides
             //no need to swap
         } else {  // swap two sides
             for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
-                Quartet.TEMP_STRING = this.taxa_sisters_left[i];
+                Quartet.TEMP_TAX_TO_SWAP = this.taxa_sisters_left[i];
                 this.taxa_sisters_left[i] = this.taxa_sisters_right[i];
-                this.taxa_sisters_right[i] = Quartet.TEMP_STRING;
+                this.taxa_sisters_right[i] = Quartet.TEMP_TAX_TO_SWAP;
             }
         }
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        this.sort_quartet_taxa_names();
-        hash = 97 * hash + Arrays.deepHashCode(this.taxa_sisters_left);
-        hash = 97 * hash + Arrays.deepHashCode(this.taxa_sisters_right);
+        int hash = 3;
+        hash = 97 * hash + Arrays.hashCode(this.taxa_sisters_left);
+        hash = 97 * hash + Arrays.hashCode(this.taxa_sisters_right);
         return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-        this.sort_quartet_taxa_names();
         if (this == obj) {
             return true;
         }
@@ -124,29 +158,16 @@ public class Quartet {
         if (getClass() != obj.getClass()) {
             return false;
         }
-
         Quartet other = (Quartet) obj;
         other.sort_quartet_taxa_names();
 
-//        System.out.print("-->>Quartet.equals() + " + this.toString() + " , " + other.toString() + "  ");
-//        for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
-//            if (this.taxa_sisters_left[i].equals(other.taxa_sisters_left[i]) == false) {
-//                return false;
-//            }
-//        }
-//        for (int i = 0; i < Quartet.NUM_TAXA_PER_PARTITION; i++) {
-//            if (this.taxa_sisters_right[i].equals(other.taxa_sisters_right[i]) == false) {
-//                return false;
-//            }
-//        }
-        if (!Arrays.deepEquals(this.taxa_sisters_left, other.taxa_sisters_left)) {
+        if (!Arrays.equals(this.taxa_sisters_left, other.taxa_sisters_left)) {
             return false;
         }
-        if (!Arrays.deepEquals(this.taxa_sisters_right, other.taxa_sisters_right)) {
-
+        if (!Arrays.equals(this.taxa_sisters_right, other.taxa_sisters_right)) {
             return false;
         }
-
         return true;
     }
+
 }
