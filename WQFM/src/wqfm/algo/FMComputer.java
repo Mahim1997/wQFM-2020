@@ -294,7 +294,7 @@ public class FMComputer {
 
             //Debug printing.
             if (listOfPerPassStatistics.isEmpty() == false) { //AT LEAST ONE per-pass val exists.
-                StatsPerPass last_pass_stat = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
+//                StatsPerPass last_pass_stat = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
 
 //                System.out.println("[Line 200]. FM-pass(box) = " + pass + " , best-taxon: " + last_pass_stat.whichTaxaWasPassed + " , MaxGain = "
 //                        + last_pass_stat.maxGainOfThisPass);

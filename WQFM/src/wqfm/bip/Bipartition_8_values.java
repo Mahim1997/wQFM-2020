@@ -5,6 +5,7 @@
  */
 package wqfm.bip;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -97,7 +98,7 @@ public class Bipartition_8_values {
 
     public void compute8ValuesUsingAllQuartets_this_level(CustomDSPerLevel customDS, Map<Integer, Integer> map_bipartitions) {
 
-        Map<int[], List<Double>> map_four_tax_seq_weights_list = new HashMap<>();
+        Map<List<Integer>, List<Double>> map_four_tax_seq_weights_list = new HashMap<>();
         //  System.out.println("L 100. Bipartition_8_vals: BIPARTITION size : " + map_bipartitions.keySet().size());
         //  System.out.println("Keyset size before populating: " + dictiory_4Tax_sequence.keySet().size());
         //for feature computation
@@ -138,6 +139,8 @@ public class Bipartition_8_values {
                     break;
             }
         }
+        
+        
         if (Main.PARTITION_SCORE_MODE == Status.PARTITION_SCORE_FULL_DYNAMIC) {
             FeatureComputer.computeBinningFeature(map_four_tax_seq_weights_list, customDS.level);
         }
