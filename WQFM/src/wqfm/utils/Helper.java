@@ -106,7 +106,6 @@ public class Helper {
 //        sum = mapInitialBip.keySet().stream().map((key) -> mapInitialBip.get(key)).reduce(sum, Integer::sum);
 //        return sum;
 //    }
-
     public static boolean checkAllValuesIFSame(List<Boolean> list, boolean val) {
         return list.stream().noneMatch((x) -> (x != val)); //if at least one is different wrt val, then return false
     }
@@ -134,6 +133,42 @@ public class Helper {
         }
         s += "\n";
         return s;
+    }
+
+    public static String getFinalTreeFromMap(String finalTree,
+            Map<Integer, String> map_of_int_vs_str) {
+
+        String decodedTree = "";
+        for (int i = 0; i < finalTree.length(); i++) {
+            char c = finalTree.charAt(i);
+            if (c != '(' && c != ')' && c != ',' && c != ';') {
+                String key = "";
+                int j;
+                for (j = i + 1; j < finalTree.length(); j++) {
+                    char c1 = finalTree.charAt(j);
+                    if (c1 == ')' || c1 == '(' || c1 == ',' || c1 == ';') {
+                        break;
+                    }
+                }
+                // System.out.println(j);
+                key = finalTree.substring(i, j);
+                // System.out.println("i: "+i+ " j: "+j);
+                // System.out.println("Key: "+ key);
+                String val = map_of_int_vs_str.get(Integer.parseInt(key.trim()));
+                //System.out.println(val);
+                decodedTree += val;
+                i += (j - 1 - i);
+            } else {
+                decodedTree += c;
+            }
+            //  System.out.println(finalTree.charAt(i));
+
+        }
+//        for(int key: map_of_int_vs_str.keySet()){
+//            System.out.println("<<REPLACING key=" + key + ", with val=" + map_of_int_vs_str.get(key) + ">>");
+//            replaced = replaced.replace(String.valueOf(key), map_of_int_vs_str.get(key));
+//        }
+        return decodedTree;
     }
 
 }
