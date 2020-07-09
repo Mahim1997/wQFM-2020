@@ -58,7 +58,7 @@ with open(inputFile) as fin:
 
 
 
-(pd.DataFrame.from_dict(data=sorted(dictionary_line), orient='index')
+(pd.DataFrame.from_dict(data=dictionary_line, orient='index')
    .to_csv(outputFile, header=False, sep=" "))
 
 
