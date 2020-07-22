@@ -57,7 +57,7 @@ of wQMC and ASTRAL.
     ```
 
 
-2. For running the jar file, use java -jar wQFM.jar <input-file-name> <output-file-name> [ALPHA] [BETA]
+2. For running the jar file, use java -jar wQFM.jar "input-file-name" "output-file-name" [ALPHA] [BETA]
 <!-- Code Blocks -->
   ```bash
       # for using the whole dynamic ratio-feature partition-score calculation.
