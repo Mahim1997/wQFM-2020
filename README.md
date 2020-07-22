@@ -37,7 +37,7 @@ of wQMC and ASTRAL.
   #### If you want to keep "triplets.soda2103" in the same directory and run, then don't change the paths. It should look like this now [with no absolute paths].
       cat $1| xargs -I@ sh -c 'echo -n "@" >'$tmp'; ./triplets.soda2103 printQuartets '$tmp';'|sed 's/.*: //'| sed 's/^/\(\(/'| sed 's/$/\)\)\;/'| sed 's/ | /\),\(/'| sed 's/ /\,/g'
    ```
-
+<!-- OL -->
 2. Need to have "lib" folder in same path as jar file. (Check github/astral at https://github.com/smirarab/ASTRAL for more details on lib [uses phylonet package])
 (This is needed to reroot the tree with respect to an outgroup node.)
 
