@@ -68,6 +68,6 @@ of wQMC and ASTRAL.
       
       # for running without dynamic ratio-feature partition-score calculation
       # Simply uses the input values of ALPHA and BETA to calculate partition-score = ALPHA*w[s] - BETA*w[v]
-      java -jar wQFM.jar "weighted_quartets" "output-file-name" "1" "0.5" 
+      java -jar wQFM.jar "weighted_quartets" "output-file-name" "1" "0.5"  # for ALPHA = 1, BETA = 0.5
  ```
 
