@@ -44,28 +44,23 @@ of wQMC and ASTRAL.
 ## Running the application.
 <!-- OL -->
 1. For generating embedded weighted quartets, use the "quartet-controller.sh" as discussed above.
-   <!-- UL -->
+
    Use ./quartet-controller.sh <input-gene-tree-file-name> <output-quartet-file-name>
    
    Make sure "quartet_count.sh" and "summarize_quartets_stdin.pl" are all in the same directory as "quartet-controller.sh"
    
    Make sure "quartet_count.sh" contains the correct directory for "triplets.soda2103"
-   
    <!-- Code Blocks -->
-
      ```bash
       ./quartet-controller.sh "gene-tree-file-name" "weighted-quartets"      
     ```
 
 
 2. For running the jar file, use java -jar wQFM.jar <input-file-name> <output-file-name> [ALPHA] [BETA]
-
 <!-- Code Blocks -->
   ```bash
-      
       # for using the whole dynamic ratio-feature partition-score calculation.
       java -jar wQFM.jar "weighted_quartets" "output-file-name" 
-      
       # for running without dynamic ratio-feature partition-score calculation
       # Simply uses the input values of ALPHA and BETA to calculate partition-score = ALPHA*w[s] - BETA*w[v]
       java -jar wQFM.jar "weighted_quartets" "output-file-name" "1" "0.5"  # for ALPHA = 1, BETA = 0.5
