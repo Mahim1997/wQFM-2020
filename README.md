@@ -29,13 +29,13 @@ of wQMC and ASTRAL.
   If you want to keep it in another path, please change to absolute path of "triplets.soda2103" in Line 36. of "generate-embedded-weighted-quartets.py".
   <!-- Code Blocks -->
   ```python
-        # use absolute path eg. /home/gene-trees/triplets.soda2103.
+        # we can also use absolute path eg. /home/gene-trees/triplets.soda2103 instead of keeping the tool in the same directory.
         result = subprocess.run(['./triplets.soda2103', 'printQuartets', tmp_file_name], stdout=subprocess.PIPE)
   ```
 
 2. Need to have "lib" folder in same path as jar file. 
-(Check [ASTRAL's github repo](https://github.com/smirarab/ASTRAL) for more details on lib [uses PhyloNet package])
-(This is needed to reroot the tree with respect to an outgroup node.)
+  (Check [ASTRAL's github repo](https://github.com/smirarab/ASTRAL) for more details on lib [uses PhyloNet package])
+  (This is needed to reroot the tree with respect to an outgroup node.)
 
 
 ## Running the application.
@@ -46,43 +46,42 @@ of wQMC and ASTRAL.
 
   <!-- Code Blocks -->
   ```bash
-    python3 generate-embedded-weighted-quartets.py <input-gene-tree-file-name> <output-quartet-file-name>
+    python3 generate-embedded-weighted-quartets.py "input-gene-tree-file-name" "output-quartet-file-name"
   ``` 
 
 2. For running the jar file, use java -jar wQFM.jar "input-file-name" "output-file-name" [ALPHA] [BETA]
 
-  For running using whole dynamic bin-ratio-heuristic partition-score calculation
-<!-- Code Blocks -->
-  ```bash
-      java -jar wQFM.jar "weighted_quartets" "output-file-name" 
-  ```
+    For running using whole dynamic bin-ratio-heuristic partition-score calculation
+    <!-- Code Blocks -->
+      ```bash
+          java -jar wQFM.jar "weighted_quartets" "output-file-name" 
+      ```
+    For running using fixed partition-score (input params: ALPHA, BETA) where partition-score = ALPHA.w[s] - BETA.w[v]
   
-  For running using fixed partition-score (input params: ALPHA, BETA) where partition-score = ALPHA.w[s] - BETA.w[v]
-  
-<!-- Code Blocks -->
-  ```bash
-      # Uses input values of ALPHA and BETA to calculate partition-score = ALPHA*w[s] - BETA*w[v]
-      
-      ## Example, partition-score = 1*w[s] - 0.5*w[v] i.e. ALPHA = 1, BETA = 0.5
-      java -jar wQFM.jar "weighted_quartets" "output-file-name" "1" "0.5"
- ```
+    <!-- Code Blocks -->
+      ```bash
+          # Uses input values of ALPHA and BETA to calculate partition-score = ALPHA*w[s] - BETA*w[v]
+
+          ## Example, partition-score = 1*w[s] - 0.5*w[v] i.e. ALPHA = 1, BETA = 0.5
+          java -jar wQFM.jar "weighted_quartets" "output-file-name" "1" "0.5"
+     ```
 
 3. For large number of taxa, increasing the memory available to Java is recommended. 
 
-**You should give Java only as much free available memory as you have in your machine.** 
+    **You should give Java only as much free available memory as you have in your machine.** 
 
-Suppose you have 8GB of free memory, do use the following command to make all the 8GB available to Java:
+    Suppose you have 8GB of free memory, do use the following command to make all the 8GB available to Java:
 
-<!-- Code Blocks -->
-```bash
-  java -Xmx8000M -jar wQFM.jar "weighted_quartets" "output-file-name" ## dynamic ratio-based partition-score
+    <!-- Code Blocks -->
+    ```bash
+      java -Xmx8000M -jar wQFM.jar "weighted_quartets" "output-file-name" ## dynamic ratio-based partition-score
 
-  java -Xmx8000M -jar wQFM.jar "weighted_quartets" "output-file-name" "1" "0.5" ## fixed partition-score
-```
+      java -Xmx8000M -jar wQFM.jar "weighted_quartets" "output-file-name" "1" "0.5" ## fixed partition-score
+    ```
 
 4. For now, wQFM cannot handle **stars** which is induced due to polytomy in gene trees.
   
-  So, if you do provide stars in input quartet-file, wQFM will terminate (by giving a prompt).
+    So, if you do provide stars in input quartet-file, wQFM will terminate (by giving a prompt).
 
 
 ## Acknowledgement
