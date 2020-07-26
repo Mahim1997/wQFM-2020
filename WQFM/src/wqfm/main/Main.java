@@ -22,16 +22,17 @@ public class Main {
 
 //    public static String INPUT_FILE_NAME = "input_files/best_weighted_quartets_avian_2X_R1_est";
     
-    public static String INPUT_FILE_NAME = "input_files/weighted_quartets_avian_biological_dataset";
-//    public static String INPUT_FILE_NAME = "input_files/wqrts_37Tax_noscale_800g_500b_R1";
+//    public static String INPUT_FILE_NAME = "input_files/weighted_quartets_avian_biological_dataset";
+    public static String INPUT_FILE_NAME = "input_files/weighted_quartets_R20_noscale_200g_1000b";
 //   public static String INPUT_FILE_NAME = "input_files/wqrts_15G_100g100b_R1";
 //    public static String INPUT_FILE_NAME = "input_files/wqrts_11Tax_est_5G_R1";
 //    public static String INPUT_FILE_NAME = "input_files/wqrts_toy_dataset_QFM_paper";
+//        public static String INPUT_FILE_NAME = "input_files/weird_dataset_1";
 
     public static String OUTPUT_FILE_NAME = "test-output-file-wqfm-java.tre";
 
     public static boolean DEBUG_MODE_TESTING = true;
-    public static double SMALLEPSILON = 0.00001; //if cumulative gain of iteration < this_num then stop
+    public static double SMALLEPSILON = 0.000001; //if cumulative gain of iteration < this_num then stop
     public static int MAX_ITERATIONS_LIMIT = 1000000; //can we keep it as another stopping-criterion ? [100k]
     public static double STEP_SIZE_BINNING = 0.01; //always used 0.01 for experiments (default)
     public static boolean SET_RIGHT_TO_1 = false; //false: dual-bin, true: right will be set to 1.

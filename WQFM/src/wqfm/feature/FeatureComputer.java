@@ -75,6 +75,10 @@ public class FeatureComputer {
                 if (Bin.proportion_left_thresh < Main.CUT_OFF_LIMIT_BINNING) { //level == 1 has no good distribution ... so do no more.
                     //stop ... don't bin on any levels. set to 1.
                     Bin.WILL_DO_DYNAMIC = false; //DEBUGGING FOR NOW
+                    System.out.println("\nNow, P(0.5," + Main.THRESHOLD_BINNING + ") = " + Bin.proportion_left_thresh
+                        + ", P(" + Main.THRESHOLD_BINNING + ",1) = "
+                        + Bin.proportion_after_thresh_before_1 + ", P(>=1) = " + Bin.proportion_greater_or_equal_1);
+                    
                     System.out.println(">> DON'T BIN ON NEXT LEVELS. Level 1 has good distribution above threshold = " + Main.THRESHOLD_BINNING
                             + " set BETA = " + Status.BETA_DEFAULT_VAL);
                     WeightedPartitionScores.BETA_PARTITION_SCORE = Status.BETA_DEFAULT_VAL; // set to 1 

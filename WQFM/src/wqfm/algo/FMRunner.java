@@ -48,7 +48,7 @@ public class FMRunner {
 
         String final_tree = runner.recursiveDivideAndConquer(customDS, level, initialTable); //customDS will have (P, Q, Q_relevant etc) all the params needed.
         System.out.println("\n\n[L 49.] FMRunner: final tree return");
-        
+
 //        System.out.println(final_tree);
         String final_tree_decoded = Helper.getFinalTreeFromMap(final_tree, InitialTable.map_of_int_vs_str_tax_list);
         System.out.println(final_tree_decoded);
@@ -110,8 +110,34 @@ public class FMRunner {
         return merged_tree;
     }
 
+    // https://stackoverflow.com/questions/6100712/simple-way-to-count-character-occurrences-in-a-string/23906674
+    private int countChars_in_String(String str, char c) {
+        int count = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == c) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     //------------------Initial Bipartition --------------------
-    private void populatePerInputLine(CustomDSPerLevel customDS, InitialTable initialTable, String line) {
+    private void populatePerInputLine(CustomDSPerLevel customDS, InitialTable initialTable, String line, int line_cnt) {
+        // Check if STAR is present 
+        // ((1,2,49,57)); 6     is a STAR
+        // ((0,1),(10,9)); 343  is normal // should have 3 right brackets and 3 left brackets
+        
+        int cnt_left_brackets = countChars_in_String(line, '(');
+        int cnt_right_brackets = countChars_in_String(line, ')');
+        
+        if((cnt_left_brackets != cnt_right_brackets) || (cnt_left_brackets != 3) || (cnt_right_brackets != 3)){
+            System.out.println("\n\n****** Found STAR, line num " + line_cnt + " :->" + line);
+            System.out.println("\nCan't handle polytomy for now. Exiting System.\n\n");
+            System.exit(-1);
+        }
+        
+        
+        // No issues with STAR.
         Quartet quartet = new Quartet(line);
         initialTable.addToListOfQuartets(quartet); //add to initial-quartets-single-list
         int idx_qrt_in_table_1 = initialTable.sizeTable() - 1; //size - 1 is the last index
@@ -126,8 +152,10 @@ public class FMRunner {
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
             try (BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
                 String line;
+                int line_cnt = 1;
                 while ((line = bufferedReader.readLine()) != null && !line.isEmpty()) {
-                    populatePerInputLine(customDS, initialTable, line);
+                    populatePerInputLine(customDS, initialTable, line, line_cnt);
+                    line_cnt++;
                 }
             }
         } catch (IOException ex) {
