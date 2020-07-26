@@ -26,16 +26,17 @@ of wQMC and ASTRAL.
 ## Execution dependencies
 <!-- OL -->
 1. The tool "triplets.soda2103" must be in the same directory as "generate-embedded-weighted-quartets.py".
-  If you want to keep it in another path, please change to absolute path of "triplets.soda2103" in Line 36. of "generate-embedded-weighted-quartets.py".
-  <!-- Code Blocks -->
-  ```python
+    
+    If you want to keep it in another path, please change to absolute path of "triplets.soda2103" in Line 36. of "generate-embedded-weighted-quartets.py".
+    <!-- Code Blocks -->
+    ```python
         # we can also use absolute path eg. /home/gene-trees/triplets.soda2103 instead of keeping the tool in the same directory.
         result = subprocess.run(['./triplets.soda2103', 'printQuartets', tmp_file_name], stdout=subprocess.PIPE)
-  ```
+    ```
 
 2. Need to have "lib" folder in same path as jar file. 
-  (Check [ASTRAL's github repo](https://github.com/smirarab/ASTRAL) for more details on lib [uses PhyloNet package])
-  (This is needed to reroot the tree with respect to an outgroup node.)
+    (Check [ASTRAL's github repo](https://github.com/smirarab/ASTRAL) for more details on lib [uses PhyloNet package])
+    (This is needed to reroot the tree with respect to an outgroup node.)
 
 
 ## Running the application.
@@ -44,10 +45,10 @@ of wQMC and ASTRAL.
     
     Make sure "triplets.soda2103" is in the same path (or you have added correct absolute paths) in the generate-embedded-weighted-quartets.py file.
 
-  <!-- Code Blocks -->
-  ```bash
-    python3 generate-embedded-weighted-quartets.py "input-gene-tree-file-name" "output-quartet-file-name"
-  ``` 
+    <!-- Code Blocks -->
+    ```bash
+      python3 generate-embedded-weighted-quartets.py "input-gene-tree-file-name" "output-quartet-file-name"
+    ``` 
 
 2. For running the jar file, use java -jar wQFM.jar "input-file-name" "output-file-name" [ALPHA] [BETA]
 
