@@ -25,13 +25,16 @@ of wQMC and ASTRAL.
 
 ## Execution dependencies
 <!-- OL -->
-1. The tool "triplets.soda2103" must be in the same directory as "generate-embedded-weighted-quartets.py".
+1. The tool "triplets.soda2103" must be in the same directory as "quartet-controller.sh".
     
-    If you want to keep it in another path, please change to absolute path of "triplets.soda2103" in Line 36. of "generate-embedded-weighted-quartets.py".
+    Other scripts such as "quartet_count.sh" and "summarize-quartet-counts.py" should be in the same directory as "quartet-controller.sh" and "triplets.soda2103".
+    
+    If you want to keep it in another path, please change to absolute path of "triplets.soda2103" in "quartet_count.sh".
+    
     <!-- Code Blocks -->
-    ```python
+    ```bash
         # we can also use absolute path eg. /home/gene-trees/triplets.soda2103 instead of keeping the tool in the same directory.
-        result = subprocess.run(['./triplets.soda2103', 'printQuartets', tmp_file_name], stdout=subprocess.PIPE)
+        cat $1| xargs -I@ sh -c 'echo -n "@" >'$tmp'; ./triplets.soda2103 printQuartets '$tmp';'|sed 's/.*: //'| sed 's/^/\(\(/'| sed 's/$/\)\)\;/'| sed 's/ | /\),\(/'| sed 's/ /\,/g'
     ```
 
 2. Need to have "lib" folder in same path as jar file. 
@@ -41,13 +44,13 @@ of wQMC and ASTRAL.
 
 ## Running the application.
 <!-- OL -->
-1.  For generating embedded weighted quartets, use the "generate-embedded-weighted-quartets.py" as discussed above.
+1.  For generating embedded weighted quartets, use the "quartet-controller.sh" as discussed above.
     
-    Make sure "triplets.soda2103" is in the same path (or you have added correct absolute paths) in the generate-embedded-weighted-quartets.py file.
+    Make sure "triplets.soda2103" is in the same path (or you have added correct absolute paths) in the "quartet_count.sh" file.
 
     <!-- Code Blocks -->
     ```bash
-      python3 generate-embedded-weighted-quartets.py "input-gene-tree-file-name" "output-quartet-file-name"
+      ./quartet-controller.sh "input-gene-tree-file-name" "output-quartet-file-name"
     ``` 
 
 2. For running the jar file, use java -jar wQFM.jar "input-file-name" "output-file-name" [ALPHA] [BETA]
