@@ -1,11 +1,11 @@
 # wQFM-2020
-wQFM implementation in Java 
+wQFM (Implementation in Java) 
 
 
 <!-- Headings -->
 # wQFM
 <!-- Strong -->
-wQFM is a quartet amalgamation method of estimating species tree. It takes set of estimated gene trees as input and generates set of weighted quartets (statistically consistent tree of four taxa) and combine these weighted quartet trees into a tree on the full set of taxa using a heuristic aimed at finding a species tree of minimum distance to the set of weighted quartet trees.
+wQFM is a quartet amalgamation method of estimating species tree. It takes set of estimated gene trees as input and generates set of weighted quartets (statistically consistent tree of four taxa) and combines these weighted quartet trees into a tree on the full set of taxa using a heuristic aimed at finding a species tree of minimum distance to the set of weighted quartet trees.
 
 ## Background
 Species tree estimation from genes sampled from throughout the whole genome is complicated due to the gene tree-species tree discordance. Incomplete Lineage Sorting (ILS) is one of the most frequent causes for this discordance.
@@ -25,45 +25,65 @@ of wQMC and ASTRAL.
 
 ## Execution dependencies
 <!-- OL -->
-1. For now, "triplets.soda2103" must be in the same directory as "quartet_count.sh".
-  If you want to change the path, then please change the paths in the file "quartet_count.sh".
-  The path in "quartet_count.sh" file must be changed to where the tool "triplets.soda2103" is kept.
-   <!-- Code Blocks -->
-  ```bash
-  #### Eg. In line 10, the triplets.soda2103 is kept in the directory "/home/mahim/gene-tree-tools/"
-  #### Change it accordingly into where triplets.soda2103 is kept in your directory structure.
-      cat $1| xargs -I@ sh -c 'echo -n "@" >'$tmp'; /home/mahim/gene-tree-tools/triplets.soda2103 printQuartets '$tmp';'|sed 's/.*: //'| sed 's/^/\(\(/'| sed 's/$/\)\)\;/'| sed 's/ | /\),\(/'| sed 's/ /\,/g'
+1. The tool "triplets.soda2103" must be in the same directory as "generate-embedded-weighted-quartets.py".
+    
+    If you want to keep it in another path, please change to absolute path of "triplets.soda2103" in Line 36. of "generate-embedded-weighted-quartets.py".
+    <!-- Code Blocks -->
+    ```python
+        # we can also use absolute path eg. /home/gene-trees/triplets.soda2103 instead of keeping the tool in the same directory.
+        result = subprocess.run(['./triplets.soda2103', 'printQuartets', tmp_file_name], stdout=subprocess.PIPE)
+    ```
 
-  #### If you want to keep "triplets.soda2103" in the same directory and run, then don't change the paths. It should look like this now [with no absolute paths].
-      cat $1| xargs -I@ sh -c 'echo -n "@" >'$tmp'; ./triplets.soda2103 printQuartets '$tmp';'|sed 's/.*: //'| sed 's/^/\(\(/'| sed 's/$/\)\)\;/'| sed 's/ | /\),\(/'| sed 's/ /\,/g'
- 
-```
+2. Need to have "lib" folder in same path as jar file. 
+    (Check [ASTRAL's github repo](https://github.com/smirarab/ASTRAL) for more details on lib [uses PhyloNet package])
+    (This is needed to reroot the tree with respect to an outgroup node.)
 
-2. Need to have "lib" folder in same path as jar file. (Check [ASTRAL's git repo](https://github.com/smirarab/ASTRAL) for more details on lib [uses phylonet package])
-(This is needed to reroot the tree with respect to an outgroup node.)
 
 ## Running the application.
 <!-- OL -->
-1. For generating embedded weighted quartets, use the "quartet-controller.sh" as discussed above.
+1.  For generating embedded weighted quartets, use the "generate-embedded-weighted-quartets.py" as discussed above.
+    
+    Make sure "triplets.soda2103" is in the same path (or you have added correct absolute paths) in the generate-embedded-weighted-quartets.py file.
 
-   Use ./quartet-controller.sh <input-gene-tree-file-name> <output-quartet-file-name>
-   
-   Make sure "quartet_count.sh" and "summarize_quartets_stdin.pl" are all in the same directory as "quartet-controller.sh"
-   
-   Make sure "quartet_count.sh" contains the correct directory for "triplets.soda2103"
-   <!-- Code Blocks -->
-     ```bash
-      ./quartet-controller.sh "gene-tree-file-name" "weighted-quartets"      
-    ```
-
+    <!-- Code Blocks -->
+    ```bash
+      python3 generate-embedded-weighted-quartets.py "input-gene-tree-file-name" "output-quartet-file-name"
+    ``` 
 
 2. For running the jar file, use java -jar wQFM.jar "input-file-name" "output-file-name" [ALPHA] [BETA]
-<!-- Code Blocks -->
-  ```bash
-      # for using the whole dynamic ratio-feature partition-score calculation.
-      java -jar wQFM.jar "weighted_quartets" "output-file-name" 
-      # for running without dynamic ratio-feature partition-score calculation
-      # Simply uses the input values of ALPHA and BETA to calculate partition-score = ALPHA*w[s] - BETA*w[v]
-      java -jar wQFM.jar "weighted_quartets" "output-file-name" "1" "0.5"  # for ALPHA = 1, BETA = 0.5
- ```
 
+    For running using whole dynamic bin-ratio-heuristic partition-score calculation
+    <!-- Code Blocks -->
+      ```bash
+          java -jar wQFM.jar "weighted_quartets" "output-file-name" 
+      ```
+    For running using fixed partition-score (input params: ALPHA, BETA) where partition-score = ALPHA.w[s] - BETA.w[v]
+  
+    <!-- Code Blocks -->
+      ```bash
+          # Uses input values of ALPHA and BETA to calculate partition-score = ALPHA*w[s] - BETA*w[v]
+
+          ## Example, partition-score = 1*w[s] - 0.5*w[v] i.e. ALPHA = 1, BETA = 0.5
+          java -jar wQFM.jar "weighted_quartets" "output-file-name" "1" "0.5"
+     ```
+
+3. For large number of taxa, increasing the memory available to Java is recommended. 
+
+    **You should give Java only as much free available memory as you have in your machine.** 
+
+    Suppose you have 8GB of free memory, do use the following command to make all the 8GB available to Java:
+
+    <!-- Code Blocks -->
+    ```bash
+      java -Xmx8000M -jar wQFM.jar "weighted_quartets" "output-file-name" ## dynamic ratio-based partition-score
+
+      java -Xmx8000M -jar wQFM.jar "weighted_quartets" "output-file-name" "1" "0.5" ## fixed partition-score
+    ```
+
+4. For now, wQFM cannot handle **stars** which is induced due to polytomy in gene trees.
+  
+    So, if you do provide stars in input quartet-file, wQFM will terminate (by giving a prompt).
+
+
+## Acknowledgement
+wQFM uses some methods of the PhyloNet package for rerooting of unrooted trees with respect to an outgroup.
