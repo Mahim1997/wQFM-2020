@@ -3,6 +3,7 @@ import sys
 import subprocess
 import re
 import time
+from collections import OrderedDict
 
 start_time = time.time()
 
@@ -58,9 +59,14 @@ with open(inputFile) as fin:
 
 
 
-(pd.DataFrame.from_dict(data=dictionary_line, orient='index')
-   .to_csv(outputFile, header=False, sep=" "))
+sorted_dict = OrderedDict(sorted(dictionary_line.items()))
+# print(sorted_dict)
 
+# (pd.DataFrame.from_dict(data=dictionary_line, orient='index')
+#    .to_csv(outputFile, header=False, sep=" "))
+
+(pd.DataFrame.from_dict(data=sorted_dict, orient='index')
+   .to_csv(outputFile, header=False, sep=" "))
 
 end_time = time.time()
 

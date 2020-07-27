@@ -1,5 +1,6 @@
 import pandas as pd
 import sys
+from collections import OrderedDict
 
 if not sys.stdin.isatty():
     input_stream = sys.stdin
@@ -30,6 +31,9 @@ for line in input_stream:
 #         print(line)
 
 # print(dictionary)
+sorted_dict = OrderedDict(sorted(dictionary.items()))
+# (pd.DataFrame.from_dict(data=dictionary, orient='index')
+#    .to_csv(output_file_name, header=False, sep=" "))
 
-(pd.DataFrame.from_dict(data=dictionary, orient='index')
+(pd.DataFrame.from_dict(data=sorted_dict, orient='index')
    .to_csv(output_file_name, header=False, sep=" "))
