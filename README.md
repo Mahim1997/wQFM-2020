@@ -37,10 +37,23 @@ of wQMC and ASTRAL.
         cat $1| xargs -I@ sh -c 'echo -n "@" >'$tmp'; ./triplets.soda2103 printQuartets '$tmp';'|sed 's/.*: //'| sed 's/^/\(\(/'| sed 's/$/\)\)\;/'| sed 's/ | /\),\(/'| sed 's/ /\,/g'
     ```
 
-2. Need to have "lib" folder in same path as jar file. 
-    (Check [ASTRAL's github repo](https://github.com/smirarab/ASTRAL) for more details on lib [uses PhyloNet package])
+2. Need to have "lib" folder in same path as jar file. (This uses some bytecode from [PhyloNet package](https://wiki.rice.edu/confluence/display/PHYLONET/PhyloNet+3+General+Overview))
+    <!--(Check [ASTRAL's github repo](https://github.com/smirarab/ASTRAL) for more details on lib [uses PhyloNet package])-->
     (This is needed to reroot the tree with respect to an outgroup node.)
 
+## Installation
+<!-- UL -->
+* There is no installation required to run wQFM.jar
+
+* To download, use either of the following approach:
+
+    * You can clone/download the whole repository and use required scripts and wQFM.jar to run the application.
+
+    * Alternatively, you can also download and extract the "wQFM-package.zip" file which contains relevant scripts for generating embedded-weighted-quartets and running wQFM.jar
+
+* wQFM is a java-based application, and hence should run in any environment (Windows, Linux, Mac, etc.) as long as java is installed.
+
+* To generate embedded-weighted-quartets, python needs to be installed. Also, Linux is required for using the tool "triplets.soda2103".
 
 ## Running the application.
 <!-- OL -->
@@ -87,6 +100,32 @@ of wQMC and ASTRAL.
   
     So, if you do provide stars in input quartet-file, wQFM will terminate (by giving a prompt).
 
+## Datasets
+For now, the datasets used are available [here](https://drive.google.com/drive/folders/1IYKYWG81Sld8QwzZNO5D71mOulGVd7ax?usp=sharing)
+
+As of July 29, the datasets contain the following:
+<!-- UL -->
+* All gene trees (all_gt.tre)
+* Generated embedded-weighted-quartets (weighted_quartets)
+* Reconstructed species tree by wQFM.jar using full bin-ratio calculation on all levels which was run on "weighted_quartets" (wQFM-July-26.tre)
+* Reconstructed species tree by wQMC which was run on "weighted_quartets"
+* Reconstructed species tree by ASTRAL-5.7.3 which was run on "all_gt.tre"
+
+Both simulated and biological datasets are present. These include the following:
+<!-- UL -->
+* Simulated Datasets
+    * 11-taxon Dataset
+    * 15-taxon Dataset
+    * 37-taxon Dataset
+    * 48-taxon Dataset
+    * 101-taxon Dataset (first 10 replicates)
+    
+* Biological Datasets
+    * aminota-aa
+    * aminota-nt
+    * mamalian
+    * angiosperm
+    * avian
 
 ## Acknowledgement
 wQFM uses some methods of the PhyloNet package for rerooting of unrooted trees with respect to an outgroup.
