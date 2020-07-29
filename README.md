@@ -66,7 +66,7 @@ of wQMC and ASTRAL.
   ./quartet-controller.sh "input-gene-tree-file-name" "output-quartet-file-name"
 ``` 
 
-2. For running the jar file (**default mode**), use java -jar wQFM.jar "input-file-name" "output-file-name"
+2. (**Default Mode**) For running the jar file, use java -jar wQFM.jar "input-file-name" "output-file-name"
 
 <!-- Code Blocks -->
   ```bash
