@@ -92,7 +92,9 @@ of wQMC and ASTRAL.
 
 <!-- Code Blocks -->
 ```bash
-  java -Xmx8000M -jar wQFM.jar "weighted_quartets" "output-file-name" ## dynamic ratio-based partition-score
+  # Example: To supply 8GB of free memory.
+  
+  java -Xmx8000M -jar wQFM.jar "weighted_quartets" "output-file-name" ## (default) dynamic ratio-based partition-score
 
   java -Xmx8000M -jar wQFM.jar "weighted_quartets" "output-file-name" "1" "0.5" ## fixed partition-score
 ```
