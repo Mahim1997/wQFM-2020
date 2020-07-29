@@ -131,4 +131,8 @@ Both simulated and biological datasets are present.
 wQFM uses some methods of the [PhyloNet](https://bioinfocs.rice.edu/phylonet) package for rerooting of unrooted trees with respect to an outgroup.
 
 ## Bug Report
-We are always looking to improve our codebase. For any bugs, please email at mahim.mahbub.97@gmail.com or zahinwahab@gmail.com
+We are always looking to improve our codebase. 
+
+For any bugs, please post on [wQFM-2020 issues page](https://github.com/Mahim1997/wQFM-2020/issues).
+
+Alternatively, you can also email at ``mahim.mahbub.97@gmail.com`` or ``zahinwahab@gmail.com``.
