@@ -135,4 +135,4 @@ We are always looking to improve our codebase.
 
 For any bugs, please post on [wQFM-2020 issues page](https://github.com/Mahim1997/wQFM-2020/issues).
 
-Alternatively, you can also email at ``mahim.mahbub.97@gmail.com`` or ``zahinwahab@gmail.com``.
+Alternatively, you can email at ``mahim.mahbub.97@gmail.com`` or ``zahinwahab@gmail.com``.
