@@ -62,23 +62,32 @@ public class Helper {
             Main.INPUT_FILE_NAME = args[0];
             return;
         }
-        if (((args.length == 4) || (args.length == 2)) == false) {
+        if (((args.length == 4) || (args.length == 2) || (args.length == 3)) == false) {
             printUsageAndExitSystem();
         }
 
         Main.INPUT_FILE_NAME = args[0];
         Main.OUTPUT_FILE_NAME = args[1];
+
         if (args.length == 2) {
             Main.PARTITION_SCORE_MODE = Status.PARTITION_SCORE_FULL_DYNAMIC;
-        } else if (args.length == 4) {
-            //partition-score argument not given. [to do feature selection] //default is [s] - [v]
+        } else {
             double alpha = Double.parseDouble(args[2]);
             double beta = Double.parseDouble(args[3]);
             WeightedPartitionScores.ALPHA_PARTITION_SCORE = alpha;
             WeightedPartitionScores.BETA_PARTITION_SCORE = beta;
             Main.PARTITION_SCORE_MODE = Status.PARITTION_SCORE_COMMAND_LINE;
+            if (args.length == 3) {
+                //Use unweighted partition-score
+                WeightedPartitionScores.USE_WEIGHTS_PARTITION_SCORE = false;
+                System.out.println("->>> NOT USING PARTITION-SCORES weighted.");
+            } else if (args.length == 4) {
+                //partition-score argument not given. [to do feature selection] //default is [s] - [v]
+                WeightedPartitionScores.USE_WEIGHTS_PARTITION_SCORE = true;
+            }
         }
-        System.out.println("-->>Helper.end Main.PARTITION_SCORE_MODE = " + Main.PARTITION_SCORE_MODE);
+
+        System.out.println("-->>Helper.end Main.PARTITION_SCORE_MODE = " + Main.PARTITION_SCORE_MODE + " , " + Status.GET_PARTITION_SCORE_PRINT());
     }
 
     public static int sumArray(int[] arr) {

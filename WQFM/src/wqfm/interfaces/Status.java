@@ -40,14 +40,7 @@ public interface Status {
     public static int RIGHT_SISTER_2_IDX = 3;
 
     //Partition score modes ... 0->[s]-[v], 1->[s]-0.5[v], 2->[s]-[v]-[d], 3->3[s]-2[v]
-    public static int PARTITION_SCORE_MODE_0 = 0;
-    public static int PARTITION_SCORE_MODE_1 = 1;
-    public static int PARTITION_SCORE_MODE_2 = 2;
-    public static int PARTITION_SCORE_MODE_3 = 3;
-    public static int PARTITION_SCORE_MODE_4 = 4;
-    public static int PARTITION_SCORE_MODE_5 = 5;
-    public static int PARTITION_SCORE_MODE_6 = 6;
-    public static int PARTITION_SCORE_MODE_7 = 7;
+    public static int PARTITION_SCORE_DEFAULT_MODE = 0;
     public static int PARITTION_SCORE_COMMAND_LINE = 8;
     public static int PARTITION_SCORE_FULL_DYNAMIC = 9;
     
@@ -82,22 +75,8 @@ public interface Status {
     public static String GET_PARTITION_SCORE_PRINT() {
         int mode = Main.PARTITION_SCORE_MODE;
         switch (mode) {
-            case Status.PARTITION_SCORE_MODE_0:
+            case Status.PARTITION_SCORE_DEFAULT_MODE:
                 return "mode = " + mode + ", [ws - wv]";
-            case Status.PARTITION_SCORE_MODE_1:
-                return "mode = " + mode + ", [ws - 0.5*wv]";
-            case Status.PARTITION_SCORE_MODE_2:
-                return "mode = " + mode + ", [ws - wv - wd]";
-            case Status.PARTITION_SCORE_MODE_3:
-                return "mode = " + mode + ", [3*ws - 2*wv]";
-            case Status.PARTITION_SCORE_MODE_4:
-                return "mode = " + mode + ", [5*ws - 4*wv]";
-            case Status.PARTITION_SCORE_MODE_5:
-                return "mode = " + mode + ", [ws]";
-            case Status.PARTITION_SCORE_MODE_6:
-                return "mode = " + mode + ", [ws - 0.5*wv - 0.25*wd]";
-            case Status.PARTITION_SCORE_MODE_7:
-                return "mode = " + mode + ", [11*ws - 1*wv]";
             case Status.PARITTION_SCORE_COMMAND_LINE:
                 return "mode = Command line [" + WeightedPartitionScores.ALPHA_PARTITION_SCORE + "*ws - " + WeightedPartitionScores.BETA_PARTITION_SCORE + "*wv]";
             case Status.PARTITION_SCORE_FULL_DYNAMIC:
