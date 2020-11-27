@@ -62,7 +62,7 @@ public class Helper {
             Main.INPUT_FILE_NAME = args[0];
             return;
         }
-        if (((args.length == 4) || (args.length == 2) || (args.length == 3)) == false) {
+        if (((args.length == 4) || (args.length == 2) || (args.length == 3) || (args.length == 5)) == false) {
             printUsageAndExitSystem();
         }
 
@@ -72,18 +72,21 @@ public class Helper {
         if (args.length == 2) {
             Main.PARTITION_SCORE_MODE = Status.PARTITION_SCORE_FULL_DYNAMIC;
         } else {
-            double alpha = Double.parseDouble(args[2]);
-            double beta = Double.parseDouble(args[3]);
-            WeightedPartitionScores.ALPHA_PARTITION_SCORE = alpha;
-            WeightedPartitionScores.BETA_PARTITION_SCORE = beta;
-            Main.PARTITION_SCORE_MODE = Status.PARITTION_SCORE_COMMAND_LINE;
-            if (args.length == 3) {
-                //Use unweighted partition-score
+            // Use unweighted for ODD number of arguments. eg. <input> <output> <123123> -> full-dynamic, unweighted
+            // eg. <input> <output> <alpha> <beta> <123123123> -> alpha*count[s] - beta*count[v], i.e. unweighted
+            if ((args.length == 3) || (args.length == 5)) {
                 WeightedPartitionScores.USE_WEIGHTS_PARTITION_SCORE = false;
-                System.out.println("->>> NOT USING PARTITION-SCORES weighted.");
-            } else if (args.length == 4) {
-                //partition-score argument not given. [to do feature selection] //default is [s] - [v]
-                WeightedPartitionScores.USE_WEIGHTS_PARTITION_SCORE = true;
+                System.out.println("+->>> NOT using weights for PARTITION-SCORE calculation.");
+            }
+            // Use dynamic binning OR command line argument.
+            if (args.length == 3) {
+                Main.PARTITION_SCORE_MODE = Status.PARTITION_SCORE_FULL_DYNAMIC;
+            } else if (args.length > 3) {
+                double alpha = Double.parseDouble(args[2]);
+                double beta = Double.parseDouble(args[3]);
+                Main.PARTITION_SCORE_MODE = Status.PARITTION_SCORE_COMMAND_LINE;
+                WeightedPartitionScores.ALPHA_PARTITION_SCORE = alpha;
+                WeightedPartitionScores.BETA_PARTITION_SCORE = beta;
             }
         }
 
