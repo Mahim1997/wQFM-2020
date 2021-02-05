@@ -129,6 +129,13 @@ def compute_tree_QSupport(tree, list_quartets, map_taxa_quartet):
     return tree
 
 
+""" Write to output file
+"""
+def write_output(output_tree, outputFile):
+    print(output_tree)
+    with open(outputFile, 'w') as fout:
+        fout.write(output_tree)
+        fout.write("\n")
 
 
 """ Main function
@@ -145,8 +152,8 @@ def run(inputQrtFile, inputStreeFile, outputFile):
     output_tree = compute_tree_QSupport(tree, list_quartets, map_taxa_quartet)
     output_tree = output_tree.as_string("newick").strip()
 
-    print("\n")
-    print(output_tree)
+    output_tree = output_tree.replace("[&R] ", "") ## remove this sign
+    write_output(output_tree, outputFile)
     # print(f"\n In run(), output_tree = {output_tree}")
 
 #####################################################################################################################
