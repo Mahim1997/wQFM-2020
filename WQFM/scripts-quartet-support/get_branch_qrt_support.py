@@ -2,6 +2,11 @@ import dendropy
 import sys
 
 
+global LEFT, RIGHT
+
+LEFT  = -1
+RIGHT = 1
+
 #####################################################################################################################
 
 
@@ -58,29 +63,47 @@ def read_tree(inputStreeFile):
     return tree
 
 
+""" Function to return as a map, the bitmap of bipartition
+"""
+def getPartitionMap(bipartition, taxon_namespace):
+    map_bipartition = {}
+    for i in range(0, len(taxon_namespace)):
+        bit_idx = len(taxon_namespace) - 1 - i
+        partition = LEFT if (bipartition[bit_idx] == '0') else RIGHT
+        map_bipartition[taxon_namespace[i]] = partition
+        #### map_bipartition[str(taxon_namespace[i])] = partition
+
+    return map_bipartition
+
+""" Function to compute Quartet Support for EACH bipartition
+"""
+def get_support_value(bipartition, taxon_namespace, list_quartets, map_taxa_quartet):
+    bipartitionSTR = str(bipartition)
+    map_bipartition = getPartitionMap(bipartitionSTR, taxon_namespace)
+
+
+    return float(100)
+
+
 """ Function to compute Quartet Support and return new tree with quartet support.
 """
 def compute_tree_QSupport(tree, list_quartets, map_taxa_quartet):
-    benc = tree.encode_bipartitions()
-    support_values = {}
+    tree.encode_bipartitions() ## encode bipartitions to bitmaps
+    support_values = {} ## Map for support values
 
     for nd in tree:
         if nd.bipartition.is_trivial() == False:
-            # print(f"Bipartition: {nd.bipartition}, bip.is_trivial() = {nd.bipartition.is_trivial()}")
-            print(f"Bip = {nd.bipartition.leafset_as_newick_string(taxon_namespace=tree.taxon_namespace)}, is_trivial = {nd.bipartition.is_trivial()}")
+            # print(f"\nBip = {nd.bipartition.leafset_as_newick_string(taxon_namespace=tree.taxon_namespace)}, is_trivial = {nd.bipartition.is_trivial()}")
 
-            support_values[nd.bipartition] = float(7) if nd.label is not None else 1.0 # get_support_value(nd.bipartition)
-            ## support_values[nd.bipartition] = float(nd.label) if nd.label is not None else 1.0
-
-    # outgroup_node = tree.find_node_with_taxon_label("X")
-    # outgroup_node = tree.find_node_with_taxon_label(OUTGROUP_NODE)
-
-    # new_root = outgroup_node.parent_node
-    # tree.reseed_at(new_root)
+            # support_values[nd.bipartition] = get_support_value(nd.bipartition) if nd.label is not None else 1.0
+            support_values[nd.bipartition] = get_support_value(nd.bipartition, tree.taxon_namespace, list_quartets, map_taxa_quartet) if nd.label is None else -1.0
 
     tree.encode_bipartitions()
+
+    TOTAL_SATISFIED_QUARTETS = -1
+
     for nd in tree:
-        nd.label = support_values.get(nd.bipartition, 77)
+        nd.label = support_values.get(nd.bipartition, float(TOTAL_SATISFIED_QUARTETS))
     return tree
 
 
