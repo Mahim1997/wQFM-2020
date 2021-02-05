@@ -70,19 +70,40 @@ def getPartitionMap(bipartition, taxon_namespace):
     for i in range(0, len(taxon_namespace)):
         bit_idx = len(taxon_namespace) - 1 - i
         partition = LEFT if (bipartition[bit_idx] == '0') else RIGHT
-        map_bipartition[taxon_namespace[i]] = partition
-        #### map_bipartition[str(taxon_namespace[i])] = partition
+        # map_bipartition[taxon_namespace[i]] = partition
+        map_bipartition[str(taxon_namespace[i]).replace("'", "")] = partition
 
     return map_bipartition
+
+""" Function to check if given quartet is satisfied or not.
+"""
+def checkQuartetSatisfied(map_bipartition, quartet):
+    (t0, t1, t2, t3, _) = quartet ## unwrap the quartet
+    cond1 = map_bipartition[t0] == map_bipartition[t1] ## check if sisters 1 are in same side
+    cond2 = map_bipartition[t2] == map_bipartition[t3] ## check if sisters 2 are in same side
+    cond3 = map_bipartition[t0] != map_bipartition[t2] ## check if both sisters are in opposite sides.
+    return (cond1 and cond2 and cond3)
 
 """ Function to compute Quartet Support for EACH bipartition
 """
 def get_support_value(bipartition, taxon_namespace, list_quartets, map_taxa_quartet):
     bipartitionSTR = str(bipartition)
     map_bipartition = getPartitionMap(bipartitionSTR, taxon_namespace)
+    # checked_quartets_indices = [False for i in range(0, len(list_quartets))] ## initialize as False since no quartet is checked
 
+    ## Iterating through all quartets everytime. [Can't think of a more efficient approach.]
+    numSatisfiedQrts = 0 ## num satisfied quartets
+    cumlWtSatisfiedQrts = 0 ## total weight satisfied quartets
 
-    return float(100)
+    for quartet in list_quartets:
+        (t0, t1, t2, t3, w) = quartet
+        if checkQuartetSatisfied(map_bipartition, quartet):
+            cumlWtSatisfiedQrts += w
+            numSatisfiedQrts += 1
+
+    normWtSatisfiedQrts = cumlWtSatisfiedQrts/float(numSatisfiedQrts)
+
+    return float(normWtSatisfiedQrts)
 
 
 """ Function to compute Quartet Support and return new tree with quartet support.
@@ -103,7 +124,8 @@ def compute_tree_QSupport(tree, list_quartets, map_taxa_quartet):
     TOTAL_SATISFIED_QUARTETS = -1
 
     for nd in tree:
-        nd.label = support_values.get(nd.bipartition, float(TOTAL_SATISFIED_QUARTETS))
+        # nd.label = support_values.get(nd.bipartition, float(TOTAL_SATISFIED_QUARTETS))
+        nd.label = support_values.get(nd.bipartition, "")
     return tree
 
 
