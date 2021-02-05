@@ -1,0 +1,3 @@
+Created-By: Fat Jar/One-JAR Eclipse Plug-In
+Main-Class: phylonet.app.PhyloNetApp
+
