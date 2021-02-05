@@ -50,16 +50,59 @@ def processQuartets(inputQrtFile):
 
     return list_quartets, map_taxa_quartet
 
+""" Read tree from the Species Tree file
+"""
+def read_tree(inputStreeFile):
+    taxa = dendropy.TaxonNamespace()
+    tree = dendropy.Tree.get_from_path(inputStreeFile, "newick", taxon_namespace=taxa, rooting="force-rooted") ## rooting should be done
+    return tree
+
+
+""" Function to compute Quartet Support and return new tree with quartet support.
+"""
+def compute_tree_QSupport(tree, list_quartets, map_taxa_quartet):
+    benc = tree.encode_bipartitions()
+    support_values = {}
+
+    for nd in tree:
+        if nd.bipartition.is_trivial() == False:
+            # print(f"Bipartition: {nd.bipartition}, bip.is_trivial() = {nd.bipartition.is_trivial()}")
+            print(f"Bip = {nd.bipartition.leafset_as_newick_string(taxon_namespace=tree.taxon_namespace)}, is_trivial = {nd.bipartition.is_trivial()}")
+
+            support_values[nd.bipartition] = float(7) if nd.label is not None else 1.0 # get_support_value(nd.bipartition)
+            ## support_values[nd.bipartition] = float(nd.label) if nd.label is not None else 1.0
+
+    # outgroup_node = tree.find_node_with_taxon_label("X")
+    # outgroup_node = tree.find_node_with_taxon_label(OUTGROUP_NODE)
+
+    # new_root = outgroup_node.parent_node
+    # tree.reseed_at(new_root)
+
+    tree.encode_bipartitions()
+    for nd in tree:
+        nd.label = support_values.get(nd.bipartition, 77)
+    return tree
+
+
+
 
 """ Main function
 """
 def run(inputQrtFile, inputStreeFile, outputFile):
 
     list_quartets, map_taxa_quartet = processQuartets(inputQrtFile)
+    
+    tree = read_tree(inputStreeFile)
+    treeStr = tree.as_string("newick").strip()
+    
+    print(treeStr, "\n")
 
-    for key in map_taxa_quartet:
-        print(key, map_taxa_quartet[key], "\n")
+    output_tree = compute_tree_QSupport(tree, list_quartets, map_taxa_quartet)
+    output_tree = output_tree.as_string("newick").strip()
 
+    print("\n")
+    print(output_tree)
+    # print(f"\n In run(), output_tree = {output_tree}")
 
 #####################################################################################################################
 

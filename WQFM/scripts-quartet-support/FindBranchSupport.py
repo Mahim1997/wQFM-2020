@@ -6,6 +6,7 @@ import dendropy
 
 ## ((5,6),((1,2),(3,4)));
 ## (5,(6,((1,2),(3,4))));
+## ((E,F),((A,B),(C,D)));
 
 taxa = dendropy.TaxonNamespace()
 tree = dendropy.Tree.get_from_path(
