@@ -53,7 +53,7 @@ def runMethod(input_file, output_file, max_mode=False):
     with open(input_file, 'r') as fp:
         line = fp.readline()
         while line:
-            append_to_dictionary(line)
+            append_to_dictionary(line, max_mode)
             line = fp.readline()
 
     ## For each key, divide by MAX OR divide by SUM
