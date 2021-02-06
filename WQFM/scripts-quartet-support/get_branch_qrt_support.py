@@ -90,7 +90,7 @@ def get_support_value(bipartition, taxon_namespace, list_quartets):
 
     normWtSatisfiedQrts = cumlWtSatisfiedQrts/float(numSatisfiedQrts)
 
-    return float(normWtSatisfiedQrts)
+    return ":"+str(float(normWtSatisfiedQrts))
 
 
 """ Function to compute Quartet Support and return new tree with quartet support.
@@ -140,6 +140,7 @@ def run(inputQrtFile, inputStreeFile, outputFile):
     output_tree = output_tree.as_string("newick").strip()
 
     output_tree = output_tree.replace("[&R] ", "") ## remove this sign
+    output_tree = output_tree.replace("'", "")
     write_output(output_tree, outputFile)
     # print(f"\n In run(), output_tree = {output_tree}")
 
