@@ -37,7 +37,7 @@ def get_quartet(line):
 
 """ Appends one single line to dictionary
 """
-def append_to_dictionary(line, max_mode=False):
+def append_to_dictionary(line, max_mode):
     (tax1, tax2, tax3, tax4, weight) = get_quartet(line)
     (t1, t2, t3, t4) = sort_4TaxSequence(tax1, tax2, tax3, tax4) # any sorting order
 
@@ -54,13 +54,14 @@ def append_to_dictionary(line, max_mode=False):
     
 
 
-def runMethod(input_file, output_file, max_mode=False):
-    
+def runMethod(input_file, output_file, max_mode):
+    print(f"max_mode = {max_mode}")
+
     ## Read each line, pre-process, and push to dictionary of quartets
     with open(input_file, 'r') as fp:
         line = fp.readline()
         while line:
-            append_to_dictionary(line)
+            append_to_dictionary(line, max_mode)
             line = fp.readline()
 
  
