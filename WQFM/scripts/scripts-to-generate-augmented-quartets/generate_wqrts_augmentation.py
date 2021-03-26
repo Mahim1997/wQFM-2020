@@ -1,9 +1,16 @@
 import sys
+import random
+
+## MODES
+DOMINANT_QUARTET_INITIAL_WEIGHT = 34
+DOMINANT_QUARTET_FINAL_WEIGHT = 99
 
 ## CONSTANTS
-DOMINANT_QUARTET_WEIGHT = 34
-OTHER_TOPOLOGY_WEIGHT = 33
+DOMINANT_QUARTET_WEIGHT = 98
 
+OTHER_TOPOLOGY_WEIGHT = 1
+
+RANDOM_MODE=True
 
 ## Methods
 
@@ -15,10 +22,20 @@ def get_quartet(line):
     arr = line.split(",") ## split by COMMA
     return (arr[0], arr[1], arr[2], arr[3], float(arr[4]))
 
-def get_other_quartets(a,b,c,d):
+def get_dominant_quartet_weight(initial, final):
+    w = random.randint(initial, final)
+    return float(w)
+
+def get_other_quartets(a,b,c,d,random_mode=False, lowest_weight = None, highest_weight=None):
     ## a,b|c,d -> a,c|b,d AND a,d|b,c
-    q1 = (a, c, b, d, float(OTHER_TOPOLOGY_WEIGHT))
-    q2 = (a, d, b, c, float(OTHER_TOPOLOGY_WEIGHT))
+    if random_mode == True and lowest_weight is not None and highest_weight is not None:
+        w1 = random.randint(int(lowest_weight), highest_weight)
+        w2 = random.randint(int(lowest_weight), highest_weight)
+        q1 = (a, c, b, d, float(w1))
+        q2 = (a, d, b, c, float(w2))     
+    else:
+        q1 = (a, c, b, d, float(OTHER_TOPOLOGY_WEIGHT))
+        q2 = (a, d, b, c, float(OTHER_TOPOLOGY_WEIGHT))
     return q1, q2
 
 def get_newick(a,b,c,d,w):
@@ -34,18 +51,25 @@ def runner(inputFileName, outputFileName):
             while line:
                 ## Read the dominant quartet
                 q_dominant = get_quartet(line)
-                (a,b,c,d,w) = q_dominant
-                w = float(DOMINANT_QUARTET_WEIGHT)
                 
+                (a,b,c,d,w) = q_dominant
+                # w = float(DOMINANT_QUARTET_WEIGHT)
+                w = get_dominant_quartet_weight(initial=DOMINANT_QUARTET_INITIAL_WEIGHT,
+                                                final=DOMINANT_QUARTET_FINAL_WEIGHT)
+
                 ## Get other two quartets and corresponding weights
-                (q_other_1, q_other_2) = get_other_quartets(a,b,c,d)
+                (q_other_1, q_other_2) = get_other_quartets(a,b,c,d, 
+                                            random_mode=RANDOM_MODE,
+                                            lowest_weight=0.4*w,
+                                            highest_weight=w)
+
                 (a1,b1,c1,d1,w1) = q_other_1
                 (a2,b2,c2,d2,w2) = q_other_2
 
                 ## Get newick representations
                 n_dominant = get_newick(a,b,c,d,w)
-                n_other_1 = get_newick(a1,b1,c1,d1,w1)
-                n_other_2 = get_newick(a2,b2,c2,d2,w2)
+                n_other_1  = get_newick(a1,b1,c1,d1,w1)
+                n_other_2  = get_newick(a2,b2,c2,d2,w2)
 
 
                 ## Write output to file
@@ -66,4 +90,6 @@ inputFileName = sys.argv[1]
 outputFileName = sys.argv[2]
 
 runner(inputFileName, outputFileName)
-print(f"Done running script for DOMINANT_QUARTET_WEIGHT = {DOMINANT_QUARTET_WEIGHT}, OTHER_TOPOLOGY_WEIGHT = {OTHER_TOPOLOGY_WEIGHT}")
+print(f"inputFileName = {inputFileName}, outputFileName = {outputFileName}")
+
+# print(f"Done running script for DOMINANT_QUARTET_WEIGHT = {DOMINANT_QUARTET_WEIGHT}, OTHER_TOPOLOGY_WEIGHT = {OTHER_TOPOLOGY_WEIGHT}")
