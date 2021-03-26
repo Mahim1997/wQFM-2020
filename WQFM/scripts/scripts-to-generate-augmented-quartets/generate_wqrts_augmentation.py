@@ -61,7 +61,7 @@ def runner(inputFileName, outputFileName):
                 (q_other_1, q_other_2) = get_other_quartets(a,b,c,d, 
                                             random_mode=RANDOM_MODE,
                                             lowest_weight=0.4*w,
-                                            highest_weight=w)
+                                            highest_weight=w-1)
 
                 (a1,b1,c1,d1,w1) = q_other_1
                 (a2,b2,c2,d2,w2) = q_other_2
