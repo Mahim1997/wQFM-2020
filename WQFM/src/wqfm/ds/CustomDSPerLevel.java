@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -35,11 +36,14 @@ public class CustomDSPerLevel {
         this.taxa_list_int = new ArrayList<>();
     }
 
-    private void printTable1() {
+    public void printTable1() {
         System.out.println("----------- Table1 [SINGLE list of quartets indices] ------------------");
-        for (int i = 0; i < quartet_indices_list_unsorted.size(); i++) {
-            System.out.println(this.quartet_indices_list_unsorted.get(i).toString());
-        }
+        
+        System.out.println(this.quartet_indices_list_unsorted.stream()
+                .map(x -> this.initial_table1_of_list_of_quartets.get(x))
+                .map(x -> String.valueOf(x))
+                .collect(Collectors.joining("\n")));
+        
     }
 
     private void printMap_RelevantQuartetsIndicesPerTaxa() {
