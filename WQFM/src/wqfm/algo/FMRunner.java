@@ -79,14 +79,18 @@ public class FMRunner {
         level++; // For dummy node finding.
         customDS_this_level.level = level; //for debugging issues.
 
+                
+        InitialBipartition initialBip = new InitialBipartition();
+        Map<Integer, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS_this_level);
+        
+        
         
         if(level >= 3){
             System.out.println("++++++++++++++ Before Computations, Level " + level + " Quartet lists ++++++++++++++++++++ " + customDS_this_level.quartet_indices_list_unsorted.size());
-            customDS_this_level.printTable1();
+            customDS_this_level.printSortedQuartetsTable();
         }
+
         
-        InitialBipartition initialBip = new InitialBipartition();
-        Map<Integer, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS_this_level);
         System.out.println("L 84. FMComputer. Printing initialBipartition.");
         System.out.println(mapInitialBipartition);
         Helper.printPartition(mapInitialBipartition, Status.LEFT_PARTITION, Status.RIGHT_PARTITION);
