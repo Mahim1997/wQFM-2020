@@ -32,6 +32,8 @@ import wqfm.bip.WeightedPartitionScores;
  */
 public class FMComputer {
 
+    private final Map<Integer, Integer> initial_bipartition_map_this_level;
+    
     public int level;
     private Bipartition_8_values initialBipartition_8_values;
     private final CustomDSPerLevel customDS;
@@ -44,6 +46,8 @@ public class FMComputer {
     public FMComputer(CustomDSPerLevel customDS,
             Map<Integer, Integer> mapInitialBipartition,
             Bipartition_8_values initialBip_8_vals, int level) {
+        this.initial_bipartition_map_this_level = mapInitialBipartition;
+        
         this.level = level;
         this.customDS = customDS;
         //Initially all the taxa will be FREE
@@ -383,6 +387,16 @@ public class FMComputer {
         }
 
         FMResultObject object = new FMResultObject(this.customDS, this.level); //pass the parent's customDS as reference
+        
+        System.out.println("");
+        if(this.bipartitionMap.equals(this.initial_bipartition_map_this_level)){
+            System.out.println(">>>>>>>>>>>>>>>> INITIAL MAP SAME AS RETURNED MAP OF FM PASS this level = " + this.level);
+            
+        }else{
+            System.out.println(">>>><<<<<-------- NOT EQUAL MAP AS RETURNED MAP OF FM PASS this level = " + this.level);
+        }
+        System.out.println(this.bipartitionMap);
+        
         object.createFMResultObjects(this.bipartitionMap); //pass THIS level's final-bipartition to get P_left,Q_left,P_right,Q_right
         return object;
     }
