@@ -32,7 +32,9 @@ import wqfm.bip.WeightedPartitionScores;
  */
 public class FMComputer {
 
-    private final Map<Integer, Integer> initial_bipartition_map_this_level;
+    private final Map<Integer, Integer> initial_bipartition_map_this_level_FIXED;
+    private final Bipartition_8_values initial_bipartition_8_values_FIXED;
+    
     
     public int level;
     private Bipartition_8_values initialBipartition_8_values;
@@ -46,8 +48,12 @@ public class FMComputer {
     public FMComputer(CustomDSPerLevel customDS,
             Map<Integer, Integer> mapInitialBipartition,
             Bipartition_8_values initialBip_8_vals, int level) {
-        this.initial_bipartition_map_this_level = mapInitialBipartition;
         
+        // Final values are initialized here.
+        this.initial_bipartition_map_this_level_FIXED = new HashMap<>(mapInitialBipartition);
+        this.initial_bipartition_8_values_FIXED = new Bipartition_8_values(initialBip_8_vals);
+        
+        // Regular values initialized.
         this.level = level;
         this.customDS = customDS;
         //Initially all the taxa will be FREE
@@ -377,7 +383,7 @@ public class FMComputer {
                 this.bipartitionMap = map_previous_iteration; // just change as previous map
             }
 
-//            System.out.println("End of Iteration " + iterationsFM
+//            System.out.println("End of Iteration " + iterationsFMprintPartitions
 //                    + " new bipartition =>> \n"
 //                    + Helper.getReadableMap(bipartitionMap));
 //            System.out.println("================================================================");
@@ -388,15 +394,25 @@ public class FMComputer {
 
         FMResultObject object = new FMResultObject(this.customDS, this.level); //pass the parent's customDS as reference
         
+        /////////////////////////////////////// DEBUGGING \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         System.out.println("");
-        if(this.bipartitionMap.equals(this.initial_bipartition_map_this_level)){
+        if(this.bipartitionMap.equals(this.initial_bipartition_map_this_level_FIXED)){
             System.out.println(">>>>>>>>>>>>>>>> INITIAL MAP SAME AS RETURNED MAP OF FM PASS this level = " + this.level);
             
         }else{
             System.out.println(">>>><<<<<-------- NOT EQUAL MAP AS RETURNED MAP OF FM PASS this level = " + this.level);
         }
-        System.out.println(this.bipartitionMap);
         
+        System.out.println("INITIAL  ==> " + this.initial_bipartition_8_values_FIXED.toString());
+        Helper.printPartition(this.initial_bipartition_map_this_level_FIXED, Status.LEFT_PARTITION, Status.RIGHT_PARTITION);
+        
+        System.out.println("RETURNED ==> " + this.initialBipartition_8_values.toString());
+        Helper.printPartition(bipartitionMap, Status.LEFT_PARTITION, Status.RIGHT_PARTITION);
+        
+        
+        
+        
+        //////////////////////////////////// Create results and return \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         object.createFMResultObjects(this.bipartitionMap); //pass THIS level's final-bipartition to get P_left,Q_left,P_right,Q_right
         return object;
     }

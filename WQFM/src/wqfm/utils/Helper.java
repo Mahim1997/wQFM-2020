@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import wqfm.interfaces.Status;
 import wqfm.main.Main;
 
@@ -99,6 +100,25 @@ public class Helper {
         int sum = 0;
         sum = mapInitialBip.keySet().stream().map((key) -> mapInitialBip.get(key)).reduce(sum, Integer::sum);
         return sum;
+    }
+
+    private static String getKeysWithSpecifiedValue(Map<Integer, Integer> map, int val) {
+        return map.keySet()
+                .stream()
+                .filter((t) -> {
+                    return map.get(t) == val;
+                })
+                .map(String::valueOf)
+                .collect(Collectors.joining(", "));
+    }
+
+    public static void printPartition(Map<Integer, Integer> partition_map, int left_partition, int right_partition) {
+        System.out.print("LEFT:  ");
+        System.out.println(getKeysWithSpecifiedValue(partition_map, left_partition));
+
+        System.out.print("RIGHT: ");
+        System.out.println(getKeysWithSpecifiedValue(partition_map, right_partition));
+
     }
 
 //    public static int sumMapValuesInteger(Map<String, Integer> mapInitialBip) {

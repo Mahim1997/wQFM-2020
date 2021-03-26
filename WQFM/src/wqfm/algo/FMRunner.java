@@ -81,7 +81,11 @@ public class FMRunner {
 
         InitialBipartition initialBip = new InitialBipartition();
         Map<Integer, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS_this_level);
-
+        System.out.println("L 84. FMComputer. Printing initialBipartition.");
+        System.out.println(mapInitialBipartition);
+        Helper.printPartition(mapInitialBipartition, Status.LEFT_PARTITION, Status.RIGHT_PARTITION);
+        
+        
         Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
         initialBip_8_vals.compute8ValuesUsingAllQuartets_this_level(customDS_this_level, mapInitialBipartition);
         System.out.println(Status.GET_PARTITION_SCORE_PRINT() + " LEVEL: " + level + ", ALPHA: " + WeightedPartitionScores.ALPHA_PARTITION_SCORE + ", BETA: " + WeightedPartitionScores.BETA_PARTITION_SCORE);
