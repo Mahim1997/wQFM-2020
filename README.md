@@ -130,7 +130,13 @@ Both simulated and biological datasets are present.
 | 101-taxon    |avian                      |
 
 ## Acknowledgement
-wQFM uses some methods of the [PhyloNet](https://bioinfocs.rice.edu/phylonet) package for rerooting of unrooted trees with respect to an outgroup.
+- wQFM uses some methods of the [PhyloNet](https://bioinfocs.rice.edu/phylonet) package for rerooting of unrooted trees with respect to an outgroup.
+    
+    C. Than, D. Ruths, L. Nakhleh (2008) PhyloNet: A software package for analyzing and reconstructing reticulate evolutionary histories, BMC Bioinformatics 9:322.
+    
+- Certain additional scripts (branch-support calculation, bootstrap support calculation) uses [DendroPy](http://dendropy.org/).
+    
+    Sukumaran, J. and Mark T. Holder. The DendroPy Phylogenetic Computing Library Documentation. Retrieved 01/02/2021, from http://dendropy.org/.
 
 ## Bug Report
 We are always looking to improve our codebase. 
