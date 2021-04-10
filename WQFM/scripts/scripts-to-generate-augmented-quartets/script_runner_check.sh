@@ -35,7 +35,7 @@ java -jar generateBestWQrts.jar "$wqrts_all" "$wqrts_dominant"
 ## Run wQFM
 java -jar wQFM-printing-more-info.jar "$wqrts_dominant" "$wQFM_dominant" > "$log_dominant"
 
-java -jar wQFM-printing-more-info.jar "$wqrts_all" "$wQFM_all" > "$log_all"
+java -jar wQFM-printing-more-info.jar "$wqrts_all" "$wQFM_all"  "1" "0" > "$log_all"
 
 ## Check phylonet jar
 echo "Checking $wQFM_dominant"
