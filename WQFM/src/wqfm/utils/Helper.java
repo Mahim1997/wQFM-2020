@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import wqfm.ds.InitialTable;
 import wqfm.interfaces.Status;
 import wqfm.main.Main;
 
@@ -109,7 +111,7 @@ public class Helper {
                 .filter((t) -> {
                     return map.get(t) == val;
                 })
-                .map(reverse_mapping::get) // x -> reverse_mapping.get(x)
+                .map(x -> (reverse_mapping.get(x) == null) ? Helper.getDummyName(x) : reverse_mapping.get(x)) // x -> reverse_mapping.get(x)
                 .collect(Collectors.joining(", "));
     }
     
@@ -122,6 +124,16 @@ public class Helper {
         System.out.print("RIGHT: ");
         System.out.println(getKeysWithSpecifiedValue(partition_map, right_partition, reverse_mapping));
 
+    }
+
+
+    private static String getDummyName(int x){
+        return "DUM_" + Integer.toString(x);
+    }
+    
+    public static String getStringMappedName(int x) {
+        String s = InitialTable.map_of_int_vs_str_tax_list.get(x);
+        return (s != null) ? s : getDummyName(x);
     }
 
     private static String getKeysWithSpecifiedValue(Map<Integer, Integer> map, int val) {

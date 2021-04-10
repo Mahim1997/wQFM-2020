@@ -141,7 +141,7 @@ public class CustomDSPerLevel {
                     System.out.println(
                             list_quartet_indices.stream()
                                     .map(qrt_idx -> this.initial_table1_of_list_of_quartets.get(qrt_idx))
-                                    .map(quartet -> quartet.toString()) // quartet.getNamedQuartet()
+                                    .map(quartet -> quartet.getNamedQuartet()) // quartet.getNamedQuartet()
                                     .collect(Collectors.joining("\n"))
                     );
                 });

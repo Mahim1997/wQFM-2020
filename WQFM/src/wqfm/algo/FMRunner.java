@@ -93,7 +93,7 @@ public class FMRunner {
         
         System.out.println("L 84. FMComputer. Printing initialBipartition.");
 //        System.out.println(mapInitialBipartition);
-        Helper.printPartition(mapInitialBipartition, Status.LEFT_PARTITION, Status.RIGHT_PARTITION);
+        Helper.printPartition(mapInitialBipartition, Status.LEFT_PARTITION, Status.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list);
 
         Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
         initialBip_8_vals.compute8ValuesUsingAllQuartets_this_level(customDS_this_level, mapInitialBipartition);

@@ -1,6 +1,7 @@
 package wqfm.ds;
 
 import java.util.Arrays;
+import wqfm.utils.Helper;
 
 /**
  *
@@ -19,17 +20,18 @@ public class Quartet {
         this.weight = 1.0;
     }
 
+
     public String getNamedQuartet() {
         StringBuilder builder = new StringBuilder();
         builder.append("((");
-        builder.append(InitialTable.map_of_int_vs_str_tax_list.get(this.taxa_sisters_left[0]));
+        builder.append(Helper.getStringMappedName(this.taxa_sisters_left[0]));
         builder.append(",");
-        builder.append(InitialTable.map_of_int_vs_str_tax_list.get(this.taxa_sisters_left[1]));
+        builder.append(Helper.getStringMappedName(this.taxa_sisters_left[1]));
         builder.append("),(");
-        builder.append(InitialTable.map_of_int_vs_str_tax_list.get(this.taxa_sisters_right[0]));
+        builder.append(Helper.getStringMappedName(this.taxa_sisters_right[0]));
         builder.append(",");
-        builder.append(InitialTable.map_of_int_vs_str_tax_list.get(this.taxa_sisters_right[1]));
-        builder.append("));");
+        builder.append(Helper.getStringMappedName(this.taxa_sisters_right[1]));
+        builder.append(")); ");
         builder.append(Double.toString(this.weight));
         return builder.toString();
     }
@@ -114,7 +116,7 @@ public class Quartet {
 
     @Override
     public String toString() {
-        String s = "((" + this.taxa_sisters_left[0] + "," + this.taxa_sisters_left[1] + "),(" + this.taxa_sisters_right[0] + "," + this.taxa_sisters_right[1] + "));" + String.valueOf(this.weight);
+        String s = "((" + this.taxa_sisters_left[0] + "," + this.taxa_sisters_left[1] + "),(" + this.taxa_sisters_right[0] + "," + this.taxa_sisters_right[1] + ")); " + String.valueOf(this.weight);
         return s;
     }
 
