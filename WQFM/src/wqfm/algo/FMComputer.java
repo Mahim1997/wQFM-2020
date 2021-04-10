@@ -216,7 +216,10 @@ public class FMComputer {
                 }//else: simply append to the list.
                 this.mapCandidateGainsPerListTax.get(gainOfThisTax).add(taxToConsider); //add gain to map
                 this.mapCandidateTax_vs_8vals.put(taxToConsider, _8_values_whole_considering_thisTax_swap);
-
+                
+                System.out.println("FMComputer L219. taxToConsider = " + taxToConsider + " , " + Helper.getStringMappedName(taxToConsider)
+                        + " _8Values_consideringTaxSwap = " + _8_values_whole_considering_thisTax_swap);
+                
             } //end if
         }//end outer for
 
@@ -293,7 +296,7 @@ public class FMComputer {
                 run_FM_singlepass_hypothetical_swap();
             } else {
                 try {
-                    //    //FM hypothetical single swap run
+                    // Threaded version, not running.
                     run_FM_singlepass_hypothetical_swap_threaded_version();
                 } catch (ExecutionException ex) {
                     System.out.println("-->>(L 286.) Exception while running threads in run_FM_single_iteration()");

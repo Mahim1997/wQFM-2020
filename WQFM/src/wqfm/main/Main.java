@@ -3,7 +3,7 @@ package wqfm.main;
 import wqfm.interfaces.Status;
 import wqfm.algo.FMRunner;
 import wqfm.feature.Bin;
-import wqfm.testFunctions.TestNormalFunctions;
+//import wqfm.testFunctions.TestNormalFunctions;
 import wqfm.utils.Helper;
 import wqfm.utils.TreeHandler;
 
@@ -23,7 +23,7 @@ public class Main {
 //    public static String INPUT_FILE_NAME = "input_files/best_weighted_quartets_avian_2X_R1_est";
     
 //    public static String INPUT_FILE_NAME = "input_files/weighted_quartets_avian_biological_dataset";
-    public static String INPUT_FILE_NAME = "input_files/weighted_quartets_R20_noscale_200g_1000b";
+    public static String INPUT_FILE_NAME = "input_files/wqrts_11Tax_est_5G_R1";
 //   public static String INPUT_FILE_NAME = "input_files/wqrts_15G_100g100b_R1";
 //    public static String INPUT_FILE_NAME = "input_files/wqrts_11Tax_est_5G_R1";
 //    public static String INPUT_FILE_NAME = "input_files/wqrts_toy_dataset_QFM_paper";
