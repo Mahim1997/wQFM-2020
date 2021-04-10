@@ -102,6 +102,28 @@ public class Helper {
         return sum;
     }
 
+
+    private static String getKeysWithSpecifiedValue(Map<Integer, Integer> map, int val, Map<Integer, String> reverse_mapping) {
+        return map.keySet()
+                .stream()
+                .filter((t) -> {
+                    return map.get(t) == val;
+                })
+                .map(reverse_mapping::get) // x -> reverse_mapping.get(x)
+                .collect(Collectors.joining(", "));
+    }
+    
+    public static void printPartition(Map<Integer, Integer> partition_map, 
+            int left_partition, int right_partition, 
+            Map<Integer, String> reverse_mapping) {
+        System.out.print("LEFT:  ");
+        System.out.println(getKeysWithSpecifiedValue(partition_map, left_partition, reverse_mapping));
+
+        System.out.print("RIGHT: ");
+        System.out.println(getKeysWithSpecifiedValue(partition_map, right_partition, reverse_mapping));
+
+    }
+
     private static String getKeysWithSpecifiedValue(Map<Integer, Integer> map, int val) {
         return map.keySet()
                 .stream()
@@ -190,5 +212,6 @@ public class Helper {
 //        }
         return decodedTree;
     }
+
 
 }

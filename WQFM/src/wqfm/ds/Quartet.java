@@ -19,6 +19,21 @@ public class Quartet {
         this.weight = 1.0;
     }
 
+    public String getNamedQuartet() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("((");
+        builder.append(InitialTable.map_of_int_vs_str_tax_list.get(this.taxa_sisters_left[0]));
+        builder.append(",");
+        builder.append(InitialTable.map_of_int_vs_str_tax_list.get(this.taxa_sisters_left[1]));
+        builder.append("),(");
+        builder.append(InitialTable.map_of_int_vs_str_tax_list.get(this.taxa_sisters_right[0]));
+        builder.append(",");
+        builder.append(InitialTable.map_of_int_vs_str_tax_list.get(this.taxa_sisters_right[1]));
+        builder.append("));");
+        builder.append(Double.toString(this.weight));
+        return builder.toString();
+    }
+
     /*
         Keep a,b|c,d as the quartet.
         Keep the minimum of (a,b) in taxa_sisters_left i.e. taxa_sisters_left[0] = min, taxa_sisters_left[1] = max
@@ -91,9 +106,9 @@ public class Quartet {
             InitialTable.map_of_str_vs_int_tax_list.put(arr[3], d);
             InitialTable.map_of_int_vs_str_tax_list.put(d, arr[3]);
         }
-        
+
         initialiseQuartet(a, b, c, d, Double.parseDouble(arr[4]));
-        
+
 //        initialiseQuartet(arr[0], arr[1], arr[2], arr[3], Double.parseDouble(arr[4]));
     }
 

@@ -118,9 +118,13 @@ public class CustomDSPerLevel {
 
     public String onlyQuartetIndices() {
         String s = "";
-        s = this.quartet_indices_list_unsorted.stream().map((qrtIndex) -> (String.valueOf(qrtIndex) + ", ")).reduce(s, String::concat);
+        s = this.quartet_indices_list_unsorted
+                .stream()
+                .map((qrtIndex) -> (String.valueOf(qrtIndex) + ", "))
+                .reduce(s, String::concat);
         return s;
     }
+    
 
     public void printSortedQuartetsTable() {
 
@@ -137,7 +141,7 @@ public class CustomDSPerLevel {
                     System.out.println(
                             list_quartet_indices.stream()
                                     .map(qrt_idx -> this.initial_table1_of_list_of_quartets.get(qrt_idx))
-                                    .map(String::valueOf)
+                                    .map(quartet -> quartet.toString()) // quartet.getNamedQuartet()
                                     .collect(Collectors.joining("\n"))
                     );
                 });
