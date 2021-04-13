@@ -13,7 +13,7 @@ import wqfm.utils.TreeHandler;
  * @author mahim
  */
 public class Main {
-    
+    public static boolean NORMALIZE_DUMMY_QUARTETS = false; // true -> divide by count, false -> simply sum
     public static int BIPARTITION_MODE = Status.BIPARTITION_GREEDY; // BIPARTITION_EXTREME, BIPARTITION_RANDOM, BIPARTITION_GREEDY
 
     public static boolean DEBUG_DUMMY_NAME = false; //true -> X1, X2 like that & false -> MZCY ... weird name.
