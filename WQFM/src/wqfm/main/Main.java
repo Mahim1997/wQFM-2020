@@ -13,7 +13,7 @@ import wqfm.utils.TreeHandler;
  * @author mahim
  */
 public class Main {
-    public static boolean NORMALIZE_DUMMY_QUARTETS = false; // true -> divide by count, false -> simply sum
+    public static boolean NORMALIZE_DUMMY_QUARTETS = true; // true -> divide by count, false -> simply sum
     public static int BIPARTITION_MODE = Status.BIPARTITION_GREEDY; // BIPARTITION_EXTREME, BIPARTITION_RANDOM, BIPARTITION_GREEDY
 
     public static boolean DEBUG_DUMMY_NAME = false; //true -> X1, X2 like that & false -> MZCY ... weird name.
@@ -34,7 +34,7 @@ public class Main {
 
     public static String OUTPUT_FILE_NAME = "test-output-file-wqfm-java.tre";
 
-    public static boolean DEBUG_MODE_TESTING = true;
+    public static boolean DEBUG_MODE_TESTING = false; // true -> while running from netbeans, false -> run from cmd
     public static double SMALLEPSILON = 0.000001; //if cumulative gain of iteration < this_num then stop
     public static int MAX_ITERATIONS_LIMIT = 1000000; //can we keep it as another stopping-criterion ? [100k]
     public static double STEP_SIZE_BINNING = 0.01; //always used 0.01 for experiments (default)

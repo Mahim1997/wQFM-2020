@@ -79,21 +79,20 @@ public class FMRunner {
         level++; // For dummy node finding.
         customDS_this_level.level = level; //for debugging issues.
 
-                
         InitialBipartition initialBip = new InitialBipartition();
         Map<Integer, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS_this_level);
-        
-        
-        
-        if(level >= 3){
-            System.out.println("++++++++++++++ Before Computations, Level " + level + " Quartet lists ++++++++++++++++++++ " + customDS_this_level.quartet_indices_list_unsorted.size());
-            customDS_this_level.printSortedQuartetsTable();
+
+        if (Main.DEBUG_MODE_TESTING) { // replace with a logger.
+            if (level >= 3) {
+                System.out.println("++++++++++++++ Before Computations, Level " + level + " Quartet lists ++++++++++++++++++++ " + customDS_this_level.quartet_indices_list_unsorted.size());
+                customDS_this_level.printSortedQuartetsTable();
+            }
         }
 
-        
-        System.out.println("L 84. FMComputer. Printing initialBipartition.");
-//        System.out.println(mapInitialBipartition);
-        Helper.printPartition(mapInitialBipartition, Status.LEFT_PARTITION, Status.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list);
+        if (Main.DEBUG_MODE_TESTING) {
+            System.out.println("L 84. FMComputer. Printing initialBipartition.");
+            Helper.printPartition(mapInitialBipartition, Status.LEFT_PARTITION, Status.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list);
+        }
 
         Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
         initialBip_8_vals.compute8ValuesUsingAllQuartets_this_level(customDS_this_level, mapInitialBipartition);
@@ -113,7 +112,6 @@ public class FMRunner {
         //        System.out.println(customDS_right.onlyQuartetIndices());
         //        System.out.println(customDS_right.taxa_list_int);
         //Debug printing end
-
         /////////////////// Beginning of Recursion \\\\\\\\\\\\\\\\\\\\\\\\\\\
         int dummyTaxon = fmResultObject.dummyTaxonThisLevel;
         String left_tree_unrooted = recursiveDivideAndConquer(customDS_left, level, initialTable);
