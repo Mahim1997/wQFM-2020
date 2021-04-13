@@ -218,7 +218,11 @@ public class FMComputer {
                 this.mapCandidateTax_vs_8vals.put(taxToConsider, _8_values_whole_considering_thisTax_swap);
                 
                 System.out.println("FMComputer L219. taxToConsider = " + taxToConsider + " , " + Helper.getStringMappedName(taxToConsider)
-                        + " _8Values_consideringTaxSwap = " + _8_values_whole_considering_thisTax_swap);
+                        + "\n _8_before = " + _8_vals_THIS_TAX_before_hypo_swap
+                        + "\n _8_after = " + _8_vals_THIS_TAX_AFTER_hypo_swap
+                        + "\n ps_before = " + ps_before_reduced 
+                        + " , ps_after = " + ps_after_reduced 
+                        + ", gainOfThisTax = " + gainOfThisTax);
                 
             } //end if
         }//end outer for

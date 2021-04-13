@@ -1,11 +1,14 @@
 package wqfm.bip;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import wqfm.interfaces.Status;
 import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.Quartet;
+import wqfm.main.Main;
 
 /**
  *
@@ -14,23 +17,94 @@ import wqfm.ds.Quartet;
 public class InitialBipartition {
     //Function to obtain initial (logical) bipartition 
 
+    private static String getCommaSeparatedEqualValue(Map<String, Integer> map, int value) {
+        return map.keySet()
+                .stream()
+                .map(x -> map.get(x))
+                .filter(x -> (x == value))
+                .map(x -> String.valueOf(x))
+                .collect(Collectors.joining(", "));
+    }
+
     public static void printBipartition(Map<String, Integer> map) {
         System.out.print("LEFT: ");
-        for (String key_taxa : map.keySet()) { // print left
-            if (map.get(key_taxa) == Status.LEFT_PARTITION) {
-                System.out.print(key_taxa + ", ");
-            }
-        }
-        System.out.print("\nRIGHT: ");
-        for (String key_taxa : map.keySet()) { // print left
-            if (map.get(key_taxa) == Status.RIGHT_PARTITION) {
-                System.out.print(key_taxa + ", ");
-            }
-        }
-        System.out.println("");
+        System.out.println(InitialBipartition.getCommaSeparatedEqualValue(map, Status.LEFT_PARTITION));
+
+        System.out.print("RIGHT: ");
+        System.out.println(InitialBipartition.getCommaSeparatedEqualValue(map, Status.RIGHT_PARTITION));
     }
 
     public Map<Integer, Integer> getInitialBipartitionMap(CustomDSPerLevel customDS) {
+        // Factory level choice.
+        switch (Main.BIPARTITION_MODE) {
+
+            case Status.BIPARTITION_GREEDY:
+                return this.getInitialBipartitionGreedy(customDS);
+
+            case Status.BIPARTITION_EXTREME:
+                return this.getInitialBipartitionExtreme(customDS);
+
+            case Status.BIPARTITION_RANDOM:
+                return this.getInitialBipartitionRandom(customDS);
+
+            default:
+                return this.getInitialBipartitionGreedy(customDS); // by default
+
+        }
+
+    }
+
+    private Map<Integer, Integer> getInitialBipartitionExtreme(CustomDSPerLevel customDS) {
+        // one on the left, all the others on the right.
+        Map<Integer, Integer> map_partition = new HashMap<>();
+
+        // initially put all taxa to the right.
+        customDS.taxa_list_int.forEach((t) -> {
+            map_partition.put(t, Status.RIGHT_PARTITION);
+        });
+
+        // take the first taxa put into left.
+        map_partition.put(customDS.taxa_list_int.get(0), Status.LEFT_PARTITION);
+
+        return map_partition;
+    }
+
+    private Map<Integer, Integer> getInitialBipartitionRandom(CustomDSPerLevel customDS) {
+        Map<Integer, Integer> map_partition = new HashMap<>();
+
+        // randomly assign partitions.
+        customDS.taxa_list_int.forEach((t) -> {
+            int partition = (Math.random() > 0.5) ? Status.LEFT_PARTITION : Status.RIGHT_PARTITION;
+            map_partition.put(t, partition);
+        });
+
+        // check if any side is empty, then place there.
+        boolean has_left = false, has_right = false;
+
+        for (int key : map_partition.keySet()) {
+            int val = map_partition.get(key);
+            if (val == Status.LEFT_PARTITION) {
+                has_left = true;
+            }
+            if (val == Status.RIGHT_PARTITION) {
+                has_right = true;
+            }
+        }
+
+        if (!has_left) {
+            // assign first element.
+            map_partition.put(customDS.taxa_list_int.get(0), Status.LEFT_PARTITION);
+        }
+        if (!has_right) {
+            // assign first element.
+            map_partition.put(customDS.taxa_list_int.get(0), Status.RIGHT_PARTITION);
+        }
+
+        return map_partition;
+    }
+
+    private Map<Integer, Integer> getInitialBipartitionGreedy(CustomDSPerLevel customDS) {
+
         Map<Integer, Integer> map_partition = new HashMap<>(); //return this map
 
         for (int tax : customDS.taxa_list_int) { //initially assign all as 0/unassigned
@@ -189,4 +263,5 @@ public class InitialBipartition {
         return map_partition;
 
     }
+
 }

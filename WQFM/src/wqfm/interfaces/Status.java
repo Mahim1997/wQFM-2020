@@ -59,6 +59,11 @@ public interface Status {
     public static double ALPHA_DEFAULT_VAL = 1.0;
     public static double BETA_DEFAULT_VAL = 1.0;
     
+    // for bipartition modes
+    public static int BIPARTITION_GREEDY = 1;
+    public static int BIPARTITION_EXTREME = 2;
+    public static int BIPARTITION_RANDOM = 3;
+    
     // not important.
 //    public static int EARLY_STOP_NUM_TAXA = 5; //just experimentation purposes.
     

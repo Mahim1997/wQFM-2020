@@ -3,6 +3,7 @@ package wqfm.main;
 import wqfm.interfaces.Status;
 import wqfm.algo.FMRunner;
 import wqfm.feature.Bin;
+import wqfm.testFunctions.TestNormalFunctions;
 //import wqfm.testFunctions.TestNormalFunctions;
 import wqfm.utils.Helper;
 import wqfm.utils.TreeHandler;
@@ -12,6 +13,8 @@ import wqfm.utils.TreeHandler;
  * @author mahim
  */
 public class Main {
+    
+    public static int BIPARTITION_MODE = Status.BIPARTITION_GREEDY; // BIPARTITION_EXTREME, BIPARTITION_RANDOM, BIPARTITION_GREEDY
 
     public static boolean DEBUG_DUMMY_NAME = false; //true -> X1, X2 like that & false -> MZCY ... weird name.
     public static int REROOT_MODE = Status.REROOT_USING_JAR;
@@ -45,7 +48,7 @@ public class Main {
         Main.testIfRerootWorks();
 
         FMRunner.runFunctions(); //main functions for wQFM
-//        TestNormalFunctions.testReverseMap();
+//        TestNormalFunctions.testInitialBipartitionFunctions();
 
         long time_del = System.currentTimeMillis() - time_1;
         long minutes = (time_del / 1000) / 60;
