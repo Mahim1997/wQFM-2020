@@ -186,8 +186,8 @@ else:
         BETA = weighted_avg_bin_ratio_before_thresh # basically this new ratio-wise calculation will get BETA
     else: # Bin(THRESH, 1, del=0.01)
         ALPHA = 1 # ALPHA will be 1
-        BETA = weighted_avg_bin_ratio_after_thresh # basically this new ratio-wise calculation will get BETA
-
+        # BETA = weighted_avg_bin_ratio_after_thresh # basically this new ratio-wise calculation will get BETA
+        BETA = 1
 
 # print(total_counts_before_thresh/total_counts_all, total_counts_AFTER_thresh_below_1/total_counts_all, total_counts_after_or_equal_1/total_counts_all)
 print(BETA)
