@@ -86,7 +86,7 @@ def create_bins(lower_bound, upper_bound, step_size):
     return bins
 
 
-def find_in_bins(list_ratios, thresh = 0.85):
+def find_in_bins(list_ratios, thresh = 0.9):
     bins = create_bins(lower_bound=0.5, upper_bound=1, step_size=0.01)
     # print("Using thresh = " + str(thresh))
     # print(bins)
