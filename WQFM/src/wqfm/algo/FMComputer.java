@@ -216,7 +216,7 @@ public class FMComputer {
                 this.mapCandidateGainsPerListTax.get(gainOfThisTax).add(taxToConsider); //add gain to map
                 this.mapCandidateTax_vs_8vals.put(taxToConsider, _8_values_whole_considering_thisTax_swap);
 
-                if (Main.DEBUG_MODE_TESTING) {
+                if (Main.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
                     System.out.println("FMComputer L219. taxToConsider = " + taxToConsider + " , " + Helper.getStringMappedName(taxToConsider)
                             + "\n _8_before = " + _8_vals_THIS_TAX_before_hypo_swap
                             + "\n _8_after = " + _8_vals_THIS_TAX_AFTER_hypo_swap
@@ -315,7 +315,7 @@ public class FMComputer {
             if (listOfPerPassStatistics.isEmpty() == false) { //AT LEAST ONE per-pass val exists.
                 StatsPerPass last_pass_stat = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
 
-                if (Main.DEBUG_MODE_TESTING) {
+                if (Main.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
                     System.out.println("[FMComputer L 310]. FM-pass(box) = " + pass + " , best-taxon: "
                             + Helper.getStringMappedName(last_pass_stat.whichTaxaWasPassed)
                             + " , MaxGain = " + last_pass_stat.maxGainOfThisPass);
@@ -352,7 +352,7 @@ public class FMComputer {
         //Retrieve the stat's bipartition.
         StatsPerPass statOfMaxCumulativeGainBox = this.listOfPerPassStatistics.get(pass_index_with_max_cumulative_gain);
 
-        if (Main.DEBUG_MODE_TESTING) {
+        if (Main.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
             System.out.println("[FMComputer L 341] Cumulative gain (max) = " + max_cumulative_gain_of_current_iteration
                     + " , for pass = " + (pass_index_with_max_cumulative_gain + 1)
                     + " , Tax Passed = " + Helper.getStringMappedName(statOfMaxCumulativeGainBox.whichTaxaWasPassed));

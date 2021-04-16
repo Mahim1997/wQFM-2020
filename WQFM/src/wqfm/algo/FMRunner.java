@@ -82,14 +82,8 @@ public class FMRunner {
         InitialBipartition initialBip = new InitialBipartition();
         Map<Integer, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS_this_level);
 
-        if (Main.DEBUG_MODE_TESTING) { // replace with a logger.
-            if (level >= 3) {
-                System.out.println("++++++++++++++ Before Computations, Level " + level + " Quartet lists ++++++++++++++++++++ " + customDS_this_level.quartet_indices_list_unsorted.size());
-                customDS_this_level.printSortedQuartetsTable();
-            }
-        }
 
-        if (Main.DEBUG_MODE_TESTING) {
+        if (Main.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
             System.out.println("L 84. FMComputer. Printing initialBipartition.");
             Helper.printPartition(mapInitialBipartition, Status.LEFT_PARTITION, Status.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list);
         }
