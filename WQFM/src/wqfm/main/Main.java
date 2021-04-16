@@ -20,7 +20,7 @@ public class Main {
     public static int REROOT_MODE = Status.REROOT_USING_JAR;
     public static int PARTITION_SCORE_MODE = Status.PARTITION_SCORE_FULL_DYNAMIC; //0->[s]-[v], 1->[s]-0.5[v], 2->[s]-[v]-[d], 3->3[s]-2[v]
 
-    public static boolean BIN_LIMIT_LEVEL_1 = true; // by default: false (bin on all levels); true -> only bin level 1
+    public static boolean BIN_LIMIT_LEVEL_1 = false; // by default: false (bin on all levels); true -> only bin level 1
     
     public static double CUT_OFF_LIMIT_BINNING = 0.1; // use 0.1 [default]
     public static double THRESHOLD_BINNING = 0.9; // use 0.9 [default]
