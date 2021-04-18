@@ -82,6 +82,12 @@ public class FMRunner {
         InitialBipartition initialBip = new InitialBipartition();
         Map<Integer, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS_this_level);
 
+
+        if (Main.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
+            System.out.println("L 84. FMComputer. Printing initialBipartition.");
+            Helper.printPartition(mapInitialBipartition, Status.LEFT_PARTITION, Status.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list);
+        }
+
         Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
         initialBip_8_vals.compute8ValuesUsingAllQuartets_this_level(customDS_this_level, mapInitialBipartition);
         System.out.println(Status.GET_PARTITION_SCORE_PRINT() + " LEVEL: " + level + ", ALPHA: " + WeightedPartitionScores.ALPHA_PARTITION_SCORE + ", BETA: " + WeightedPartitionScores.BETA_PARTITION_SCORE);
@@ -99,8 +105,6 @@ public class FMRunner {
         //        System.out.println("============== After Level " + level + " RIGHT Quartets ==================== ");
         //        System.out.println(customDS_right.onlyQuartetIndices());
         //        System.out.println(customDS_right.taxa_list_int);
-        //        System.out.println("++++++++++++++ After Level " + level + " Quartet lists ++++++++++++++++++++ ");
-        //        customDS_this_level.initial_table1_of_list_of_quartets.printQuartetList();
         //Debug printing end
         /////////////////// Beginning of Recursion \\\\\\\\\\\\\\\\\\\\\\\\\\\
         int dummyTaxon = fmResultObject.dummyTaxonThisLevel;
@@ -126,17 +130,16 @@ public class FMRunner {
         // Check if STAR is present 
         // ((1,2,49,57)); 6     is a STAR
         // ((0,1),(10,9)); 343  is normal // should have 3 right brackets and 3 left brackets
-        
+
         int cnt_left_brackets = countChars_in_String(line, '(');
         int cnt_right_brackets = countChars_in_String(line, ')');
-        
-        if((cnt_left_brackets != cnt_right_brackets) || (cnt_left_brackets != 3) || (cnt_right_brackets != 3)){
+
+        if ((cnt_left_brackets != cnt_right_brackets) || (cnt_left_brackets != 3) || (cnt_right_brackets != 3)) {
             System.out.println("\n\n****** Found STAR, line num " + line_cnt + " :->" + line);
             System.out.println("\nCan't handle polytomy for now. Exiting System.\n\n");
             System.exit(-1);
         }
-        
-        
+
         // No issues with STAR.
         Quartet quartet = new Quartet(line);
         initialTable.addToListOfQuartets(quartet); //add to initial-quartets-single-list

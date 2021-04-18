@@ -66,6 +66,9 @@ def run(inputFileName1, inputFileName2):
 
     # print(dict1)
     # print(dict2)
+    
+    if not PRINT_LIST_FLAG:
+        print("Model Condition, T-value, P-value")
 
     for model_cond_name in list(dict1.keys()):
         list_val_1 = dict1[model_cond_name]
@@ -78,10 +81,10 @@ def run(inputFileName1, inputFileName2):
         else: 
             T, p_val = stats.wilcoxon(x = list_val_1, y = list_val_2, zero_method='pratt', correction=False)  
             if PRINT_LIST_FLAG == True:
-                print(model_cond_name, ", T=", T, ",P-val=", p_val, "\nList1: ", list_val_1, "\nList2: ", list_val_2)    
+                print(model_cond_name, ", T=", T, ",P-val=", p_val, "\nList1: ", list_val_1, "\nList2: ", list_val_2)
             else:
-                print(model_cond_name, ", T=", T, ",P-val=", p_val)
-
+                # print(model_cond_name, ", T=", T, ",P-val=", p_val)
+                print(f"{model_cond_name}, {T}, {p_val}")
 
 ###################################################################################
 #################################### main #########################################

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 import javafx.util.Pair;
 import wqfm.feature.Bin;
 import wqfm.main.Main;
@@ -30,6 +31,21 @@ import wqfm.utils.Helper;
  */
 public class TestNormalFunctions {
 
+    public static void testInitialBipartitionFunctions() {
+        Map<Integer, Integer> map_partition = new HashMap<>();
+
+        Integer[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+        List<Integer> taxa_list_int = new ArrayList<>(Arrays.asList(arr));
+        // initially put all taxa to the right.
+        taxa_list_int.forEach((t) -> {
+            int partition = (Math.random() > 0.5) ? Status.LEFT_PARTITION : Status.RIGHT_PARTITION;
+            map_partition.put(t, partition);
+        });
+
+        System.out.println(map_partition);
+    }
+
     private static List<Bin> getListOfBins(double lower_limit, double upper_limit, double step_size) {
         List<Bin> bins = new ArrayList<>();
         double lower_iter = lower_limit;
@@ -42,10 +58,11 @@ public class TestNormalFunctions {
 
     public static void testBin() {
         List<Bin> bins = getListOfBins(0.5, 1.0, 0.01);
-
-        for (Bin bin : bins) {
-            System.out.println(bin);
-        }
+        System.out.println(
+                bins.stream()
+                        .map(Bin::toString)
+                        .collect(Collectors.joining("\n"))
+        );
     }
 
     public static void testMyPairClass() {
@@ -280,8 +297,6 @@ public class TestNormalFunctions {
         Map.Entry<Integer, String> entry = map.entrySet().iterator().next();
         System.out.println(entry + " , " + entry.getKey() + " , " + entry.getValue());
     }
-
- 
 
     public static void testReverseMap() {
         Map<String, String> map_of_int_vs_str = new HashMap<>();

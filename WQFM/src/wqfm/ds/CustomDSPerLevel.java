@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -16,12 +17,12 @@ public class CustomDSPerLevel {
     public InitialTable initial_table1_of_list_of_quartets; //immutable [doesn't change, only as reference, is passed]
 
     public int level;
-    
+
     //Will mutate per level
     public List<Integer> quartet_indices_list_unsorted;
     public Map<Integer, List<Integer>> map_taxa_relevant_quartet_indices; //releveant quartets map, key: taxa & val:list<indices>
     public Map<Double, List<Integer>> sorted_quartets_weight_list_indices_map;
-    
+
     public List<Integer> taxa_list_int;
 
     public void setInitialTableReference(InitialTable initTable) {
@@ -35,11 +36,14 @@ public class CustomDSPerLevel {
         this.taxa_list_int = new ArrayList<>();
     }
 
-    private void printTable1() {
+    public void printTable1() {
         System.out.println("----------- Table1 [SINGLE list of quartets indices] ------------------");
-        for (int i = 0; i < quartet_indices_list_unsorted.size(); i++) {
-            System.out.println(this.quartet_indices_list_unsorted.get(i).toString());
-        }
+
+        System.out.println(this.quartet_indices_list_unsorted.stream()
+                .map(x -> this.initial_table1_of_list_of_quartets.get(x))
+                .map(x -> String.valueOf(x))
+                .collect(Collectors.joining("\n")));
+
     }
 
     private void printMap_RelevantQuartetsIndicesPerTaxa() {
@@ -114,8 +118,34 @@ public class CustomDSPerLevel {
 
     public String onlyQuartetIndices() {
         String s = "";
-        s = this.quartet_indices_list_unsorted.stream().map((qrtIndex) -> (String.valueOf(qrtIndex) + ", ")).reduce(s, String::concat);
+        s = this.quartet_indices_list_unsorted
+                .stream()
+                .map((qrtIndex) -> (String.valueOf(qrtIndex) + ", "))
+                .reduce(s, String::concat);
         return s;
+    }
+    
+
+    public void printSortedQuartetsTable() {
+
+        /*for (double weight : this.sorted_quartets_weight_list_indices_map.keySet()) {
+            List<Integer> quartet_indices = this.sorted_quartets_weight_list_indices_map.get(weight);
+            for(int qrt_idx: quartet_indices){
+                System.out.println(this.initial_table1_of_list_of_quartets.get(qrt_idx));
+            }
+        }*/
+        this.sorted_quartets_weight_list_indices_map.keySet()
+                .stream()
+                .map(weight -> this.sorted_quartets_weight_list_indices_map.get(weight))
+                .forEach(list_quartet_indices -> {
+                    System.out.println(
+                            list_quartet_indices.stream()
+                                    .map(qrt_idx -> this.initial_table1_of_list_of_quartets.get(qrt_idx))
+                                    .map(quartet -> quartet.getNamedQuartet()) // quartet.getNamedQuartet()
+                                    .collect(Collectors.joining("\n"))
+                    );
+                });
+
     }
 
 }

@@ -98,6 +98,9 @@ public class Bin {
         Bin.proportion_after_thresh_before_1 = (double) cnt_after_thresh_before_1 / (double) total_count;
         Bin.proportion_greater_or_equal_1 = (double) cnt_after_1 / (double) total_count;
 
+        System.out.printf("L 101. cnt_before_thresh = %d, cnt_after_thresh_before_1 = %d, cnt_after_1 = %d, total_count = %d"
+                , cnt_before_thresh, cnt_after_thresh_before_1, cnt_after_1, total_count);
+        
         double weighted_avg_final; //this will be passed as BETA
 
         if (Bin.proportion_left_thresh >= Main.CUT_OFF_LIMIT_BINNING) { //greater than cut-off so, bin(left, thresh)
@@ -124,7 +127,7 @@ public class Bin {
             } else {
                 weighted_avg_final = (cumulative_mid_point_product_counts + (double) cnt_after_1) / ((double) (cnt_after_thresh_before_1 + cnt_after_1));
             }
-///            FIX to 1 [don't bin here, doesn't give better result on binning].
+            
 
         }
         bins.clear(); ///clear for gc to collect [WILL have to be more efficient than this]

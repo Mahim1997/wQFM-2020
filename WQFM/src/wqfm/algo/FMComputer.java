@@ -25,12 +25,16 @@ import wqfm.ds.Quartet;
 import wqfm.main.Main;
 import wqfm.utils.Helper;
 import wqfm.bip.WeightedPartitionScores;
+import wqfm.ds.InitialTable;
 
 /**
  *
  * @author mahim
  */
 public class FMComputer {
+
+    private final Map<Integer, Integer> initial_bipartition_map_this_level_FIXED;
+    private final Bipartition_8_values initial_bipartition_8_values_FIXED;
 
     public int level;
     private Bipartition_8_values initialBipartition_8_values;
@@ -44,6 +48,12 @@ public class FMComputer {
     public FMComputer(CustomDSPerLevel customDS,
             Map<Integer, Integer> mapInitialBipartition,
             Bipartition_8_values initialBip_8_vals, int level) {
+
+        // Final values are initialized here.
+        this.initial_bipartition_map_this_level_FIXED = new HashMap<>(mapInitialBipartition);
+        this.initial_bipartition_8_values_FIXED = new Bipartition_8_values(initialBip_8_vals);
+
+        // Regular values initialized.
         this.level = level;
         this.customDS = customDS;
         //Initially all the taxa will be FREE
@@ -206,6 +216,15 @@ public class FMComputer {
                 this.mapCandidateGainsPerListTax.get(gainOfThisTax).add(taxToConsider); //add gain to map
                 this.mapCandidateTax_vs_8vals.put(taxToConsider, _8_values_whole_considering_thisTax_swap);
 
+                if (Main.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
+                    System.out.println("FMComputer L219. taxToConsider = " + taxToConsider + " , " + Helper.getStringMappedName(taxToConsider)
+                            + "\n _8_before = " + _8_vals_THIS_TAX_before_hypo_swap
+                            + "\n _8_after = " + _8_vals_THIS_TAX_AFTER_hypo_swap
+                            + "\n ps_before = " + ps_before_reduced
+                            + " , ps_after = " + ps_after_reduced
+                            + ", gainOfThisTax = " + gainOfThisTax);
+                }
+
             } //end if
         }//end outer for
 
@@ -282,10 +301,10 @@ public class FMComputer {
                 run_FM_singlepass_hypothetical_swap();
             } else {
                 try {
-                    //    //FM hypothetical single swap run
+                    // Threaded version, not running.
                     run_FM_singlepass_hypothetical_swap_threaded_version();
                 } catch (ExecutionException ex) {
-                    System.out.println("-->>(L 286.) Exception while running threads in run_FM_single_iteration()");
+                    System.out.println("-->>(L 305.) Exception while running threads in run_FM_single_iteration()");
 
                 }
             }
@@ -294,12 +313,18 @@ public class FMComputer {
 
             //Debug printing.
             if (listOfPerPassStatistics.isEmpty() == false) { //AT LEAST ONE per-pass val exists.
-//                StatsPerPass last_pass_stat = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
+                StatsPerPass last_pass_stat = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
 
-//                System.out.println("[Line 200]. FM-pass(box) = " + pass + " , best-taxon: " + last_pass_stat.whichTaxaWasPassed + " , MaxGain = "
-//                        + last_pass_stat.maxGainOfThisPass);
+                if (Main.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
+                    System.out.println("[FMComputer L 310]. FM-pass(box) = " + pass + " , best-taxon: "
+                            + Helper.getStringMappedName(last_pass_stat.whichTaxaWasPassed)
+                            + " , MaxGain = " + last_pass_stat.maxGainOfThisPass);
+                }
+
                 changeParameterValuesForNextPass();//Change parameters to maintain consistency wrt next step/box/pass.
             }
+
+            // Debug done.
             areAllTaxaLocked = Helper.checkAllValuesIFSame(this.lockedTaxaBooleanMap, true); //if ALL are true, then stop.
         }
 
@@ -327,12 +352,15 @@ public class FMComputer {
         //Retrieve the stat's bipartition.
         StatsPerPass statOfMaxCumulativeGainBox = this.listOfPerPassStatistics.get(pass_index_with_max_cumulative_gain);
 
-//        System.out.println("[L 236] Cumulative gain (max) = " + max_cumulative_gain_of_current_iteration
-//                + " , for pass = " + (pass_index_with_max_cumulative_gain + 1)
-//                + " , Tax = " + statOfMaxCumulativeGainBox.whichTaxaWasPassed);
+        if (Main.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
+            System.out.println("[FMComputer L 341] Cumulative gain (max) = " + max_cumulative_gain_of_current_iteration
+                    + " , for pass = " + (pass_index_with_max_cumulative_gain + 1)
+                    + " , Tax Passed = " + Helper.getStringMappedName(statOfMaxCumulativeGainBox.whichTaxaWasPassed));
+        }
 //                + " map_final_bipartition = \n" + Helper.getReadableMap(statOfMaxCumulativeGainBox.map_final_bipartition));
         //Initial bipartitions and ALL maps //Now change parameters accordingly for next FM iteration.
         //only when max-cumulative-gain is GREATER than zero, we will change, otherwise return the initial bipartition of this iteration
+
         if (max_cumulative_gain_of_current_iteration > Main.SMALLEPSILON) {
             this.bipartitionMap = new HashMap<>(statOfMaxCumulativeGainBox.map_final_bipartition);
             this.initialBipartition_8_values = statOfMaxCumulativeGainBox._8_values_chosen_for_this_pass;
@@ -373,7 +401,7 @@ public class FMComputer {
                 this.bipartitionMap = map_previous_iteration; // just change as previous map
             }
 
-//            System.out.println("End of Iteration " + iterationsFM
+//            System.out.println("End of Iteration " + iterationsFMprintPartitions
 //                    + " new bipartition =>> \n"
 //                    + Helper.getReadableMap(bipartitionMap));
 //            System.out.println("================================================================");
@@ -383,6 +411,22 @@ public class FMComputer {
         }
 
         FMResultObject object = new FMResultObject(this.customDS, this.level); //pass the parent's customDS as reference
+
+        /////////////////////////////////////// DEBUGGING \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//        System.out.println("");
+//        if (this.bipartitionMap.equals(this.initial_bipartition_map_this_level_FIXED)) {
+//            System.out.println(">>>>>>>>>>>>>>>> INITIAL MAP SAME AS RETURNED MAP OF FM PASS this level = " + this.level);
+//
+//        } else {
+//            System.out.println(">>>><<<<<-------- NOT EQUAL MAP AS RETURNED MAP OF FM PASS this level = " + this.level);
+//        }
+//
+//        System.out.println("INITIAL  ==> " + this.initial_bipartition_8_values_FIXED.toString());
+//        Helper.printPartition(this.initial_bipartition_map_this_level_FIXED, Status.LEFT_PARTITION, Status.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list);
+//
+//        System.out.println("RETURNED ==> " + this.initialBipartition_8_values.toString());
+//        Helper.printPartition(bipartitionMap, Status.LEFT_PARTITION, Status.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list);
+        //////////////////////////////////// Create results and return \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         object.createFMResultObjects(this.bipartitionMap); //pass THIS level's final-bipartition to get P_left,Q_left,P_right,Q_right
         return object;
     }
@@ -397,7 +441,7 @@ public class FMComputer {
         for (double gain : this.mapCandidateGainsPerListTax.keySet()) {
             List<Integer> list_tax_with_this_gain = this.mapCandidateGainsPerListTax.get(gain);
             for (int tax : list_tax_with_this_gain) {
-                System.out.println("-->>Gain(" + tax + ") = " + gain);
+                System.out.println("-->> Gain(" + tax + ") = " + gain);
             }
         }
     }
