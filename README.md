@@ -43,17 +43,19 @@ of wQMC and ASTRAL.
 
 ## Installation
 <!-- UL -->
-* There is no installation required to run wQFM.jar
+* There is no installation required to run wQFM-v1.jar
 
 * To download, use either of the following approach:
 
-    * You can clone/download the whole repository and use required scripts and wQFM.jar to run the application.
+    * You can clone/download the whole repository and use required scripts and wQFM-v1.jar to run the application.
 
-    * Alternatively, you can also download and extract the "wQFM-package.zip" file which contains relevant scripts for generating embedded-weighted-quartets and running wQFM.jar
+    * Alternatively, you can also download and extract the "wQFM-April-2021-package.zip" file which contains relevant scripts for generating embedded-weighted-quartets and running wQFM-v1.jar
 
 * wQFM is a java-based application, and hence should run in any environment (Windows, Linux, Mac, etc.) as long as java is installed.
 
-* To generate embedded-weighted-quartets, python needs to be installed. Also, Linux is required for using the tool "triplets.soda2103".
+* To generate embedded-weighted-quartets, python needs to be installed.
+
+* Also, Linux is required for using the tool "triplets.soda2103" to generate embedded-weighted-quartets.
 
 ## Running the application.
 <!-- OL -->
@@ -66,12 +68,12 @@ of wQMC and ASTRAL.
   ./quartet-controller.sh "input-gene-tree-file-name" "output-quartet-file-name"
 ``` 
 
-2. (**Default Mode**) For running the jar file, use java -jar wQFM.jar "input-file-name" "output-file-name"
+2. (**Default Mode**) For running the jar file, use java -jar wQFM-v1.jar "input-file-name" "output-file-name"
 
 <!-- Code Blocks -->
   ```bash
       # Default mode, uses bin-ratio heuristic on all levels.
-      java -jar wQFM.jar "weighted_quartets" "output-file-name" 
+      java -jar wQFM-v1.jar "weighted_quartets" "output-file-name" 
   ```
 
 3. *Additionally*, for running using fixed partition-score (optional input parameters: ALPHA, BETA).
@@ -81,7 +83,7 @@ of wQMC and ASTRAL.
   # Uses input values of ALPHA and BETA to calculate partition-score = ALPHA*w[s] - BETA*w[v]
 
   ## Example, partition-score = 1*w[s] - 0.5*w[v] i.e. ALPHA = 1, BETA = 0.5
-  java -jar wQFM.jar "weighted_quartets" "output-file-name" "1" "0.5"
+  java -jar wQFM-v1.jar "weighted_quartets" "output-file-name" "1" "0.5"
 ```
 
 4. For large number of taxa, increasing the memory available to Java is recommended. 
@@ -94,19 +96,19 @@ of wQMC and ASTRAL.
 ```bash
   # Example: To supply 8GB of free memory.
   
-  java -Xmx8000M -jar wQFM.jar "weighted_quartets" "output-file-name" ## (default) dynamic ratio-based partition-score
+  java -Xmx8000M -jar wQFM-v1.jar "weighted_quartets" "output-file-name" ## (default) dynamic ratio-based partition-score
 
-  java -Xmx8000M -jar wQFM.jar "weighted_quartets" "output-file-name" "1" "0.5" ## fixed partition-score
+  java -Xmx8000M -jar wQFM-v1.jar "weighted_quartets" "output-file-name" "1" "0.5" ## fixed partition-score
 ```
 
 5. For now, wQFM cannot handle **stars** which is induced due to polytomy in gene trees.
   
-    So, if you do provide stars in input quartet-file, wQFM will terminate (by giving a prompt).
+    So, if you do provide stars in input quartet-file, wQFM will terminate (after giving a prompt).
 
 ## Datasets
 The simulated datasets investigated in this study are found [here](https://sites.google.com/eng.ucsd.edu/datasets/home?authuser=0)
 
-For now, the gene-trees, weighted-quartets and estimated species trees used for analysis are kept [here](https://drive.google.com/drive/folders/1IYKYWG81Sld8QwzZNO5D71mOulGVd7ax?usp=sharing).
+For now, the gene-trees, weighted-quartets and estimated species trees used for analysis are kept [analysis](https://drive.google.com/drive/folders/1IYKYWG81Sld8QwzZNO5D71mOulGVd7ax?usp=sharing).
 
 
 As of July 29, 2020, the datasets (used for analysis) contain the following:
