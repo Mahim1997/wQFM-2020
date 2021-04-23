@@ -69,8 +69,15 @@ def runMethod(input_file, max_mode=False):
     # print(f"Length of values = {len_values}")
     print(input_file, ": ", len_values)
     # print(dict_4TaxSeq_to_totalWts.values())
-    for val in sorted(dict_4TaxSeq_to_totalWts.values()):
-        print(val)
+
+    dict_vals = {}
+    for value in dict_4TaxSeq_to_totalWts.values():
+        if value not in dict_vals:
+            dict_vals[value] = 0
+        dict_vals[value] += 1
+
+    for k in sorted(dict_vals.keys()):
+        print(k, ": ", dict_vals[k])
 
 ###############################################################################################
 
