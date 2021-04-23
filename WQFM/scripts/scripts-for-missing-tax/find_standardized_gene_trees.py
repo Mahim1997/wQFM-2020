@@ -29,7 +29,7 @@ def run(input_file):
     # print(dict_num_taxa)
     max_taxa = max(list(dict_num_taxa.keys()))
 
-    for key in dict_num_taxa:
+    for key in sorted(dict_num_taxa.keys(), reverse=True):
         print("{}: {}, {}".format(key, dict_num_taxa[key]/num_gene_trees, dict_num_taxa[key]))
         # print("{},{}: {}, {}".format(key, key/max_taxa, dict_num_taxa[key]/num_gene_trees, dict_num_taxa[key]))
 
