@@ -56,6 +56,8 @@ with open(fileName,'r') as fr:
 
 dict2 = calculate_avg_stuffs(dictionary_model_conditions)
 
+print("Model Condition,Meqn Quartet Score,Mean Total Weight, Mean Percent Score")
+
 for model in dict2:
     # print(model, ": ", dict2[model])
     (mean_q_score, mean_total_weight, mean_normalized_score) = dict2[model]
