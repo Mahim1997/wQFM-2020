@@ -1,23 +1,21 @@
 package wqfm.algo;
 
+import wqfm.configs.Config;
 import wqfm.bip.InitialBipartition;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
 import java.util.Map;
 import wqfm.bip.Bipartition_8_values;
 import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.FMResultObject;
 import wqfm.ds.InitialTable;
 import wqfm.ds.Quartet;
-import wqfm.feature.FeatureComputer;
-import wqfm.interfaces.Status;
-import wqfm.main.Main;
 import wqfm.utils.Helper;
 import wqfm.utils.TreeHandler;
 import wqfm.bip.WeightedPartitionScores;
+import wqfm.configs.DefaultValues;
 
 /**
  *
@@ -26,18 +24,14 @@ import wqfm.bip.WeightedPartitionScores;
 public class FMRunner {
 
     //Main method to run all functions ... [ABSTRACT everything from Main class]
-    public static void runFunctions() {
-        mainMethod();
-    }
-
-    private static void mainMethod() {
+    public static String runFunctions() {
         FMRunner runner = new FMRunner();
         InitialTable initialTable = new InitialTable();
         CustomDSPerLevel customDS = new CustomDSPerLevel();
-        runner.readFileAndPopulateInitialTables(Main.INPUT_FILE_NAME, customDS, initialTable);
-        System.out.println("Reading from file <" + Main.INPUT_FILE_NAME + "> done."
+        runner.readFileAndPopulateInitialTables(Config.INPUT_FILE_NAME, customDS, initialTable);
+        System.out.println("Reading from file <" + Config.INPUT_FILE_NAME + "> done."
                 + "\nInitial-Num-Quartets = " + initialTable.sizeTable());
-        System.out.println("Running with partition score " + Status.GET_PARTITION_SCORE_PRINT());
+        System.out.println("Running with partition score " + DefaultValues.GET_PARTITION_SCORE_PRINT());
         int level = 0;
         customDS.level = level; //for debugging issues.
 
@@ -52,7 +46,9 @@ public class FMRunner {
 //        System.out.println(final_tree);
         String final_tree_decoded = Helper.getFinalTreeFromMap(final_tree, InitialTable.map_of_int_vs_str_tax_list);
         System.out.println(final_tree_decoded);
-        Helper.writeToFile(final_tree_decoded, Main.OUTPUT_FILE_NAME);
+        Helper.writeToFile(final_tree_decoded, Config.OUTPUT_FILE_NAME);
+        
+        return final_tree_decoded;
     }
 
     // ------>>>> Main RECURSIVE function ....
@@ -83,14 +79,14 @@ public class FMRunner {
         Map<Integer, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS_this_level);
 
 
-        if (Main.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
+        if (Config.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
             System.out.println("L 84. FMComputer. Printing initialBipartition.");
-            Helper.printPartition(mapInitialBipartition, Status.LEFT_PARTITION, Status.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list);
+            Helper.printPartition(mapInitialBipartition, DefaultValues.LEFT_PARTITION, DefaultValues.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list);
         }
 
         Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
         initialBip_8_vals.compute8ValuesUsingAllQuartets_this_level(customDS_this_level, mapInitialBipartition);
-        System.out.println(Status.GET_PARTITION_SCORE_PRINT() + " LEVEL: " + level + ", ALPHA: " + WeightedPartitionScores.ALPHA_PARTITION_SCORE + ", BETA: " + WeightedPartitionScores.BETA_PARTITION_SCORE);
+        System.out.println(DefaultValues.GET_PARTITION_SCORE_PRINT() + " LEVEL: " + level + ", ALPHA: " + WeightedPartitionScores.ALPHA_PARTITION_SCORE + ", BETA: " + WeightedPartitionScores.BETA_PARTITION_SCORE);
 
         FMComputer fmComputerObject = new FMComputer(customDS_this_level, mapInitialBipartition, initialBip_8_vals, level);
         FMResultObject fmResultObject = fmComputerObject.run_FM_Algorithm_Whole();

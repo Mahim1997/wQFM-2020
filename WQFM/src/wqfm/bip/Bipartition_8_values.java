@@ -5,18 +5,19 @@
  */
 package wqfm.bip;
 
+import wqfm.configs.Config;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import javafx.util.Pair;
-import wqfm.interfaces.Status;
 import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.Quartet;
 import wqfm.feature.FeatureComputer;
 import wqfm.main.Main;
-import wqfm.utils.Utils;
+import wqfm.utils.TaxaUtils;
+import wqfm.configs.DefaultValues;
 
 /**
  *
@@ -69,23 +70,23 @@ public class Bipartition_8_values {
 
     public void addRespectiveValue(double weight, int status) {
         switch (status) {
-            case Status.SATISFIED:
+            case DefaultValues.SATISFIED:
                 this.numSatisfied++;
                 this.wtSatisfied += weight;
                 break;
-            case Status.VIOLATED:
+            case DefaultValues.VIOLATED:
                 this.numViolated++;
                 this.wtViolated += weight;
                 break;
-            case Status.DEFERRED:
+            case DefaultValues.DEFERRED:
                 this.numDeferred++;
                 this.wtDeferred += weight;
                 break;
-            case Status.BLANK:
+            case DefaultValues.BLANK:
                 this.numBlank++;
                 this.wtBlank += weight;
                 break;
-            case Status.UNKNOWN: // do nothing for this case
+            case DefaultValues.UNKNOWN: // do nothing for this case
                 break;
             default:
                 break;
@@ -106,7 +107,7 @@ public class Bipartition_8_values {
         for (int idx_quartet : customDS.quartet_indices_list_unsorted) {
             Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_quartet);
 
-            if (Main.PARTITION_SCORE_MODE == Status.PARTITION_SCORE_FULL_DYNAMIC) {
+            if (Config.PARTITION_SCORE_MODE == DefaultValues.PARTITION_SCORE_FULL_DYNAMIC) {
                 FeatureComputer.makeDictionary(quartet, map_four_tax_seq_weights_list);
             }
 
@@ -116,22 +117,22 @@ public class Bipartition_8_values {
             int right_sis_1_bip_val = map_bipartitions.get(quartet.taxa_sisters_right[0]);
             int right_sis_2_bip_val = map_bipartitions.get(quartet.taxa_sisters_right[1]);
 
-            int status_quartet = Utils.findQuartetStatus(left_sis_1_bip_val, left_sis_2_bip_val, right_sis_1_bip_val, right_sis_2_bip_val); //obtain quartet status
+            int status_quartet = TaxaUtils.findQuartetStatus(left_sis_1_bip_val, left_sis_2_bip_val, right_sis_1_bip_val, right_sis_2_bip_val); //obtain quartet status
             //compute scores according to status.
             switch (status_quartet) {
-                case Status.SATISFIED:
+                case DefaultValues.SATISFIED:
                     this.numSatisfied++;
                     this.wtSatisfied += quartet.weight;
                     break;
-                case Status.VIOLATED:
+                case DefaultValues.VIOLATED:
                     this.numViolated++;
                     this.wtViolated += quartet.weight;
                     break;
-                case Status.DEFERRED:
+                case DefaultValues.DEFERRED:
                     this.numDeferred++;
                     this.wtDeferred += quartet.weight;
                     break;
-                case Status.BLANK:
+                case DefaultValues.BLANK:
                     this.numBlank++;
                     this.wtBlank += quartet.weight;
                     break;
@@ -141,7 +142,7 @@ public class Bipartition_8_values {
         }
         
         
-        if (Main.PARTITION_SCORE_MODE == Status.PARTITION_SCORE_FULL_DYNAMIC) {
+        if (Config.PARTITION_SCORE_MODE == DefaultValues.PARTITION_SCORE_FULL_DYNAMIC) {
             FeatureComputer.computeBinningFeature(map_four_tax_seq_weights_list, customDS.level);
         }
 

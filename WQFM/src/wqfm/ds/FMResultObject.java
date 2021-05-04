@@ -1,11 +1,12 @@
 package wqfm.ds;
 
+import wqfm.configs.Config;
 import java.util.HashMap;
 import java.util.Map;
-import wqfm.interfaces.Status;
 import wqfm.main.Main;
 import wqfm.utils.CustomPair;
-import wqfm.utils.Utils;
+import wqfm.utils.TaxaUtils;
+import wqfm.configs.DefaultValues;
 
 /**
  *
@@ -27,7 +28,7 @@ public class FMResultObject {
         //pass the reference of initial table to both left & right partitions.
         this.customDS_left_partition = new CustomDSPerLevel(); //do not initialize tables YET
         this.customDS_right_partition = new CustomDSPerLevel(); //do not initialize tables YET
-        this.dummyTaxonThisLevel = Utils.getDummyTaxonName(level); //obtain the dummy node for this level
+        this.dummyTaxonThisLevel = TaxaUtils.getDummyTaxonName(level); //obtain the dummy node for this level
 
         this.customDS_left_partition.initial_table1_of_list_of_quartets = new InitialTable(false);
         this.customDS_right_partition.initial_table1_of_list_of_quartets = new InitialTable(false);
@@ -41,9 +42,9 @@ public class FMResultObject {
     public void createFMResultObjects(Map<Integer, Integer> mapOfBipartition) {
         //Initially just transfer all to P_left and P_right. [Then for quartets-with-dummy, just pass the dummy node] 
         for (int key_taxon : mapOfBipartition.keySet()) {
-            if (mapOfBipartition.get(key_taxon) == Status.LEFT_PARTITION) {
+            if (mapOfBipartition.get(key_taxon) == DefaultValues.LEFT_PARTITION) {
                 this.customDS_left_partition.taxa_list_int.add(key_taxon);
-            } else if (mapOfBipartition.get(key_taxon) == Status.RIGHT_PARTITION) {
+            } else if (mapOfBipartition.get(key_taxon) == DefaultValues.RIGHT_PARTITION) {
                 this.customDS_right_partition.taxa_list_int.add(key_taxon);
             }
         }
@@ -62,18 +63,18 @@ public class FMResultObject {
             int right_1_partition = mapOfBipartition.get(quartet_parent.taxa_sisters_right[0]);
             int right_2_partition = mapOfBipartition.get(quartet_parent.taxa_sisters_right[1]);
 
-            int quartet_status = Utils.findQuartetStatus(left_1_partition, left_2_partition, right_1_partition, right_2_partition);
+            int quartet_status = TaxaUtils.findQuartetStatus(left_1_partition, left_2_partition, right_1_partition, right_2_partition);
 
             //check if quartet is blank or deferred and only keep those, add dummy taxon ... [add quartet-indices and taxa-set]
-            if (quartet_status == Status.BLANK) { // pass THIS quartet, no need to add dummy [all 4 are on same side]
-                if (left_1_partition == Status.LEFT_PARTITION) { //all four tax of the parent quartet are in left partition
+            if (quartet_status == DefaultValues.BLANK) { // pass THIS quartet, no need to add dummy [all 4 are on same side]
+                if (left_1_partition == DefaultValues.LEFT_PARTITION) { //all four tax of the parent quartet are in left partition
                     this.customDS_left_partition.quartet_indices_list_unsorted.add(qrt_idx); //add old quartet's index in Q_left
 
-                } else if (left_1_partition == Status.RIGHT_PARTITION) { //all four tax of the parent quartet are in right partition
+                } else if (left_1_partition == DefaultValues.RIGHT_PARTITION) { //all four tax of the parent quartet are in right partition
                     this.customDS_right_partition.quartet_indices_list_unsorted.add(qrt_idx);  //add old quartet's index in Q_right
 
                 }
-            } else if (quartet_status == Status.DEFERRED) {
+            } else if (quartet_status == DefaultValues.DEFERRED) {
                 int[] arr_bipartition = {left_1_partition, left_2_partition, right_1_partition, right_2_partition};
                 int commonBipartitionValue = findCommonBipartition(arr_bipartition); //find the common bipartition [i.e. whether q goes to Q_left or Q_right]
 //                System.out.println(">> FMResultObject (line 64) parent qrt = " + quartet_parent + " bip = " + mapOfBipartition);
@@ -89,7 +90,7 @@ public class FMResultObject {
                     int count = this.map_quartet_dummy_with_counts.get(newQuartetWithDummy);
 
                     double new_weight = 0;
-                    if (Main.NORMALIZE_DUMMY_QUARTETS == true) {
+                    if (Config.NORMALIZE_DUMMY_QUARTETS == true) {
                         //// averaging
                         new_weight = (double) ((count * pair_value_from_map.weight_double) + newQuartetWithDummy.weight) / (double) (count + 1);
                     } else {
@@ -127,9 +128,9 @@ public class FMResultObject {
             int idx_quartet_newly_added = this.customDS_initial_this_level.initial_table1_of_list_of_quartets.sizeTable() - 1;
             //push to which partition depending on the pair_value's bipartition stored.
             int bipartition_val = pair_val.partition_int;
-            if (bipartition_val == Status.LEFT_PARTITION) {
+            if (bipartition_val == DefaultValues.LEFT_PARTITION) {
                 this.customDS_left_partition.quartet_indices_list_unsorted.add(idx_quartet_newly_added);
-            } else if (bipartition_val == Status.RIGHT_PARTITION) {
+            } else if (bipartition_val == DefaultValues.RIGHT_PARTITION) {
                 this.customDS_right_partition.quartet_indices_list_unsorted.add(idx_quartet_newly_added);
             }
         }
@@ -142,9 +143,9 @@ public class FMResultObject {
         //Three will be same, one will be different
         int sum = arr[0] + arr[1] + arr[2] + arr[3];
         if (sum < 0) {
-            return Status.LEFT_PARTITION;
+            return DefaultValues.LEFT_PARTITION;
         } else {
-            return Status.RIGHT_PARTITION;
+            return DefaultValues.RIGHT_PARTITION;
         }
     }
 
@@ -159,16 +160,16 @@ public class FMResultObject {
         }
         //returns the taxon name of the uncommon bipartition
         switch (idx) {
-            case Status.LEFT_SISTER_1_IDX:
+            case DefaultValues.LEFT_SISTER_1_IDX:
                 q.taxa_sisters_left[0] = this.dummyTaxonThisLevel;
                 break;
-            case Status.LEFT_SISTER_2_IDX:
+            case DefaultValues.LEFT_SISTER_2_IDX:
                 q.taxa_sisters_left[1] = this.dummyTaxonThisLevel;
                 break;
-            case Status.RIGHT_SISTER_1_IDX:
+            case DefaultValues.RIGHT_SISTER_1_IDX:
                 q.taxa_sisters_right[0] = this.dummyTaxonThisLevel;
                 break;
-            case Status.RIGHT_SISTER_2_IDX:
+            case DefaultValues.RIGHT_SISTER_2_IDX:
                 q.taxa_sisters_right[1] = this.dummyTaxonThisLevel;
                 break;
             default:

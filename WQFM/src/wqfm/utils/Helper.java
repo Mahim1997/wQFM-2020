@@ -1,23 +1,63 @@
 package wqfm.utils;
 
+import java.io.BufferedReader;
+import wqfm.configs.Config;
 import wqfm.bip.WeightedPartitionScores;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import wqfm.ds.InitialTable;
-import wqfm.interfaces.Status;
 import wqfm.main.Main;
+import wqfm.configs.DefaultValues;
 
 /**
  *
  * @author mahim
  */
 public class Helper {
+
+    public static String getTreeFromFile(String fileName) {
+        try {
+            Scanner sc = new Scanner(new File(fileName));
+            if (sc.hasNextLine()) {
+                return sc.nextLine();
+            }
+        } catch (FileNotFoundException ex) {
+            return DefaultValues.NULL;
+        }
+        return DefaultValues.NULL;
+    }
+
+    public static void runPythonCommand(String cmd) {
+        System.out.println(cmd);
+        try {
+            Process p = Runtime.getRuntime().exec(cmd);
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+
+            String s;
+
+            while ((s = stdInput.readLine()) != null) {
+                System.out.println(s);
+            }
+
+            while ((s = stdError.readLine()) != null) {
+                System.out.println(s);
+            }
+
+        } catch (IOException ex) {
+            System.out.println("Exception while running python command. Exiting.");
+            System.exit(-1);
+        }
+    }
 
     //https://www.journaldev.com/878/java-write-to-file#:~:text=FileWriter%3A%20FileWriter%20is%20the%20simplest,number%20of%20writes%20is%20less.
     //Use FileWriter when number of write operations are less
@@ -54,34 +94,34 @@ public class Helper {
     public static void findOptionsUsingCommandLineArgs(String[] args) {
         System.out.println("Command line args" + args.length + " are -> " + Arrays.toString(args));
         if (args.length == 0) {
-            if (Main.DEBUG_MODE_TESTING == false) {
+            if (Config.DEBUG_MODE_TESTING == false) {
                 Helper.printUsageAndExitSystem();
             }
             System.out.println("-->>Using default params. ");
             return;
         }
         if (args.length == 1) {
-            System.out.println("No output file, using default output file <" + Main.OUTPUT_FILE_NAME + ">");
-            Main.INPUT_FILE_NAME = args[0];
+            System.out.println("No output file, using default output file <" + Config.OUTPUT_FILE_NAME + ">");
+            Config.INPUT_FILE_NAME = args[0];
             return;
         }
         if (((args.length == 4) || (args.length == 2)) == false) {
             printUsageAndExitSystem();
         }
 
-        Main.INPUT_FILE_NAME = args[0];
-        Main.OUTPUT_FILE_NAME = args[1];
+        Config.INPUT_FILE_NAME = args[0];
+        Config.OUTPUT_FILE_NAME = args[1];
         if (args.length == 2) {
-            Main.PARTITION_SCORE_MODE = Status.PARTITION_SCORE_FULL_DYNAMIC;
+            Config.PARTITION_SCORE_MODE = DefaultValues.PARTITION_SCORE_FULL_DYNAMIC;
         } else if (args.length == 4) {
             //partition-score argument not given. [to do feature selection] //default is [s] - [v]
             double alpha = Double.parseDouble(args[2]);
             double beta = Double.parseDouble(args[3]);
             WeightedPartitionScores.ALPHA_PARTITION_SCORE = alpha;
             WeightedPartitionScores.BETA_PARTITION_SCORE = beta;
-            Main.PARTITION_SCORE_MODE = Status.PARITTION_SCORE_COMMAND_LINE;
+            Config.PARTITION_SCORE_MODE = DefaultValues.PARITTION_SCORE_COMMAND_LINE;
         }
-        System.out.println("-->>Helper.end Main.PARTITION_SCORE_MODE = " + Main.PARTITION_SCORE_MODE);
+        System.out.println("-->>Helper.end Main.PARTITION_SCORE_MODE = " + Config.PARTITION_SCORE_MODE);
     }
 
     public static int sumArray(int[] arr) {
@@ -104,7 +144,6 @@ public class Helper {
         return sum;
     }
 
-
     private static String getKeysWithSpecifiedValue(Map<Integer, Integer> map, int val, Map<Integer, String> reverse_mapping) {
         return map.keySet()
                 .stream()
@@ -114,9 +153,9 @@ public class Helper {
                 .map(x -> (reverse_mapping.get(x) == null) ? Helper.getDummyName(x) : reverse_mapping.get(x)) // x -> reverse_mapping.get(x)
                 .collect(Collectors.joining(", "));
     }
-    
-    public static void printPartition(Map<Integer, Integer> partition_map, 
-            int left_partition, int right_partition, 
+
+    public static void printPartition(Map<Integer, Integer> partition_map,
+            int left_partition, int right_partition,
             Map<Integer, String> reverse_mapping) {
         System.out.print("LEFT:  ");
         System.out.println(getKeysWithSpecifiedValue(partition_map, left_partition, reverse_mapping));
@@ -126,11 +165,10 @@ public class Helper {
 
     }
 
-
-    private static String getDummyName(int x){
+    private static String getDummyName(int x) {
         return "DUM_" + Integer.toString(x);
     }
-    
+
     public static String getStringMappedName(int x) {
         String s = InitialTable.map_of_int_vs_str_tax_list.get(x);
         return (s != null) ? s : getDummyName(x);
@@ -174,14 +212,14 @@ public class Helper {
     public static String getReadableMap(Map<String, Integer> map_bipartitions) {
         String s = ("LEFT: ");
         for (String key : map_bipartitions.keySet()) {
-            if (map_bipartitions.get(key) == Status.LEFT_PARTITION) {
+            if (map_bipartitions.get(key) == DefaultValues.LEFT_PARTITION) {
                 s += (key + ", ");
             }
         }
 //        s += (" ||| ");
         s += ("\nRIGHT: ");
         for (String key : map_bipartitions.keySet()) {
-            if (map_bipartitions.get(key) == Status.RIGHT_PARTITION) {
+            if (map_bipartitions.get(key) == DefaultValues.RIGHT_PARTITION) {
                 s += (key + ", ");
             }
         }
@@ -224,6 +262,5 @@ public class Helper {
 //        }
         return decodedTree;
     }
-
 
 }

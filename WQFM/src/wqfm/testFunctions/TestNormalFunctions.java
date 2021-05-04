@@ -5,6 +5,7 @@
  */
 package wqfm.testFunctions;
 
+import wqfm.configs.Config;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -21,9 +22,9 @@ import javafx.util.Pair;
 import wqfm.feature.Bin;
 import wqfm.main.Main;
 import wqfm.utils.TreeHandler;
-import wqfm.interfaces.Status;
 import wqfm.ds.Quartet;
 import wqfm.utils.Helper;
+import wqfm.configs.DefaultValues;
 
 /**
  *
@@ -39,7 +40,7 @@ public class TestNormalFunctions {
         List<Integer> taxa_list_int = new ArrayList<>(Arrays.asList(arr));
         // initially put all taxa to the right.
         taxa_list_int.forEach((t) -> {
-            int partition = (Math.random() > 0.5) ? Status.LEFT_PARTITION : Status.RIGHT_PARTITION;
+            int partition = (Math.random() > 0.5) ? DefaultValues.LEFT_PARTITION : DefaultValues.RIGHT_PARTITION;
             map_partition.put(t, partition);
         });
 
@@ -100,7 +101,7 @@ public class TestNormalFunctions {
         String outGroupNode = "5";
         int i = 0;
 //            System.out.print(i + ": ");
-        Main.REROOT_MODE = Status.REROOT_USING_PERL;
+        Config.REROOT_MODE = DefaultValues.REROOT_USING_PERL;
         String rerootTree = TreeHandler.rerootTree(newickTree, outGroupNode);
         System.out.println(i + ": ->" + rerootTree);
 //        for (int i = 0; i < num; i++) {
@@ -141,7 +142,7 @@ public class TestNormalFunctions {
         String outGroupNode = "5";
 
 //            System.out.print(i + ": ");
-        Main.REROOT_MODE = Status.REROOT_USING_PYTHON;
+        Config.REROOT_MODE = DefaultValues.REROOT_USING_PYTHON;
         TreeHandler.rerootTree(newickTree, outGroupNode);
 
     }

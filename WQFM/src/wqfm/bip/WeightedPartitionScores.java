@@ -1,8 +1,9 @@
 package wqfm.bip;
 
-import wqfm.interfaces.Status;
+import wqfm.configs.Config;
 import wqfm.bip.Bipartition_8_values;
 import wqfm.main.Main;
+import wqfm.configs.DefaultValues;
 
 /**
  *
@@ -56,26 +57,26 @@ public class WeightedPartitionScores {
 
     public static double calculatePartitionScoreReduced(Bipartition_8_values bip_8_vals) {
 
-        switch (Main.PARTITION_SCORE_MODE) {
-            case Status.PARTITION_SCORE_MODE_0:
+        switch (Config.PARTITION_SCORE_MODE) {
+            case DefaultValues.PARTITION_SCORE_MODE_0:
                 return WeightedPartitionScores.calculatePScore0(bip_8_vals);
-            case Status.PARTITION_SCORE_MODE_1:
+            case DefaultValues.PARTITION_SCORE_MODE_1:
                 return WeightedPartitionScores.calculatePScore1(bip_8_vals);
-            case Status.PARTITION_SCORE_MODE_2:
+            case DefaultValues.PARTITION_SCORE_MODE_2:
                 return WeightedPartitionScores.calculatePScore2(bip_8_vals);
-            case Status.PARTITION_SCORE_MODE_3:
+            case DefaultValues.PARTITION_SCORE_MODE_3:
                 return WeightedPartitionScores.calculatePScore3(bip_8_vals);
-            case Status.PARTITION_SCORE_MODE_4:
+            case DefaultValues.PARTITION_SCORE_MODE_4:
                 return WeightedPartitionScores.calculatePScore4(bip_8_vals);
-            case Status.PARTITION_SCORE_MODE_5:
+            case DefaultValues.PARTITION_SCORE_MODE_5:
                 return WeightedPartitionScores.calculatePScore5(bip_8_vals);
-            case Status.PARTITION_SCORE_MODE_6:
+            case DefaultValues.PARTITION_SCORE_MODE_6:
                 return WeightedPartitionScores.calculatePScore6(bip_8_vals);
-            case Status.PARTITION_SCORE_MODE_7:
+            case DefaultValues.PARTITION_SCORE_MODE_7:
                 return WeightedPartitionScores.calculatePScore7(bip_8_vals);
-            case Status.PARITTION_SCORE_COMMAND_LINE:
+            case DefaultValues.PARITTION_SCORE_COMMAND_LINE:
                 return WeightedPartitionScores.calculatePScoreCommandLine(bip_8_vals);
-            case Status.PARTITION_SCORE_FULL_DYNAMIC:
+            case DefaultValues.PARTITION_SCORE_FULL_DYNAMIC:
                 return WeightedPartitionScores.calculatePScoreFullDynamic(bip_8_vals);
             default:
                 return WeightedPartitionScores.calculatePScore0(bip_8_vals); //[s]-[v] is default.

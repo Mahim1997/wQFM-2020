@@ -1,9 +1,10 @@
 package wqfm.feature;
 
+import wqfm.configs.Config;
 import java.util.ArrayList;
 import java.util.List;
-import wqfm.interfaces.Status;
 import wqfm.main.Main;
+import wqfm.configs.DefaultValues;
 
 /**
  *
@@ -57,22 +58,22 @@ public class Bin {
         int cnt_after_1 = 0;
 
         //already counts are initialized to 0
-        List<Bin> bins = Bin.getListOfBins(0.5, 1.0, Main.STEP_SIZE_BINNING); //initialize bins from [0.5,1.0] in delta = 0.01
+        List<Bin> bins = Bin.getListOfBins(0.5, 1.0, Config.STEP_SIZE_BINNING); //initialize bins from [0.5,1.0] in delta = 0.01
 //        System.out.println(bins);
 
         //calculate counts in each bin as well as the proportion-counts
         if (bins.isEmpty()) {
-            System.out.println("-->>L 64. Num of bins is empty. Returning default beta = " + Status.BETA_DEFAULT_VAL);
-            return Status.BETA_DEFAULT_VAL;
+            System.out.println("-->>L 64. Num of bins is empty. Returning default beta = " + DefaultValues.BETA_DEFAULT_VAL);
+            return DefaultValues.BETA_DEFAULT_VAL;
         }
         double upper_limit_of_highest_bin = bins.get(bins.size() - 1).upper_limit;
 
         //proportion-counts and bin-counts for each ratio and each bin.
         for (double ratio : list_ratios) {
             //proportion counts ..
-            if (Bin.does_lie_within(0.5, Main.THRESHOLD_BINNING, ratio)) {
+            if (Bin.does_lie_within(0.5, Config.THRESHOLD_BINNING, ratio)) {
                 cnt_before_thresh++;
-            } else if (Bin.does_lie_within(Main.THRESHOLD_BINNING, upper_limit_of_highest_bin, ratio)) {
+            } else if (Bin.does_lie_within(Config.THRESHOLD_BINNING, upper_limit_of_highest_bin, ratio)) {
                 cnt_after_thresh_before_1++;
             } else { // >= 1
                 cnt_after_1++;
@@ -90,8 +91,8 @@ public class Bin {
 
         //base-case if no ratios exist. [should be handled from calling function, but check nonetheless]
         if (total_count == 0) {
-            System.out.println("L 97. Bin. Total-Count-Ratios = 0, Use beta default = " + Status.BETA_DEFAULT_VAL);
-            return Status.BETA_DEFAULT_VAL;
+            System.out.println("L 97. Bin. Total-Count-Ratios = 0, Use beta default = " + DefaultValues.BETA_DEFAULT_VAL);
+            return DefaultValues.BETA_DEFAULT_VAL;
         }
         //set-up the proportions accordingly.
         Bin.proportion_left_thresh = (double) cnt_before_thresh / (double) total_count;
@@ -103,11 +104,11 @@ public class Bin {
         
         double weighted_avg_final; //this will be passed as BETA
 
-        if (Bin.proportion_left_thresh >= Main.CUT_OFF_LIMIT_BINNING) { //greater than cut-off so, bin(left, thresh)
+        if (Bin.proportion_left_thresh >= Config.CUT_OFF_LIMIT_BINNING) { //greater than cut-off so, bin(left, thresh)
             //bin on the left side.
             double cumulative_mid_point_product_counts = 0;
             for (Bin bin : bins) {
-                if (bin.lower_limit < Main.THRESHOLD_BINNING) { //Bin from 0.5 upto 0.9 [left-side-bin]
+                if (bin.lower_limit < Config.THRESHOLD_BINNING) { //Bin from 0.5 upto 0.9 [left-side-bin]
                     //sum the mid-point-of-class * frequency-of-class
                     cumulative_mid_point_product_counts += (bin.getMidPoint() * bin.frequency);
                 }
@@ -117,13 +118,13 @@ public class Bin {
         else {
             double cumulative_mid_point_product_counts = 0;
             for (Bin bin : bins) {
-                if (bin.lower_limit >= Main.THRESHOLD_BINNING) {
+                if (bin.lower_limit >= Config.THRESHOLD_BINNING) {
                     cumulative_mid_point_product_counts += (bin.getMidPoint() * bin.frequency);
                 }
             }
 ///             compute using both bins.
-            if (Main.SET_RIGHT_TO_1 == true) {
-                weighted_avg_final = Status.BETA_DEFAULT_VAL;
+            if (Config.SET_RIGHT_TO_1 == true) {
+                weighted_avg_final = DefaultValues.BETA_DEFAULT_VAL;
             } else {
                 weighted_avg_final = (cumulative_mid_point_product_counts + (double) cnt_after_1) / ((double) (cnt_after_thresh_before_1 + cnt_after_1));
             }

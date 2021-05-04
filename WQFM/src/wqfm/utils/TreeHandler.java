@@ -1,5 +1,6 @@
 package wqfm.utils;
 
+import wqfm.configs.Config;
 import wqfm.main.Main;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 import phylonet.tree.io.ParseException;
 import phylonet.tree.model.sti.STITree;
-import wqfm.interfaces.Status;
+import wqfm.configs.DefaultValues;
 
 /**
  *
@@ -18,12 +19,12 @@ import wqfm.interfaces.Status;
 public class TreeHandler {
 
     public static String rerootTree(String newickTree, String outGroupNode) {
-        switch (Main.REROOT_MODE) {
-            case Status.REROOT_USING_JAR:
+        switch (Config.REROOT_MODE) {
+            case DefaultValues.REROOT_USING_JAR:
                 return TreeHandler.rerootTree_JAR(newickTree, outGroupNode);
-            case Status.REROOT_USING_PYTHON:
+            case DefaultValues.REROOT_USING_PYTHON:
                 return TreeHandler.rerootTree_python(newickTree, outGroupNode);
-            case Status.REROOT_USING_PERL:
+            case DefaultValues.REROOT_USING_PERL:
                 return TreeHandler.rerootTree_Perl(newickTree, outGroupNode);
             default:
                 System.out.println("-->>FOR NOW Reroot only support using jar and python dendropy [to add perl later].");

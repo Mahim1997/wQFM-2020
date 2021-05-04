@@ -3,14 +3,13 @@ package wqfm.utils;
 import java.util.List;
 import java.util.Map;
 import wqfm.ds.InitialTable;
-import wqfm.interfaces.Status;
-import wqfm.main.Main;
+import wqfm.configs.DefaultValues;
 
 /**
  *
  * @author mahim
  */
-public class Utils {
+public class TaxaUtils {
 //    public static String getDummyTaxonName(int level) {
 //        if (Main.DEBUG_DUMMY_NAME == true) {
 //            String dummyTax = "X" + String.valueOf(level); //debug
@@ -49,18 +48,18 @@ public class Utils {
 //        if ((left_sisters_bip[0] == left_sisters_bip[1]) && (right_sisters_bip[0] == right_sisters_bip[1]) && (left_sisters_bip[0] == right_sisters_bip[0])) {
 
         if (Math.abs(sum_four_bipartitions) == 4) { // -1,-1,-1,-1 or +1,+1,+1,+1 all will lead to sum == 4
-            return Status.BLANK;
+            return DefaultValues.BLANK;
         }
         //Deferred Check: sum == 2 check [otherwise, permutations will be huge]
         if (Math.abs(sum_four_bipartitions) == 2) { //-1,+1 ,+1,+1  => +2 or +1,-1 , -1,-1 => -2 
-            return Status.DEFERRED;
+            return DefaultValues.DEFERRED;
         }
         //Satisfied check: left are equal, right are equal AND left(any one) != right(any one)
         if ((left_sis1_bip == left_sis2_bip) && (right_sis1_bip == right_sis2_bip) && (left_sis1_bip != right_sis1_bip)) {
-            return Status.SATISFIED;
+            return DefaultValues.SATISFIED;
         }
         //All check fails, Violated quartet
-        return Status.VIOLATED;
+        return DefaultValues.VIOLATED;
     }
 
     public static int findQuartetStatus(int[] arr) { //call the above function
@@ -69,12 +68,12 @@ public class Utils {
 
     public static int getOppositePartition(int partition) {
         switch (partition) {
-            case Status.LEFT_PARTITION:
-                return Status.RIGHT_PARTITION;
-            case Status.RIGHT_PARTITION:
-                return Status.LEFT_PARTITION;
+            case DefaultValues.LEFT_PARTITION:
+                return DefaultValues.RIGHT_PARTITION;
+            case DefaultValues.RIGHT_PARTITION:
+                return DefaultValues.LEFT_PARTITION;
             default:
-                return Status.UNASSIGNED_PARTITION;
+                return DefaultValues.UNASSIGNED_PARTITION;
         }
     }
 
@@ -85,10 +84,10 @@ public class Utils {
         return _8_vals;
     }*/
     public static int findQuartetStatusUsingShortcut(int status_quartet_before_hyp_swap) {
-        if (status_quartet_before_hyp_swap == Status.DEFERRED) {
-            return Status.UNKNOWN; //only if deferred, next calculations are necessary
+        if (status_quartet_before_hyp_swap == DefaultValues.DEFERRED) {
+            return DefaultValues.UNKNOWN; //only if deferred, next calculations are necessary
         }
-        return Status.DEFERRED; //s->d, v->d, b->d
+        return DefaultValues.DEFERRED; //s->d, v->d, b->d
     }
 
 }
