@@ -1,60 +1,132 @@
 package wqfm.main;
 
-import wqfm.interfaces.Status;
+import java.util.concurrent.Callable;
+import picocli.CommandLine;
 import wqfm.algo.FMRunner;
+import wqfm.bip.WeightedPartitionScores;
+import wqfm.configs.Config;
+import wqfm.configs.DefaultValues;
 import wqfm.feature.Bin;
-import wqfm.testFunctions.TestNormalFunctions;
-//import wqfm.testFunctions.TestNormalFunctions;
+import wqfm.utils.AnnotationsHandler;
 import wqfm.utils.Helper;
 import wqfm.utils.TreeHandler;
 
-/**
- *
- * @author mahim
- */
-public class Main {
-    public static boolean NORMALIZE_DUMMY_QUARTETS = false; // true -> divide by count, false -> simply sum
-    public static int BIPARTITION_MODE = Status.BIPARTITION_GREEDY; // BIPARTITION_EXTREME, BIPARTITION_RANDOM, BIPARTITION_GREEDY
 
-    public static boolean DEBUG_DUMMY_NAME = false; //true -> X1, X2 like that & false -> MZCY ... weird name.
-    public static int REROOT_MODE = Status.REROOT_USING_JAR;
-    public static int PARTITION_SCORE_MODE = Status.PARTITION_SCORE_FULL_DYNAMIC; //0->[s]-[v], 1->[s]-0.5[v], 2->[s]-[v]-[d], 3->3[s]-2[v]
+@CommandLine.Command(name = "wQFM", mixinStandardHelpOptions = true, version = Main.WQFM_VERSION,
+        description = "Runing " + Main.WQFM_VERSION)
+public class Main implements Callable<Integer> {
 
-    public static boolean BIN_LIMIT_LEVEL_1 = false; // by default: false (bin on all levels); true -> only bin level 1
+    public static boolean DEBUG_MODE = false;
+
+    //    public static String INPUT_FILE_NAME = "input_files/weighted_quartets_avian_biological_dataset";
+    public static String INPUT_FILE_NAME_PLACE_HOLDER = "input_files/wqrts_11Tax_est_5G_R1";
+    public static String OUTPUT_FILE_NAME_PLACE_HOLDER = "test-output-file-wqfm-java.tre";
+    public static String SPECIES_TREE_FILE_NAME = Config.OUTPUT_FILE_NAME; // for now both will be the same
     
-    public static double CUT_OFF_LIMIT_BINNING = 0.1; // use 0.1 [default]
-    public static double THRESHOLD_BINNING = 0.9; // use 0.9 [default]
+    public static final String WQFM_VERSION = "wQFM v1.2";
+    public static String PYTHON_ENGINE = "python3";
 
+//    @CommandLine.Option(names = {"-i", "--input_file"}, required = false, description = "The input file name/path for weighted quartets")
+    @CommandLine.Option(names = {"-i", "--input_file"}, required = true, description = "The input file name/path for weighted quartets")
+    private String inputFileNameWeightedQuartets = INPUT_FILE_NAME_PLACE_HOLDER;
 
-//    public static String INPUT_FILE_NAME = "input_files/weighted_quartets_avian_biological_dataset";
-    public static String INPUT_FILE_NAME = "input_files/weighted_quartets_2X_1000_500_R10";
-//    public static String INPUT_FILE_NAME = "input_files/wqrts_11Tax_est_5G_R1";
+//    @CommandLine.Option(names = {"-o", "--output_file"}, required = false, description = "The output file name/path for (estimated) species tree")
+    @CommandLine.Option(names = {"-o", "--output_file"}, required = true, description = "The output file name/path for (estimated) species tree")
+    private String outputFileNameSpeciesTree = OUTPUT_FILE_NAME_PLACE_HOLDER;
 
+    @CommandLine.Option(names = {"-t", "--annotations_level"}, required = false, description = "t=0 for none (default)\nt=1 for annotations using quartet support\nt=2 for annotations using quartet support normalized by sum\nt=3 for annotations using quartet support nomralized by max")
+    private int annotationsLevel = DefaultValues.ANNOTATIONS_LEVEL0_NONE;
 
-    public static String OUTPUT_FILE_NAME = "test-output-file-wqfm-java.tre";
+    @CommandLine.Option(names = {"-beta", "--partition_score_beta"}, required = false, description = "(not mentioned; default) then beta = 1, and [s]-[v] used\nbeta='<BETA>' for 1[ws]-<BETA>[wv] partition score\nbeta=<dyanmic> then dynamic bin heuristic is used.")
+    private String beta = "1"; //WeightedPartitionScores.BETA_PARTITION_SCORE;
 
-    public static boolean DEBUG_MODE_TESTING = true; // true -> while running from netbeans, false -> run from cmd
-    public static double SMALLEPSILON = 0.000001; //if cumulative gain of iteration < this_num then stop
-    public static int MAX_ITERATIONS_LIMIT = 1000000; //can we keep it as another stopping-criterion ? [100k]
-    public static double STEP_SIZE_BINNING = 0.01; //always used 0.01 for experiments (default)
-    public static boolean SET_RIGHT_TO_1 = false; //false: dual-bin (default), true: right will be set to 1.
-    public static boolean DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS = false; // printing gains, default: false (otherwise too much cluttered)
+    @CommandLine.Option(names = {"-st", "--species_tree"}, required = false, description = "If given, will run annotations and provide to output file (will NOT run wQFM)")
+    private String speciesTreeFileName = DefaultValues.NULL;
 
-    public static void main(String[] args) {
-        System.out.println("================= **** ======================== **** ====================");
-        Helper.findOptionsUsingCommandLineArgs(args); //initial arguments processing
+    @CommandLine.Option(names = {"-pe", "--python_engine"}, required = false, description = "(default) python3\npv = python for simple python engine")
+    private String pythonEngine = PYTHON_ENGINE;
+    
+//    @CommandLine.Option(names = {"-nd", "--normalize_dummy"}, required = false, description = "(default) on\n<off> to sum dummy deferred quartets")
+//    private String normalizeDummy = DefaultValues.ON; // true by default
+
+    // weights = false -> to run QFM. Will need to handle separately for quartets' weights.
+    
+    private static void goDebugMode() {
+        Config.ANNOTATIONS_LEVEL = DefaultValues.ANNOTATIONS_LEVEL3_QUARTET_SUPPORT_NORMALIZED_MAX;
+        Main.PYTHON_ENGINE = "python";
+    }
+
+    @Override
+    public Integer call() throws Exception { // your business logic goes here...
+        Config.INPUT_FILE_NAME = this.inputFileNameWeightedQuartets;
+        Config.OUTPUT_FILE_NAME = this.outputFileNameSpeciesTree;
+        Main.SPECIES_TREE_FILE_NAME = Config.OUTPUT_FILE_NAME; // initially set as same.
+
+        Config.ANNOTATIONS_LEVEL = (this.annotationsLevel <= DefaultValues.ANNOTATIONS_LEVEL3_QUARTET_SUPPORT_NORMALIZED_MAX)
+                ? this.annotationsLevel
+                : DefaultValues.ANNOTATIONS_LEVEL0_NONE;
+
+        // set partition scores.
+        double beta_double = DefaultValues.BETA_DEFAULT_VAL; // 1.0
+        try {
+            Bin.WILL_DO_DYNAMIC = false;
+            beta_double = Double.parseDouble(this.beta);
+            Config.PARTITION_SCORE_MODE = DefaultValues.PARITTION_SCORE_COMMAND_LINE;
+            WeightedPartitionScores.BETA_PARTITION_SCORE = beta_double; // set beta
+            System.out.println(WeightedPartitionScores.GET_PARTITION_SCORE_PRINT());
+
+        } catch (NumberFormatException e) {
+            if (this.beta.equals("dynamic")) {
+                Bin.WILL_DO_DYNAMIC = true;
+                Config.PARTITION_SCORE_MODE = DefaultValues.PARTITION_SCORE_FULL_DYNAMIC;
+                System.out.println("Using full dyanmic heuristic for partition score computation");
+            }
+        }
+
+        // print annotations message.
+        System.out.println(AnnotationsHandler.GET_ANNOTATIONS_LEVEL_MESSAGE());
+
+        Main.PYTHON_ENGINE = this.pythonEngine;
+        System.out.println("Python Engine: " + Main.PYTHON_ENGINE);
+
+        // debug mode.
+        if (Main.DEBUG_MODE) {
+            Main.goDebugMode();
+        }
+        
+        Config.NORMALIZE_DUMMY_QUARTETS = true; // always will be used as true.
+        
+        if(this.speciesTreeFileName.equals(DefaultValues.NULL) == false){ // argument is passed.
+            Main.SPECIES_TREE_FILE_NAME = this.speciesTreeFileName; // will be passed as the 2nd argument for python commands.
+            String tree = Helper.getTreeFromFile(this.speciesTreeFileName);
+            AnnotationsHandler.handleAnnotations(tree);
+        }
+        else{
+            // run wQFM
+            Main.runwQFM();            
+        }
+        
+
+        return 0;
+    }
+
+    private static void runwQFM() {
+        // Call wQFM runner here. ?
+        System.out.println("================= **** ========== Running " + WQFM_VERSION + " ============== **** ====================");
+
         long time_1 = System.currentTimeMillis(); //calculate starting time
-        Bin.WILL_DO_DYNAMIC = true; //set to dynamic=true //SHOULD BE KEPT TRUE.
-        Main.testIfRerootWorks();
 
-        FMRunner.runFunctions(); //main functions for wQFM
-//        TestNormalFunctions.testInitialBipartitionFunctions();
+        Main.testIfRerootWorks(); // test to check if phylonet jar is attached correctly.
+
+        String tree = FMRunner.runFunctions(); //main functions for wQFM
+        AnnotationsHandler.handleAnnotations(tree);
 
         long time_del = System.currentTimeMillis() - time_1;
         long minutes = (time_del / 1000) / 60;
         long seconds = (time_del / 1000) % 60;
         System.out.format("\nTime taken = %d ms ==> %d minutes and %d seconds.\n", time_del, minutes, seconds);
         System.out.println("================= **** ======================== **** ====================");
+
     }
 
     private static void testIfRerootWorks() {
@@ -62,11 +134,17 @@ public class Main {
             //Test a dummy reroot function. To check if "lib" is in correct folder.
             String newickTree = "((3,(1,2)),((6,5),4));";
             String outGroupNode = "5";
-            String rerootTree = TreeHandler.rerootTree(newickTree, outGroupNode);
+            TreeHandler.rerootTree(newickTree, outGroupNode);
         } catch (Exception e) {
             System.out.println("Reroot not working, check if lib is in correct folder. Exiting.");
             System.exit(-1);
         }
     }
 
+    // this example implements Callable, so parsing, error handling and handling user
+    // requests for usage help or version help can be done with one line of code.
+    public static void main(String... args) {
+        int exitCode = new CommandLine(new Main()).execute(args);
+        System.exit(exitCode);
+    }
 }

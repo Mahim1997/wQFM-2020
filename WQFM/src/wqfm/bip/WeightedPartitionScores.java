@@ -1,8 +1,7 @@
 package wqfm.bip;
 
-import wqfm.interfaces.Status;
-import wqfm.bip.Bipartition_8_values;
-import wqfm.main.Main;
+import wqfm.configs.Config;
+import wqfm.configs.DefaultValues;
 
 /**
  *
@@ -56,30 +55,58 @@ public class WeightedPartitionScores {
 
     public static double calculatePartitionScoreReduced(Bipartition_8_values bip_8_vals) {
 
-        switch (Main.PARTITION_SCORE_MODE) {
-            case Status.PARTITION_SCORE_MODE_0:
+        switch (Config.PARTITION_SCORE_MODE) {
+            case DefaultValues.PARTITION_SCORE_MODE_0:
                 return WeightedPartitionScores.calculatePScore0(bip_8_vals);
-            case Status.PARTITION_SCORE_MODE_1:
+            case DefaultValues.PARTITION_SCORE_MODE_1:
                 return WeightedPartitionScores.calculatePScore1(bip_8_vals);
-            case Status.PARTITION_SCORE_MODE_2:
+            case DefaultValues.PARTITION_SCORE_MODE_2:
                 return WeightedPartitionScores.calculatePScore2(bip_8_vals);
-            case Status.PARTITION_SCORE_MODE_3:
+            case DefaultValues.PARTITION_SCORE_MODE_3:
                 return WeightedPartitionScores.calculatePScore3(bip_8_vals);
-            case Status.PARTITION_SCORE_MODE_4:
+            case DefaultValues.PARTITION_SCORE_MODE_4:
                 return WeightedPartitionScores.calculatePScore4(bip_8_vals);
-            case Status.PARTITION_SCORE_MODE_5:
+            case DefaultValues.PARTITION_SCORE_MODE_5:
                 return WeightedPartitionScores.calculatePScore5(bip_8_vals);
-            case Status.PARTITION_SCORE_MODE_6:
+            case DefaultValues.PARTITION_SCORE_MODE_6:
                 return WeightedPartitionScores.calculatePScore6(bip_8_vals);
-            case Status.PARTITION_SCORE_MODE_7:
+            case DefaultValues.PARTITION_SCORE_MODE_7:
                 return WeightedPartitionScores.calculatePScore7(bip_8_vals);
-            case Status.PARITTION_SCORE_COMMAND_LINE:
+            case DefaultValues.PARITTION_SCORE_COMMAND_LINE:
                 return WeightedPartitionScores.calculatePScoreCommandLine(bip_8_vals);
-            case Status.PARTITION_SCORE_FULL_DYNAMIC:
+            case DefaultValues.PARTITION_SCORE_FULL_DYNAMIC:
                 return WeightedPartitionScores.calculatePScoreFullDynamic(bip_8_vals);
             default:
                 return WeightedPartitionScores.calculatePScore0(bip_8_vals); //[s]-[v] is default.
         }
 
+    }
+
+    public static String GET_PARTITION_SCORE_PRINT() {
+        int mode = Config.PARTITION_SCORE_MODE;
+        switch (mode) {
+            case DefaultValues.PARTITION_SCORE_MODE_0:
+                return "mode = " + mode + ", [ws - wv]";
+            case DefaultValues.PARTITION_SCORE_MODE_1:
+                return "mode = " + mode + ", [ws - 0.5*wv]";
+            case DefaultValues.PARTITION_SCORE_MODE_2:
+                return "mode = " + mode + ", [ws - wv - wd]";
+            case DefaultValues.PARTITION_SCORE_MODE_3:
+                return "mode = " + mode + ", [3*ws - 2*wv]";
+            case DefaultValues.PARTITION_SCORE_MODE_4:
+                return "mode = " + mode + ", [5*ws - 4*wv]";
+            case DefaultValues.PARTITION_SCORE_MODE_5:
+                return "mode = " + mode + ", [ws]";
+            case DefaultValues.PARTITION_SCORE_MODE_6:
+                return "mode = " + mode + ", [ws - 0.5*wv - 0.25*wd]";
+            case DefaultValues.PARTITION_SCORE_MODE_7:
+                return "mode = " + mode + ", [11*ws - 1*wv]";
+            case DefaultValues.PARITTION_SCORE_COMMAND_LINE:
+                return "mode = Command line [" + WeightedPartitionScores.ALPHA_PARTITION_SCORE + "*ws - " + WeightedPartitionScores.BETA_PARTITION_SCORE + "*wv]";
+            case DefaultValues.PARTITION_SCORE_FULL_DYNAMIC:
+                return "mode: FULL DYNAMIC [Left-Bin-Right-Level-0-Stop-to-1]. Threshold = " + Config.THRESHOLD_BINNING + " , Cut-off = " + Config.CUT_OFF_LIMIT_BINNING;
+            default:
+                return "default partition score mode = " + mode + ", [ws - wv]";
+        }
     }
 }

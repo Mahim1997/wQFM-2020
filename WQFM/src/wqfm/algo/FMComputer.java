@@ -1,8 +1,9 @@
 package wqfm.algo;
 
+import wqfm.configs.Config;
 import thread_objects.HypotheticalGainCalcuator;
 import wqfm.ds.StatsPerPass;
-import wqfm.utils.Utils;
+import wqfm.utils.TaxaUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,7 +18,6 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import thread_objects.HypotheticalGain_Object;
-import wqfm.interfaces.Status;
 import wqfm.bip.Bipartition_8_values;
 import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.FMResultObject;
@@ -26,6 +26,7 @@ import wqfm.main.Main;
 import wqfm.utils.Helper;
 import wqfm.bip.WeightedPartitionScores;
 import wqfm.ds.InitialTable;
+import wqfm.configs.DefaultValues;
 
 /**
  *
@@ -84,8 +85,8 @@ public class FMComputer {
                 int taxPartValBeforeHypoSwap = this.bipartitionMap.get(taxToConsider);
                 //First check IF moving this will lead to a singleton bipartition ....
                 Map<Integer, Integer> newMap = new HashMap<>(this.bipartitionMap);
-                newMap.put(taxToConsider, Utils.getOppositePartition(taxPartValBeforeHypoSwap)); //hypothetically make the swap.
-                if (Utils.isThisSingletonBipartition(newMap) == true) {
+                newMap.put(taxToConsider, TaxaUtils.getOppositePartition(taxPartValBeforeHypoSwap)); //hypothetically make the swap.
+                if (TaxaUtils.isThisSingletonBipartition(newMap) == true) {
                     //THIS hypothetical movement of taxToConsider leads to singleton bipartition so, continue ...
                     continue;
                 } //ELSE: DOESN'T lead to singleton bipartition [add to map, and other datastructures]
@@ -94,7 +95,7 @@ public class FMComputer {
 
             } //end if
         }//end outer for
-        int totalThreads = Status.TOTAL_THREADS;
+        int totalThreads = DefaultValues.TOTAL_THREADS;
         int totalLoops = (int) Math.floor(freeTaxList.size() / totalThreads);
         //System.out.println("totalLoops: " + totalLoops);
         //System.out.println("freetaxList: " + freeTaxList.size());
@@ -161,8 +162,8 @@ public class FMComputer {
                 int taxPartValBeforeHypoSwap = this.bipartitionMap.get(taxToConsider);
                 //First check IF moving this will lead to a singleton bipartition ....
                 Map<Integer, Integer> newMap = new HashMap<>(this.bipartitionMap);
-                newMap.put(taxToConsider, Utils.getOppositePartition(taxPartValBeforeHypoSwap)); //hypothetically make the swap.
-                if (Utils.isThisSingletonBipartition(newMap) == true) {
+                newMap.put(taxToConsider, TaxaUtils.getOppositePartition(taxPartValBeforeHypoSwap)); //hypothetically make the swap.
+                if (TaxaUtils.isThisSingletonBipartition(newMap) == true) {
                     //THIS hypothetical movement of taxToConsider leads to singleton bipartition so, continue ...
                     continue;
                 } //ELSE: DOESN'T lead to singleton bipartition [add to map, and other datastructures]
@@ -179,14 +180,14 @@ public class FMComputer {
                     //No need explicit checking as customDS will be changed after every level
                     Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(idx_relevant_qrt);
 
-                    int status_quartet_before_hyp_swap = Utils.findQuartetStatus(bipartitionMap.get(quartet.taxa_sisters_left[0]),
+                    int status_quartet_before_hyp_swap = TaxaUtils.findQuartetStatus(bipartitionMap.get(quartet.taxa_sisters_left[0]),
                             bipartitionMap.get(quartet.taxa_sisters_left[1]), bipartitionMap.get(quartet.taxa_sisters_right[0]), bipartitionMap.get(quartet.taxa_sisters_right[1]));
                     //                    System.out.println("Before hypo swap, tax considered = " + taxToConsider + " , Qrt = " + quartet.toString() + " , Status = " + Status.PRINT_STATUS_QUARTET(status_quartet_before_hyp_swap));
-                    int status_quartet_after_hyp_swap = Utils.findQuartetStatusUsingShortcut(status_quartet_before_hyp_swap); //_8values include ns, nv, nd, nb, ws, wv, wd, wb
+                    int status_quartet_after_hyp_swap = TaxaUtils.findQuartetStatusUsingShortcut(status_quartet_before_hyp_swap); //_8values include ns, nv, nd, nb, ws, wv, wd, wb
                     _8_vals_THIS_TAX_before_hypo_swap.addRespectiveValue(quartet.weight, status_quartet_before_hyp_swap); //_8values include ns, nv, nd, nb, ws, wv, wd, wb
                     _8_vals_THIS_TAX_AFTER_hypo_swap.addRespectiveValue(quartet.weight, status_quartet_after_hyp_swap); //If status.UNKNOWN, then don't add anything.
 
-                    if (status_quartet_before_hyp_swap == Status.DEFERRED) {
+                    if (status_quartet_before_hyp_swap == DefaultValues.DEFERRED) {
                         deferredQuartetsBeforeHypoMoving.add(idx_relevant_qrt);
                     }
 
@@ -194,7 +195,7 @@ public class FMComputer {
                 for (int itr_deferred_qrts = 0; itr_deferred_qrts < deferredQuartetsBeforeHypoMoving.size(); itr_deferred_qrts++) {
                     int qrt_idx_deferred_relevant_quartets_after_hypo_swap = deferredQuartetsBeforeHypoMoving.get(itr_deferred_qrts);
                     Quartet quartet = customDS.initial_table1_of_list_of_quartets.get(qrt_idx_deferred_relevant_quartets_after_hypo_swap);
-                    int status_after_hypothetical_swap = Utils.findQuartetStatus(newMap.get(quartet.taxa_sisters_left[0]),
+                    int status_after_hypothetical_swap = TaxaUtils.findQuartetStatus(newMap.get(quartet.taxa_sisters_left[0]),
                             newMap.get(quartet.taxa_sisters_left[1]), newMap.get(quartet.taxa_sisters_right[0]), newMap.get(quartet.taxa_sisters_right[1]));
                     _8_vals_THIS_TAX_AFTER_hypo_swap.addRespectiveValue(quartet.weight, status_after_hypothetical_swap);
                 }
@@ -216,7 +217,7 @@ public class FMComputer {
                 this.mapCandidateGainsPerListTax.get(gainOfThisTax).add(taxToConsider); //add gain to map
                 this.mapCandidateTax_vs_8vals.put(taxToConsider, _8_values_whole_considering_thisTax_swap);
 
-                if (Main.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
+                if (Config.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
                     System.out.println("FMComputer L219. taxToConsider = " + taxToConsider + " , " + Helper.getStringMappedName(taxToConsider)
                             + "\n _8_before = " + _8_vals_THIS_TAX_before_hypo_swap
                             + "\n _8_after = " + _8_vals_THIS_TAX_AFTER_hypo_swap
@@ -281,7 +282,7 @@ public class FMComputer {
             Map<Integer, Integer> mapAfterMovement = new HashMap<>(this.bipartitionMap);
 
             //reverse the bipartition for THIS taxon
-            mapAfterMovement.put(taxonWithTheHighestGainInThisPass, Utils.getOppositePartition(mapAfterMovement.get(taxonWithTheHighestGainInThisPass)));
+            mapAfterMovement.put(taxonWithTheHighestGainInThisPass, TaxaUtils.getOppositePartition(mapAfterMovement.get(taxonWithTheHighestGainInThisPass)));
 
             StatsPerPass statsForThisPass = new StatsPerPass(taxonWithTheHighestGainInThisPass, highest_gain_value,
                     this.mapCandidateTax_vs_8vals.get(taxonWithTheHighestGainInThisPass), mapAfterMovement);
@@ -297,7 +298,7 @@ public class FMComputer {
             pass++; //for debug printing....
 
             //Either do threaded or single-thread calculation for hypothetical gain calculation
-            if (Status.THREADED_GAIN_CALCULATION_MODE == false) { //for now it is false.
+            if (DefaultValues.THREADED_GAIN_CALCULATION_MODE == false) { //for now it is false.
                 run_FM_singlepass_hypothetical_swap();
             } else {
                 try {
@@ -315,7 +316,7 @@ public class FMComputer {
             if (listOfPerPassStatistics.isEmpty() == false) { //AT LEAST ONE per-pass val exists.
                 StatsPerPass last_pass_stat = this.listOfPerPassStatistics.get(this.listOfPerPassStatistics.size() - 1);
 
-                if (Main.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
+                if (Config.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
                     System.out.println("[FMComputer L 310]. FM-pass(box) = " + pass + " , best-taxon: "
                             + Helper.getStringMappedName(last_pass_stat.whichTaxaWasPassed)
                             + " , MaxGain = " + last_pass_stat.maxGainOfThisPass);
@@ -352,7 +353,7 @@ public class FMComputer {
         //Retrieve the stat's bipartition.
         StatsPerPass statOfMaxCumulativeGainBox = this.listOfPerPassStatistics.get(pass_index_with_max_cumulative_gain);
 
-        if (Main.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
+        if (Config.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
             System.out.println("[FMComputer L 341] Cumulative gain (max) = " + max_cumulative_gain_of_current_iteration
                     + " , for pass = " + (pass_index_with_max_cumulative_gain + 1)
                     + " , Tax Passed = " + Helper.getStringMappedName(statOfMaxCumulativeGainBox.whichTaxaWasPassed));
@@ -361,7 +362,7 @@ public class FMComputer {
         //Initial bipartitions and ALL maps //Now change parameters accordingly for next FM iteration.
         //only when max-cumulative-gain is GREATER than zero, we will change, otherwise return the initial bipartition of this iteration
 
-        if (max_cumulative_gain_of_current_iteration > Main.SMALLEPSILON) {
+        if (max_cumulative_gain_of_current_iteration > Config.SMALLEPSILON) {
             this.bipartitionMap = new HashMap<>(statOfMaxCumulativeGainBox.map_final_bipartition);
             this.initialBipartition_8_values = statOfMaxCumulativeGainBox._8_values_chosen_for_this_pass;
             this.listOfPerPassStatistics.clear();
@@ -382,10 +383,10 @@ public class FMComputer {
         boolean willIterateMore = true;
         int iterationsFM = 0; //can have stopping criterion for 10k iterations ?
         while (true) { //stopping condition
-            if (iterationsFM > Main.MAX_ITERATIONS_LIMIT) { //another stopping criterion.
+            if (iterationsFM > Config.MAX_ITERATIONS_LIMIT) { //another stopping criterion.
                 System.out.println("[FMComputer L258.] Thread (" + Thread.currentThread().getName()
                         + ", " + Thread.currentThread().getId() + ") MAX_ITERATIONS_LIMIT = "
-                        + Main.MAX_ITERATIONS_LIMIT + " is reached for level = " + this.level);
+                        + Config.MAX_ITERATIONS_LIMIT + " is reached for level = " + this.level);
                 break;
             }
             iterationsFM++;
