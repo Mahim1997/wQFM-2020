@@ -46,8 +46,8 @@ public class Main implements Callable<Integer> {
     @CommandLine.Option(names = {"-pe", "--python_engine"}, required = false, description = "(default) python3\npv = python for simple python engine")
     private String pythonEngine = PYTHON_ENGINE;
     
-    @CommandLine.Option(names = {"-nd", "--normalize_dummy"}, required = false, description = "(default) on\n<off> to sum dummy deferred quartets")
-    private String normalizeDummy = DefaultValues.ON; // true by default
+//    @CommandLine.Option(names = {"-nd", "--normalize_dummy"}, required = false, description = "(default) on\n<off> to sum dummy deferred quartets")
+//    private String normalizeDummy = DefaultValues.ON; // true by default
 
     // weights = false -> to run QFM. Will need to handle separately for quartets' weights.
     
@@ -94,8 +94,7 @@ public class Main implements Callable<Integer> {
             Main.goDebugMode();
         }
         
-        Config.NORMALIZE_DUMMY_QUARTETS = Helper.isOptionOn(this.normalizeDummy);
-        System.out.println("Option for normalizing dummy deferred quartets = " + Config.NORMALIZE_DUMMY_QUARTETS);
+        Config.NORMALIZE_DUMMY_QUARTETS = true; // always will be used as true.
         
         if(this.speciesTreeFileName.equals(DefaultValues.NULL) == false){ // argument is passed.
             Main.SPECIES_TREE_FILE_NAME = this.speciesTreeFileName; // will be passed as the 2nd argument for python commands.
