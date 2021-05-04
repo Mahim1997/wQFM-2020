@@ -1,11 +1,11 @@
 # wQFM-2020
-wQFM (Implementation in Java) 
+**wQFM (Version 1.2)**
 
 
 <!-- Headings -->
 # wQFM
 <!-- Strong -->
-wQFM is a quartet amalgamation method of estimating species tree. 
+wQFM is a quartet amalgamation method. <!--for estimating species trees.--> 
 <!--It takes a set of estimated gene trees as input and generates a set of weighted quartets and combines these weighted quartet trees into a tree on the full set of taxa using a heuristic aimed at finding a species tree of minimum distance to the set of weighted quartet trees.
 -->
 
@@ -28,17 +28,7 @@ of wQMC and ASTRAL.
 
 ## Execution dependencies
 <!-- OL -->
-1. The tool "triplets.soda2103" must be in the same directory as "quartet-controller.sh".
-    
-    Other scripts such as "quartet_count.sh", "summarize-quartet-counts.py" should be in the same directory as "quartet-controller.sh" and "triplets.soda2103".
-    
-    If you want to keep it in another path, please change to absolute path of "triplets.soda2103" in "quartet_count.sh".
-    
-<!-- Code Blocks -->
-```bash
-    # we can also use absolute path eg. /home/gene-trees/triplets.soda2103 instead of keeping the tool in the same directory.
-    cat $1| xargs -I@ sh -c 'echo -n "@" >'$tmp'; ./triplets.soda2103 printQuartets '$tmp';'|sed 's/.*: //'| sed 's/^/\(\(/'| sed 's/$/\)\)\;/'| sed 's/ | /\),\(/'| sed 's/ /\,/g'
-```
+1. The tool "triplets.soda2103" must be in the same directory as "quartet-controller.sh". Helper scripts such as "quartet_count.sh", "summarize-quartet-counts.py" should be in the same directory as "quartet-controller.sh" and "triplets.soda2103".
 
 2. Need to have "lib" folder in same path as jar file. (This uses some bytecode from [PhyloNet](https://bioinfocs.rice.edu/phylonet) package by Luay Nakhleh)
     <!--(Check [ASTRAL's github repo](https://github.com/smirarab/ASTRAL) for more details on lib [uses PhyloNet package])-->
@@ -59,9 +49,9 @@ of wQMC and ASTRAL.
 
 * wQFM is a java-based application, and hence should run in any environment (Windows, Linux, Mac, etc.) as long as java is installed.
 
-* To generate embedded-weighted-quartets, python needs to be installed.
+* To generate embedded-weighted-quartets, **Python** and some modules such as **pandas** and **numpy** need to be installed.
 
-* Also, Linux is required for using the tool "triplets.soda2103" to generate embedded-weighted-quartets.
+* Linux O.S. is required for using the tool "triplets.soda2103" to generate embedded-weighted-quartets.
 
 * To use branch annotations, the script "annotate_branches.py" uses **DendroPy**. If you would like to use branch annotations, do setup **Python** and **DendroPy**.
 
@@ -76,7 +66,7 @@ of wQMC and ASTRAL.
   ./quartet-controller.sh "input-gene-tree-file-name" "output-quartet-file-name"
 ``` 
 
-2. (**Default Mode**) For running the jar file, use java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name"
+1. (**Default Mode**) For running the jar file, use java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name"
 
 <!-- Code Blocks -->
   ```bash
@@ -84,7 +74,30 @@ of wQMC and ASTRAL.
       java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name"
   ```
 
-3. *Relevant Multiple Options*
+1. **To use branch support annotations**
+
+    (i) Directly run from wQFM jar file using annotations i.e. -t flag 
+    ```bash
+        # to annotate branches using avg number of quartets satisfied per branch
+        java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 1 
+      
+        # to annotate branches using avg number of quartets satisfied per branch (weights will be normalized by sum)
+        java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 2 
+
+        # to annotate branches using avg number of quartets satisfied per branch (weights will be normalized by max)
+        java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 3
+        
+        ## Eg. if you have python setup instead of python3. Now, the scripts will be called using "python ..."
+        java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 1 -pe python
+    ```
+    
+    (ii) If you want to annotate another species tree using a set of weighted quartets
+    ```bash
+        # eg. using annotations level of 1 (use -pe python if you have python setup instead of python3)
+        java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-without-annotations" -o "species-tree-with-annotations" -t 1
+    ```
+
+1. *Relevant Multiple Options*
 
 ```bash
 -i, --input_file=<inputFileNameWeightedQuartets>
@@ -122,37 +135,14 @@ of wQMC and ASTRAL.
 -V, --version   Print version information and exit.
 ```
 
-4. **To use branch support annotations**
-
-    (i) Directly run from wQFM jar file using annotations i.e. -t flag 
-    ```bash
-        # to annotate branches using avg number of quartets satisfied per branch
-        java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 1 
-      
-        # to annotate branches using avg number of quartets satisfied per branch (weights will be normalized by sum)
-        java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 2 
-
-        # to annotate branches using avg number of quartets satisfied per branch (weights will be normalized by max)
-        java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 3
-        
-        ## Eg. if you have python setup instead of python3. Now, the scripts will be called using "python ..."
-        java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 1 -pe python
-    ```
-    
-    (ii) If you want to annotate another species tree using a set of weighted quartets
-    ```bash
-        # eg. using annotations level of 1 (use -pe python if you have python setup instead of python3)
-        java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-without-annotations" -o "species-tree-with-annotations" -t 1
-    ```
-
-4. For large number of taxa, increasing the memory available to Java is recommended. 
+1. For large number of taxa, increasing the memory available to Java is recommended. 
 ```bash
     # Example: To supply 8GB of free memory.
     
     java -Xmx8000M -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" 
 ```
 
-5. For now, wQFM cannot handle **stars** which is induced due to polytomy in gene trees.
+1. For now, wQFM cannot handle **stars** which is induced due to polytomy in gene trees.
   
     So, if you do provide stars in input quartet-file, wQFM will terminate (after giving a prompt).
 
@@ -194,6 +184,7 @@ Both simulated and biological datasets are present.
     Sukumaran, J. and Mark T. Holder. The DendroPy Phylogenetic Computing Library Documentation. Retrieved 01/02/2021, from http://dendropy.org/.
     
 - Arguments parsing is done using **picocli**.
+[![picocli](https://img.shields.io/badge/picocli-4.6.1-green.svg)](https://github.com/remkop/picocli)
 
 
 ## Bug Report
