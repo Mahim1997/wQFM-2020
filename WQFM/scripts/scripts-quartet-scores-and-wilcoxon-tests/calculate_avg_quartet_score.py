@@ -9,6 +9,7 @@ dictionary_model_conditions = {} # store per model-condition
 def insert_to_dictionary(line):
     line = line.replace("\n", "")
     str_arr = line.split(" ")
+    # print(str_arr)
     (file_name, qscore, total_weight, normalized_qscore) = str_arr
     str_arr2 = line.split("/")
     model_cond = str_arr2[0]
@@ -55,8 +56,12 @@ with open(fileName,'r') as fr:
 
 dict2 = calculate_avg_stuffs(dictionary_model_conditions)
 
+print("Model Condition,Meqn Quartet Score,Mean Total Weight, Mean Percent Score")
+
 for model in dict2:
     # print(model, ": ", dict2[model])
-    (mean_q_score, mean_total_weight, mean_normalized_score) = dict2[model]    
-    print(model, ",", mean_q_score, ",", mean_total_weight, ",", (mean_normalized_score*100), "%")
+    (mean_q_score, mean_total_weight, mean_normalized_score) = dict2[model]
+    percent_score = round((mean_normalized_score*100), 3)
+
+    print(model, ",", mean_q_score, ",", mean_total_weight, ",", percent_score)
 

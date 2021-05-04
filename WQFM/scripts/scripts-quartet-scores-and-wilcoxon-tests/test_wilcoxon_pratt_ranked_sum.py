@@ -84,6 +84,7 @@ def run(inputFileName1, inputFileName2):
                 print(model_cond_name, ", T=", T, ",P-val=", p_val, "\nList1: ", list_val_1, "\nList2: ", list_val_2)
             else:
                 # print(model_cond_name, ", T=", T, ",P-val=", p_val)
+                p_val = round(p_val, 4) # to 4 DP
                 print(f"{model_cond_name}, {T}, {p_val}")
 
 ###################################################################################

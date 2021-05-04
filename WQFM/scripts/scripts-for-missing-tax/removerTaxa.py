@@ -5,6 +5,7 @@ import fileinput
 import random
 import sys
 
+random.seed(2231)
 
 def usageAndExit():
     print("USAGE: python3 removerTaxaRandom.py <input-file> <output-file> <min-percent> <max-percent>")
@@ -73,6 +74,10 @@ def printList(list_to_print):
 def getPrunedTree(pruned_taxa_list, tree_str):
     tree = dendropy.Tree.get_from_string(tree_str, "newick")
     # tree.retain_taxa_with_labels(["A", "C", "G"])
+    
+    # print("Inside getPrunedTree(), pruned_taxa_list = ", pruned_taxa_list)
+    # print("tree = ", tree)
+
     tree.retain_taxa_with_labels(pruned_taxa_list)
     new_tree_str = tree.as_string('newick')
     return new_tree_str
@@ -89,6 +94,7 @@ def runMain(fileName, outputFileName, min_percent, max_percent):
     list_new_trees = []
     for gt in gt_list:
         # irand = randrange(min_remove_tax_num, max_remove_tax_num)
+        ### A random integer in range [start, end] including the end points.
         irand = random.randint(min_remove_tax_num, max_remove_tax_num)
         # print("Rand num, irand = ", irand)
         all_taxa_list = getTaxaList(gt)
