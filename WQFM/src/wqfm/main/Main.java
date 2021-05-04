@@ -19,20 +19,20 @@ public class Main implements Callable<Integer> {
     public static boolean DEBUG_MODE = false;
 
     //    public static String INPUT_FILE_NAME = "input_files/weighted_quartets_avian_biological_dataset";
-    public static String INPUT_FILE_NAME = "input_files/wqrts_11Tax_est_5G_R1";
-    public static String OUTPUT_FILE_NAME = "test-output-file-wqfm-java.tre";
-    public static String SPECIES_TREE_FILE_NAME = Main.OUTPUT_FILE_NAME; // for now both will be the same
+    public static String INPUT_FILE_NAME_PLACE_HOLDER = "input_files/wqrts_11Tax_est_5G_R1";
+    public static String OUTPUT_FILE_NAME_PLACE_HOLDER = "test-output-file-wqfm-java.tre";
+    public static String SPECIES_TREE_FILE_NAME = Config.OUTPUT_FILE_NAME; // for now both will be the same
     
     public static final String WQFM_VERSION = "wQFM v1.2";
     public static String PYTHON_ENGINE = "python3";
 
 //    @CommandLine.Option(names = {"-i", "--input_file"}, required = false, description = "The input file name/path for weighted quartets")
     @CommandLine.Option(names = {"-i", "--input_file"}, required = true, description = "The input file name/path for weighted quartets")
-    private String inputFileNameWeightedQuartets = INPUT_FILE_NAME;
+    private String inputFileNameWeightedQuartets = INPUT_FILE_NAME_PLACE_HOLDER;
 
 //    @CommandLine.Option(names = {"-o", "--output_file"}, required = false, description = "The output file name/path for (estimated) species tree")
     @CommandLine.Option(names = {"-o", "--output_file"}, required = true, description = "The output file name/path for (estimated) species tree")
-    private String outputFileNameSpeciesTree = OUTPUT_FILE_NAME;
+    private String outputFileNameSpeciesTree = OUTPUT_FILE_NAME_PLACE_HOLDER;
 
     @CommandLine.Option(names = {"-t", "--annotations_level"}, required = false, description = "t=0 for none (default)\nt=1 for annotations using quartet support\nt=2 for annotations using quartet support normalized by sum\nt=3 for annotations using quartet support nomralized by max")
     private int annotationsLevel = DefaultValues.ANNOTATIONS_LEVEL0_NONE;
@@ -58,8 +58,8 @@ public class Main implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception { // your business logic goes here...
-        INPUT_FILE_NAME = this.inputFileNameWeightedQuartets;
-        OUTPUT_FILE_NAME = this.outputFileNameSpeciesTree;
+        Config.INPUT_FILE_NAME = this.inputFileNameWeightedQuartets;
+        Config.OUTPUT_FILE_NAME = this.outputFileNameSpeciesTree;
 
         Config.ANNOTATIONS_LEVEL = (this.annotationsLevel <= DefaultValues.ANNOTATIONS_LEVEL3_QUARTET_SUPPORT_NORMALIZED_MAX)
                 ? this.annotationsLevel
