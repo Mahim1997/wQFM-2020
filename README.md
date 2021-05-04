@@ -97,7 +97,14 @@ of wQMC and ASTRAL.
         java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-without-annotations" -o "species-tree-with-annotations" -t 1
     ```
 
-4. *Relevant Multiple Options*
+4. For large number of taxa, increasing the memory available to Java is recommended. 
+```bash
+    # Example: To supply 8GB of free memory.
+    
+    java -Xmx8000M -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" 
+```
+
+5. *Relevant Multiple Options*
 
 ```bash
 -i, --input_file=<inputFileNameWeightedQuartets>
@@ -135,12 +142,6 @@ of wQMC and ASTRAL.
 -V, --version   Print version information and exit.
 ```
 
-5. For large number of taxa, increasing the memory available to Java is recommended. 
-```bash
-    # Example: To supply 8GB of free memory.
-    
-    java -Xmx8000M -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" 
-```
 
 6. For now, wQFM cannot handle **stars** which is induced due to polytomy in gene trees.
   
