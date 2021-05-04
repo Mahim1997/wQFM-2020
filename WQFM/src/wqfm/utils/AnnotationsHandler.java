@@ -89,7 +89,7 @@ public class AnnotationsHandler {
             case DefaultValues.ANNOTATIONS_LEVEL2_QUARTET_SUPPORT_NORMALIZED_SUM:
                 return "Using quartet support normalized by sum annotations for branches";
             case DefaultValues.ANNOTATIONS_LEVEL3_QUARTET_SUPPORT_NORMALIZED_MAX:
-                return "Using quartet support normalized by max annotatiosn for branches";
+                return "Using quartet support normalized by max annotations for branches";
             default:
                 return "Using no annotations for branches";
         }

@@ -99,8 +99,8 @@ public class Bin {
         Bin.proportion_after_thresh_before_1 = (double) cnt_after_thresh_before_1 / (double) total_count;
         Bin.proportion_greater_or_equal_1 = (double) cnt_after_1 / (double) total_count;
 
-        System.out.printf("L 101. cnt_before_thresh = %d, cnt_after_thresh_before_1 = %d, cnt_after_1 = %d, total_count = %d"
-                , cnt_before_thresh, cnt_after_thresh_before_1, cnt_after_1, total_count);
+//        System.out.printf("L 101. cnt_before_thresh = %d, cnt_after_thresh_before_1 = %d, cnt_after_1 = %d, total_count = %d"
+//                , cnt_before_thresh, cnt_after_thresh_before_1, cnt_after_1, total_count);
         
         double weighted_avg_final; //this will be passed as BETA
 
