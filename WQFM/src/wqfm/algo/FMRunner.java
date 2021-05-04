@@ -31,7 +31,7 @@ public class FMRunner {
         runner.readFileAndPopulateInitialTables(Config.INPUT_FILE_NAME, customDS, initialTable);
         System.out.println("Reading from file <" + Config.INPUT_FILE_NAME + "> done."
                 + "\nInitial-Num-Quartets = " + initialTable.sizeTable());
-        System.out.println("Running with partition score " + DefaultValues.GET_PARTITION_SCORE_PRINT());
+        System.out.println("Running with partition score " + WeightedPartitionScores.GET_PARTITION_SCORE_PRINT());
         int level = 0;
         customDS.level = level; //for debugging issues.
 
@@ -86,7 +86,7 @@ public class FMRunner {
 
         Bipartition_8_values initialBip_8_vals = new Bipartition_8_values();
         initialBip_8_vals.compute8ValuesUsingAllQuartets_this_level(customDS_this_level, mapInitialBipartition);
-        System.out.println(DefaultValues.GET_PARTITION_SCORE_PRINT() + " LEVEL: " + level + ", ALPHA: " + WeightedPartitionScores.ALPHA_PARTITION_SCORE + ", BETA: " + WeightedPartitionScores.BETA_PARTITION_SCORE);
+        System.out.println(WeightedPartitionScores.GET_PARTITION_SCORE_PRINT() + " LEVEL: " + level + ", ALPHA: " + WeightedPartitionScores.ALPHA_PARTITION_SCORE + ", BETA: " + WeightedPartitionScores.BETA_PARTITION_SCORE);
 
         FMComputer fmComputerObject = new FMComputer(customDS_this_level, mapInitialBipartition, initialBip_8_vals, level);
         FMResultObject fmResultObject = fmComputerObject.run_FM_Algorithm_Whole();

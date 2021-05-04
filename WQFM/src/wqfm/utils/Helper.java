@@ -13,9 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import wqfm.ds.InitialTable;
-import wqfm.main.Main;
 import wqfm.configs.DefaultValues;
 
 /**
@@ -23,6 +21,10 @@ import wqfm.configs.DefaultValues;
  * @author mahim
  */
 public class Helper {
+
+    public static boolean isOptionOn(String option) {
+        return !option.toLowerCase().equals(DefaultValues.OFF);
+    }
 
     public static String getTreeFromFile(String fileName) {
         try {
