@@ -66,7 +66,7 @@ of wQMC and ASTRAL.
   ./quartet-controller.sh "input-gene-tree-file-name" "output-quartet-file-name"
 ``` 
 
-1. (**Default Mode**) For running the jar file, use java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name"
+2. (**Default Mode**) For running the jar file, use java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name"
 
 <!-- Code Blocks -->
   ```bash
@@ -74,7 +74,7 @@ of wQMC and ASTRAL.
       java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name"
   ```
 
-1. **To use branch support annotations**
+3. **To use branch support annotations**
 
     (i) Directly run from wQFM jar file using annotations i.e. -t flag 
     ```bash
@@ -97,7 +97,7 @@ of wQMC and ASTRAL.
         java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-without-annotations" -o "species-tree-with-annotations" -t 1
     ```
 
-1. *Relevant Multiple Options*
+4. *Relevant Multiple Options*
 
 ```bash
 -i, --input_file=<inputFileNameWeightedQuartets>
@@ -135,14 +135,14 @@ of wQMC and ASTRAL.
 -V, --version   Print version information and exit.
 ```
 
-1. For large number of taxa, increasing the memory available to Java is recommended. 
+5. For large number of taxa, increasing the memory available to Java is recommended. 
 ```bash
     # Example: To supply 8GB of free memory.
     
     java -Xmx8000M -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" 
 ```
 
-1. For now, wQFM cannot handle **stars** which is induced due to polytomy in gene trees.
+6. For now, wQFM cannot handle **stars** which is induced due to polytomy in gene trees.
   
     So, if you do provide stars in input quartet-file, wQFM will terminate (after giving a prompt).
 
