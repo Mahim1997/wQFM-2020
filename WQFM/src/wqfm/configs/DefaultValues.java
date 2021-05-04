@@ -9,7 +9,8 @@ import wqfm.bip.WeightedPartitionScores;
 public interface DefaultValues {
 
     // script names.
-    public static String SCRIPT_BRANCH_ANNOTATIONS_QUARTET_SUPPORT = "src/wqfm/scripts/annotate_branches.py";
+    public static String SCRIPT_BRANCH_ANNOTATIONS_QUARTET_SUPPORT = "annotate_branches.py";
+//    public static String SCRIPT_BRANCH_ANNOTATIONS_QUARTET_SUPPORT = "src/wqfm/scripts/annotate_branches.py";
 
     // Use this for logical biparititoning
     public static int LEFT_PARTITION = -1; //-1 : left

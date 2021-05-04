@@ -60,6 +60,7 @@ public class Main implements Callable<Integer> {
     public Integer call() throws Exception { // your business logic goes here...
         Config.INPUT_FILE_NAME = this.inputFileNameWeightedQuartets;
         Config.OUTPUT_FILE_NAME = this.outputFileNameSpeciesTree;
+        Main.SPECIES_TREE_FILE_NAME = Config.OUTPUT_FILE_NAME; // initially set as same.
 
         Config.ANNOTATIONS_LEVEL = (this.annotationsLevel <= DefaultValues.ANNOTATIONS_LEVEL3_QUARTET_SUPPORT_NORMALIZED_MAX)
                 ? this.annotationsLevel
