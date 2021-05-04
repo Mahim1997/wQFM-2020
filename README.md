@@ -130,10 +130,6 @@ of wQMC and ASTRAL.
 
 -h, --help      Show this help message and exit.
 
--nd, --normalize_dummy=<normalizeDummy>
-	(default) on
-	<off> to sum dummy deferred quartets
-
 -pe, --python_engine=<pythonEngine>
 	(default) python3
 	(otherwise) python
