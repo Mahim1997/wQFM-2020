@@ -32,7 +32,7 @@ of wQMC and ASTRAL.
 
 2. Need to have "lib" folder in same path as jar file. (This uses some bytecode from [PhyloNet](https://bioinfocs.rice.edu/phylonet) package by Luay Nakhleh)
     <!--(Check [ASTRAL's github repo](https://github.com/smirarab/ASTRAL) for more details on lib [uses PhyloNet package])-->
-    (This is needed to reroot the tree with respect to an outgroup node.)
+    (This is needed to reroot the tree with respect to an outgroup.)
     
 3. Need to have the python scripts "annotate_branches.py", "normalize_weights.py" in the same directory as the jar file.
 
@@ -58,7 +58,7 @@ of wQMC and ASTRAL.
 ## Input and Output formats for wQFM
 
 ### Input
-wQFM takes a **set of weighted quartets** in **newick format** as input.  Each line contains one quartet, followed by its weight.
+wQFM takes as input a **set of weighted quartets** in **Newick format**. Each line contains one quartet, followed by its weight.
 
 	((A,B),(C,D)); 34
 	((A,C),(B,D)); 125
@@ -206,11 +206,11 @@ The following files are available for each aforementioned datasets.
 
 
 ## Acknowledgement
-- wQFM uses some methods of the [PhyloNet](https://bioinfocs.rice.edu/phylonet) package for rerooting of unrooted trees with respect to an outgroup.
+- wQFM uses some methods in the [PhyloNet](https://bioinfocs.rice.edu/phylonet) package for rerooting a tree with respect to an outgroup.
     
     C. Than, D. Ruths, L. Nakhleh (2008) PhyloNet: A software package for analyzing and reconstructing reticulate evolutionary histories, BMC Bioinformatics 9:322.
     
-- Certain additional scripts (branch-support calculation, bootstrap support calculation) uses [DendroPy](http://dendropy.org/).
+- Certain additional scripts (branch-support calculation, bootstrap support calculation) use [DendroPy](http://dendropy.org/).
     
     Sukumaran, J. and Mark T. Holder. The DendroPy Phylogenetic Computing Library Documentation. Retrieved 01/02/2021, from http://dendropy.org/.
     
