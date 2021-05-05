@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 import phylonet.tree.io.ParseException;
 import phylonet.tree.model.sti.STITree;
 import wqfm.configs.DefaultValues;
@@ -168,7 +169,7 @@ public class TreeHandler {
                 return sc.nextLine();
             }
 
-        } catch (Exception ex) {
+        } catch (IOException ex) {
         }
 
         return "ERROR_IN_TREE";
@@ -179,15 +180,20 @@ public class TreeHandler {
         if (taxa_list_int.isEmpty()) {
             return "();";
         }
-        String s = "";
-        s += "(";
-        for (int i = 0; i < taxa_list_int.size(); i++) {
-            s += taxa_list_int.get(i);
-            if (i != taxa_list_int.size() - 1) {
-                s += ","; //do not add comma for the last taxon
-            }
-        }
-        s += ");";
-        return s;
+        return taxa_list_int
+                .stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(",", "(", ")"));
+
+//        String s = "";
+//        s += "(";
+//        for (int i = 0; i < taxa_list_int.size(); i++) {
+//            s += taxa_list_int.get(i);
+//            if (i != taxa_list_int.size() - 1) {
+//                s += ","; //do not add comma for the last taxon
+//            }
+//        }
+//        s += ");";
+//        return s;
     }
 }
