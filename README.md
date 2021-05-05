@@ -55,6 +55,27 @@ of wQMC and ASTRAL.
 
 * To use branch annotations, the script "annotate_branches.py" uses **DendroPy**. If you would like to use branch annotations, do setup **Python** and **DendroPy**.
 
+## Input and Output formats for wQFM
+
+### Input
+wQFM takes a **set of weighted quartets** in **newick format** as input.  Each line contains one quartet, followed by its weight.
+
+	((A,B),(C,D)); 34
+	((A,C),(B,D)); 125
+	((B,C),(D,E)); 431
+	((A,B),(E,F)); 256
+	((C,D),(E,F)); 992
+	((A,C),(E,F)); 121	
+
+### Output
+A **newick tree** with or without **branch support** (measured as average quartet support)
+
+	- Without branch support
+	((D,(B,(A,C))),(E,F));
+	
+	- With branch support measered as average quartet support
+	((D,(B,(A,C)123.0)269.3333333333333)456.3333333333333,(E,F)456.3333333333333);
+
 ## Running the application.
 <!-- OL -->
 1.  For generating embedded weighted quartets, use the "quartet-controller.sh" as discussed above.
