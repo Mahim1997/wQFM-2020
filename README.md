@@ -55,6 +55,27 @@ of wQMC and ASTRAL.
 
 * To use branch annotations, the script "annotate_branches.py" uses **DendroPy**. If you would like to use branch annotations, do setup **Python** and **DendroPy**.
 
+## Input and Output formats for wQFM
+
+### Input
+wQFM takes a **set of weighted quartets** in **newick format** as input.  Each line contains one quartet, followed by its weight.
+
+	((A,B),(C,D)); 34
+	((A,C),(B,D)); 125
+	((B,C),(D,E)); 431
+	((A,B),(E,F)); 256
+	((C,D),(E,F)); 992
+	((A,C),(E,F)); 121	
+
+### Output
+A **newick tree** with or without **branch support** (measured as average quartet support)
+
+	- Without branch support
+	((D,(B,(A,C))),(E,F));
+	
+	- With branch support measered as average quartet support
+	((D,(B,(A,C)123.0)269.3333333333333)456.3333333333333,(E,F)456.3333333333333);
+
 ## Running the application.
 <!-- OL -->
 1.  For generating embedded weighted quartets, use the "quartet-controller.sh" as discussed above.
@@ -66,7 +87,7 @@ of wQMC and ASTRAL.
   ./quartet-controller.sh "input-gene-tree-file-name" "output-quartet-file-name"
 ``` 
 
-2. (**Default Mode**) For running the jar file, use java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name"
+2. (**Default Mode**) For running the jar file, use the flags -i for input file containing weighted quartets, and -o for the output file name.
 
 <!-- Code Blocks -->
   ```bash
@@ -74,28 +95,30 @@ of wQMC and ASTRAL.
       java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name"
   ```
 
-3. **To use branch support annotations**
+3. **To infer branch supports**
 
-    (i) Directly run from wQFM jar file using annotations i.e. -t flag 
-    ```bash
-        # to annotate branches using avg number of quartets satisfied per branch
-        java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 1 
-      
-        # to annotate branches using avg number of quartets satisfied per branch (weights will be normalized by sum)
-        java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 2 
+wQFM can annotate the branches in the output tree with the quartet support which is defined as the number of quartets in the input set of gene trees that agree with a branch.
 
-        # to annotate branches using avg number of quartets satisfied per branch (weights will be normalized by max)
-        java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 3
-        
-        ## Eg. if you have python setup instead of python3. Now, the scripts will be called using "python ..."
-        java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 1 -pe python
-    ```
+* Annotating the output species tree with -t flag 
+```bash
+# Annotate branches with average quartet support (the average weights of quartets in your gene trees that agree with a branch)
+java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 1 
+
+# Annotate branches with normalized average quartet support (the proportion of quartets in your gene trees that agree with a branch)
+java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 2 
+
+# Annotate branches with normalized average quartet support (normalized over the most dominant topology's weight, so this option will provide highest possible branch support if all dominant quartets agree with a branch)
+java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 3
+
+## Eg. if you have python setup instead of python3. Now, the scripts will be called using "python ..."
+java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 1 -pe python
+```
     
-    (ii) If you want to annotate another species tree using a set of weighted quartets
-    ```bash
-        # eg. using annotations level of 1 (use -pe python if you have python setup instead of python3)
-        java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-without-annotations" -o "species-tree-with-annotations" -t 1
-    ```
+* If you want to annotate the branches of a given species tree with quartet support with respect to a set of weighted quartets
+```bash
+# eg. using annotations level of 1 (use -pe python if you have python setup instead of python3)
+java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-without-annotations" -o "species-tree-with-annotations" -t 1
+```
 
 4. For large number of taxa, increasing the memory available to Java is recommended. 
 ```bash
