@@ -205,11 +205,15 @@ The following files are available for each aforementioned datasets.
 
 
 
-## Acknowledgement
+## Acknowledgements
 - wQFM uses some methods in the [PhyloNet](https://bioinfocs.rice.edu/phylonet) package for rerooting a tree with respect to an outgroup.
     
     C. Than, D. Ruths, L. Nakhleh (2008) PhyloNet: A software package for analyzing and reconstructing reticulate evolutionary histories, BMC Bioinformatics 9:322.
-    
+
+- For generating embedded weighted quartets, the tool **triplets.soda2103** is used.
+
+	Gerth Stølting Brodal, Rolf Fagerberg, Thomas Mailund, Christian N. S. Pedersen, and Andreas Sand. 2013. Efficient algorithms for computing the triplet and quartet distance between trees of arbitrary degree. In Proceedings of the twenty-fourth annual ACM-SIAM symposium on Discrete algorithms (SODA '13). Society for Industrial and Applied Mathematics, USA, 1814–1832.
+
 - Certain additional scripts (branch-support calculation, bootstrap support calculation) use [DendroPy](http://dendropy.org/).
     
     Sukumaran, J. and Mark T. Holder. The DendroPy Phylogenetic Computing Library Documentation. Retrieved 01/02/2021, from http://dendropy.org/.
