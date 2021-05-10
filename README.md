@@ -221,6 +221,10 @@ The following files are available for each aforementioned datasets.
 - Arguments parsing is done using **picocli**.
 [![picocli](https://img.shields.io/badge/picocli-4.6.1-green.svg)](https://github.com/remkop/picocli)
 
+## License
+The contents of this repository are licensed under the **Apache License, Version 2.0**.
+
+See [LICENSE.md](https://github.com/Mahim1997/wQFM-2020/LICENSE.md) for the full license text.
 
 ## Bug Report
 We are always looking to improve our codebase. 
