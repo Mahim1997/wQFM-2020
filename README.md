@@ -229,7 +229,7 @@ as well as includes the bootstrap supports on the species trees estimated by bes
 ## License
 The contents of this repository are licensed under the **Apache License, Version 2.0**.
 
-See [LICENSE.md](https://github.com/Mahim1997/wQFM-2020/LICENSE.md) for the full license text.
+See [LICENSE.md](https://github.com/Mahim1997/wQFM-2020/blob/master/LICENSE.md) for the full license text.
 
 ## Bug Report
 We are always looking to improve our codebase. 
