@@ -181,7 +181,7 @@ The simulated datasets investigated in this study are available [here](https://s
 The input gene trees, corresponding weighted quartets and the estimated species trees are available [here](https://drive.google.com/drive/folders/1IYKYWG81Sld8QwzZNO5D71mOulGVd7ax?usp=sharing).
 
 
-As of July 29, 2020, the datasets (used for analysis) contain the following:
+As of May 1, 2021, the datasets (used for analysis) contain the following:
 
 | Simulated Datasets  |      Biological Datasets  |
 |---------------------|:-----------------------------:|
