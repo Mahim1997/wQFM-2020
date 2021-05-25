@@ -11,7 +11,6 @@ import wqfm.utils.AnnotationsHandler;
 import wqfm.utils.Helper;
 import wqfm.utils.TreeHandler;
 
-
 @CommandLine.Command(name = "wQFM", mixinStandardHelpOptions = true, version = Main.WQFM_VERSION,
         description = "Runing " + Main.WQFM_VERSION)
 public class Main implements Callable<Integer> {
@@ -22,6 +21,8 @@ public class Main implements Callable<Integer> {
     public static String INPUT_FILE_NAME_PLACE_HOLDER = "input_files/wqrts_11Tax_est_5G_R1";
     public static String OUTPUT_FILE_NAME_PLACE_HOLDER = "test-output-file-wqfm-java.tre";
     public static String SPECIES_TREE_FILE_NAME = Config.OUTPUT_FILE_NAME; // for now both will be the same
+    
+    
     
     public static final String WQFM_VERSION = "wQFM v1.2";
     public static String PYTHON_ENGINE = "python3";
@@ -45,12 +46,10 @@ public class Main implements Callable<Integer> {
 
     @CommandLine.Option(names = {"-pe", "--python_engine"}, required = false, description = "(default) python3\npv = python for simple python engine")
     private String pythonEngine = PYTHON_ENGINE;
-    
+
 //    @CommandLine.Option(names = {"-nd", "--normalize_dummy"}, required = false, description = "(default) on\n<off> to sum dummy deferred quartets")
 //    private String normalizeDummy = DefaultValues.ON; // true by default
-
     // weights = false -> to run QFM. Will need to handle separately for quartets' weights.
-    
     private static void goDebugMode() {
         Config.ANNOTATIONS_LEVEL = DefaultValues.ANNOTATIONS_LEVEL3_QUARTET_SUPPORT_NORMALIZED_MAX;
         Main.PYTHON_ENGINE = "python";
@@ -93,19 +92,17 @@ public class Main implements Callable<Integer> {
         if (Main.DEBUG_MODE) {
             Main.goDebugMode();
         }
-        
+
         Config.NORMALIZE_DUMMY_QUARTETS = true; // always will be used as true.
-        
-        if(this.speciesTreeFileName.equals(DefaultValues.NULL) == false){ // argument is passed.
+
+        if (this.speciesTreeFileName.equals(DefaultValues.NULL) == false) { // argument is passed.
             Main.SPECIES_TREE_FILE_NAME = this.speciesTreeFileName; // will be passed as the 2nd argument for python commands.
             String tree = Helper.getTreeFromFile(this.speciesTreeFileName);
             AnnotationsHandler.handleAnnotations(tree);
-        }
-        else{
+        } else {
             // run wQFM
-            Main.runwQFM();            
+            Main.runwQFM();
         }
-        
 
         return 0;
     }
