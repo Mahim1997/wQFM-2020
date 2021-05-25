@@ -38,7 +38,7 @@ of wQMC and ASTRAL.
 
 - #### If you download the wQFM-v1.2.zip and extract the contents, all the files will be present in the required structure (described below)
 
-	1. The tool **triplets.soda2103** must be in the same directory as the helper scripts **quartet-controller.sh**, **quartet_count.sh**, **summarize-quartet-counts.py** and **generate-weighted-embedded-quartets.py**. Make sure the scripts have the executable permission.
+	1. The tool **triplets.soda2103** must be in the same directory as the helper scripts **quartet-controller.sh**, **quartet_count.sh**, **summarize-quartet-counts.py** and **generate-weighted-embedded-quartets.py**. Make sure the scripts have executable permission.
 
 	2. Need to have **lib** folder (contains **PhyloNet jar** and **Picocli jar**) in same path as the **wQFM-v1.2.jar** file.
 
