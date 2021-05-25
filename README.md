@@ -29,7 +29,9 @@ of wQMC and ASTRAL.
 
 ### Packages, Programming Languages and Operating Systems Requirements
 - Java (required to run the main wQFM application).
+
 - Python, Pandas, NumPy, Linux O.S. required to generate weighted quartets. This is done by using the combination of the helper scripts **quartet-controller.sh**, **quartet_count.sh**, **summarize-quartet-counts.py**, **generate-weighted-embedded-quartets.py** and the tool **triplets.soda2103** (requires Linux O.S.)
+
 - Python, DendroPy needed for branch annotations while using the helper script **annotate_branches.py**.
 
 ### Files Structure
@@ -38,7 +40,7 @@ of wQMC and ASTRAL.
 
 	1. The tool **triplets.soda2103** must be in the same directory as the helper scripts **quartet-controller.sh**, **quartet_count.sh**, **summarize-quartet-counts.py** and **generate-weighted-embedded-quartets.py**.
 
-	2. Need to have **lib** folder (contains **PhyloNet jar** and **Picocli jar**) in same path as the **wQFM jar** file.
+	2. Need to have **lib** folder (contains **PhyloNet jar** and **Picocli jar**) in same path as the **wQFM-v1.2.jar** file.
 
 	3. Need to have the python scripts **annotate_branches.py**, "**normalize_weights.py** in the same directory as the jar file.
 
@@ -73,24 +75,30 @@ A **newick tree** with or without **branch support** (multiple annotation levels
 
 ## Running the application.
 <!-- OL -->
-1.  For generating embedded weighted quartets, use the "quartet-controller.sh" as discussed above.
-    
-    Make sure "triplets.soda2103" is in the same path (or you have added correct absolute paths) in the "quartet_count.sh" file.
-
+####  For generating embedded weighted quartets, use the "quartet-controller.sh" as discussed above.
+   
 <!-- Code Blocks -->
 ```bash
-  ./quartet-controller.sh "input-gene-tree-file-name" "output-quartet-file-name"
+./quartet-controller.sh "input-gene-tree-file-name" "output-quartet-file-name"
 ``` 
 
-2. (**Default Mode**) For running the jar file, use the flags -i for input file containing weighted quartets, and -o for the output file name.
+<!--### (**Default Mode**) For running the jar file, use the flags -i for input file containing weighted quartets, and -o for the output file name.-->
+#### To run using weighted quartets as input file, simply use -i and -o flags
 
 <!-- Code Blocks -->
   ```bash
-      # Default mode, uses [s] - [v] as partition score.
-      java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name"
+# Default mode, uses [s] - [v] as partition score.
+java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name"
   ```
 
-3. **To infer branch supports**
+#### To run directly using gene trees, use -im/--input_mode argument.
+  ```bash
+# Uses the -im/--input_mode as gene-trees (see Relevant Multiple Options below for details).
+java -jar wQFM-v1.2.jar -i "input-file-gene-trees" -o "output-file-name" -im gene-trees
+  ```
+
+
+### **To infer branch supports**
 
 wQFM can annotate the branches in the output tree with the quartet support which is defined as the number of quartets in the input set of gene trees that agree with a branch.
 
@@ -115,14 +123,7 @@ java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 1 -pe pyth
 java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-without-annotations" -o "species-tree-with-annotations" -t 1
 ```
 
-4. For large number of taxa, increasing the memory available to Java is recommended. 
-```bash
-    # Example: To supply 8GB of free memory.
-    
-    java -Xmx8000M -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" 
-```
-
-5. *Relevant Multiple Options*
+#### Relevant Multiple Options
 
 ```bash
 -i, --input_file=<inputFileName>
@@ -132,7 +133,7 @@ java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-with
 -o, --output_file=<outputFileNameSpeciesTree>
 	The output file name/path for (estimated) species tree
 
-im, --input_mode=<inputFileMode>
+-im, --input_mode=<inputFileMode>
                   im=<weighted-quartets> (default)
                   im=<gene-trees> when input file consists of gene trees
 
@@ -162,11 +163,20 @@ im, --input_mode=<inputFileMode>
 ```
 
 
-6. For now, wQFM cannot handle **stars** which is induced due to polytomy in gene trees.
+#### For large number of taxa, increasing the memory available to Java is recommended. 
+```bash
+# Example: To supply 8GB of free memory.
+
+java -Xmx8000M -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" 
+```
+
+#### For now, wQFM cannot handle **stars** which is induced due to polytomy in gene trees.
   
-    So, if you do provide stars in input quartet-file, wQFM will terminate (after giving a prompt).
+So, if you do provide stars in input quartet-file, wQFM will terminate (after giving a prompt).
 
-
+	eg. (a,b,c,d); 10
+	This will be produced as a "quartet" if a star is present in the initial gene tree.
+	If wQFM is run and the input weighted quartets file contains such a star, then wQFM will terminate giving a prompt.
 
 ## Datasets
 The simulated datasets investigated in this study are available [here](https://sites.google.com/eng.ucsd.edu/datasets/home?authuser=0)
