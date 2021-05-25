@@ -5,10 +5,9 @@
 <!-- Headings -->
 # wQFM
 <!-- Strong -->
-wQFM is a quartet amalgamation method. <!--for estimating species trees.--> 
+**wQFM** is a quartet amalgamation method. <!--for estimating species trees.--> 
 <!--It takes a set of estimated gene trees as input and generates a set of weighted quartets and combines these weighted quartet trees into a tree on the full set of taxa using a heuristic aimed at finding a species tree of minimum distance to the set of weighted quartet trees.
 -->
-
 <!--
 ## Background
 Species tree estimation from genes sampled from throughout the whole genome is complicated due to the gene tree-species tree discordance. Incomplete Lineage Sorting (ILS) is one of the most frequent causes for this discordance.
@@ -27,38 +26,29 @@ of wQMC and ASTRAL.
 -->
 
 ## Execution dependencies
-<!-- OL -->
-1. The tool "triplets.soda2103" must be in the same directory as "quartet-controller.sh". Helper scripts such as "quartet_count.sh", "summarize-quartet-counts.py" should be in the same directory as "quartet-controller.sh" and "triplets.soda2103".
 
-2. Need to have "lib" folder in same path as jar file. (This uses some bytecode from [PhyloNet](https://bioinfocs.rice.edu/phylonet) package by Luay Nakhleh)
-    <!--(Check [ASTRAL's github repo](https://github.com/smirarab/ASTRAL) for more details on lib [uses PhyloNet package])-->
-    (This is needed to reroot the tree with respect to an outgroup.)
-    
-3. Need to have the python scripts "annotate_branches.py", "normalize_weights.py" in the same directory as the jar file.
+### Packages, Programming Languages and Operating Systems Requirements
+- Java (required to run the main wQFM application).
 
+- Python, Pandas, NumPy, Linux O.S. required to generate weighted quartets. This is done by using the combination of the helper scripts **quartet-controller.sh**, **quartet_count.sh**, **summarize-quartet-counts.py**, **generate-weighted-embedded-quartets.py** and the tool **triplets.soda2103** (requires Linux O.S.)
 
-## Installation
-<!-- UL -->
-* There is no installation required to run wQFM-v1.2.jar
+- Python, DendroPy needed for branch annotations while using the helper script **annotate_branches.py**.
 
-* To download, use either of the following approach:
+### Files Structure
 
-    * You can clone/download the whole repository and use required scripts and wQFM-v1.2.jar to run the application.
+- #### If you download the wQFM-v1.2.zip and extract the contents, all the files will be present in the required structure (described below)
 
-    * Alternatively, you can also download and extract the "wQFM-v1.2.zip" file which contains relevant scripts for generating embedded-weighted-quartets and running wQFM-v1.2.jar
+	1. The tool **triplets.soda2103** must be in the same directory as the helper scripts **quartet-controller.sh**, **quartet_count.sh**, **summarize-quartet-counts.py** and **generate-weighted-embedded-quartets.py**.
 
-* wQFM is a java-based application, and hence should run in any environment (Windows, Linux, Mac, etc.) as long as java is installed.
+	2. Need to have **lib** folder (contains **PhyloNet jar** and **Picocli jar**) in same path as the **wQFM-v1.2.jar** file.
 
-* To generate embedded-weighted-quartets, **Python** and some modules such as **pandas** and **numpy** need to be installed.
+	3. Need to have the python scripts **annotate_branches.py**, "**normalize_weights.py** in the same directory as the jar file.
 
-* Linux O.S. is required for using the tool "triplets.soda2103" to generate embedded-weighted-quartets.
-
-* To use branch annotations, the script "annotate_branches.py" uses **DendroPy**. If you would like to use branch annotations, do setup **Python** and **DendroPy**.
 
 ## Input and Output formats for wQFM
 
 ### Input
-wQFM takes as input a **set of weighted quartets** in **Newick format**. Each line contains one quartet, followed by its weight.
+**wQFM** takes as input a **set of weighted quartets** in **Newick format**. Each line contains one quartet, followed by its weight.
 
 	((A,B),(C,D)); 34
 	((A,C),(B,D)); 125
@@ -85,24 +75,30 @@ A **newick tree** with or without **branch support** (multiple annotation levels
 
 ## Running the application.
 <!-- OL -->
-1.  For generating embedded weighted quartets, use the "quartet-controller.sh" as discussed above.
-    
-    Make sure "triplets.soda2103" is in the same path (or you have added correct absolute paths) in the "quartet_count.sh" file.
-
+####  For generating embedded weighted quartets, use the "quartet-controller.sh" as discussed above.
+   
 <!-- Code Blocks -->
 ```bash
-  ./quartet-controller.sh "input-gene-tree-file-name" "output-quartet-file-name"
+./quartet-controller.sh "input-gene-tree-file-name" "output-quartet-file-name"
 ``` 
 
-2. (**Default Mode**) For running the jar file, use the flags -i for input file containing weighted quartets, and -o for the output file name.
+<!--### (**Default Mode**) For running the jar file, use the flags -i for input file containing weighted quartets, and -o for the output file name.-->
+#### To run using weighted quartets as input file, simply use -i and -o flags
 
 <!-- Code Blocks -->
   ```bash
-      # Default mode, uses [s] - [v] as partition score.
-      java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name"
+# Default mode, uses [s] - [v] as partition score.
+java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name"
   ```
 
-3. **To infer branch supports**
+#### To run directly using gene trees, use -im/--input_mode argument.
+  ```bash
+# Uses the -im/--input_mode as gene-trees (see Relevant Multiple Options below for details).
+java -jar wQFM-v1.2.jar -i "input-file-gene-trees" -o "output-file-name" -im gene-trees
+  ```
+
+
+### **To infer branch supports**
 
 wQFM can annotate the branches in the output tree with the quartet support which is defined as the number of quartets in the input set of gene trees that agree with a branch.
 
@@ -127,21 +123,19 @@ java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 1 -pe pyth
 java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-without-annotations" -o "species-tree-with-annotations" -t 1
 ```
 
-4. For large number of taxa, increasing the memory available to Java is recommended. 
-```bash
-    # Example: To supply 8GB of free memory.
-    
-    java -Xmx8000M -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" 
-```
-
-5. *Relevant Multiple Options*
+#### Relevant Multiple Options
 
 ```bash
--i, --input_file=<inputFileNameWeightedQuartets>
-	The input file name/path for weighted quartets
+-i, --input_file=<inputFileName>
+	The input file name/path
+	(default: for weighted quartets, see option -im/--input_mode for details)
 	
 -o, --output_file=<outputFileNameSpeciesTree>
 	The output file name/path for (estimated) species tree
+
+-im, --input_mode=<inputFileMode>
+                  im=<weighted-quartets> (default)
+                  im=<gene-trees> when input file consists of gene trees
 
 -t, --annotations_level=<annotationsLevel>
 	t=0 for none (default)
@@ -169,11 +163,20 @@ java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-with
 ```
 
 
-6. For now, wQFM cannot handle **stars** which is induced due to polytomy in gene trees.
+#### For large number of taxa, increasing the memory available to Java is recommended. 
+```bash
+# Example: To supply 8GB of free memory.
+
+java -Xmx8000M -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" 
+```
+
+#### For now, wQFM cannot handle **stars** which is induced due to polytomy in gene trees.
   
-    So, if you do provide stars in input quartet-file, wQFM will terminate (after giving a prompt).
+So, if you do provide stars in input quartet-file, wQFM will terminate (after giving a prompt).
 
-
+	eg. (a,b,c,d); 10
+	This will be produced as a "quartet" if a star is present in the initial gene tree.
+	If wQFM is run and the input weighted quartets file contains such a star, then wQFM will terminate giving a prompt.
 
 ## Datasets
 The simulated datasets investigated in this study are available [here](https://sites.google.com/eng.ucsd.edu/datasets/home?authuser=0)

@@ -78,7 +78,19 @@ public interface DefaultValues {
     public static String NULL = "NULL";
     public static String ON = "on";
     public static String OFF = "off";
-
+    
+    // for mode of input file
+    public static String INPUT_MODE_WEIGHTED_QUARTETS = "weighted-quartets";
+    public static String INPUT_MODE_GENE_TREES = "gene-trees";
+    public static String INPUT_MODE_UNWEIGHTED_QUARTETS = "unweighted-quartets";
+    public static String INPUT_MODE_SEQUENCES = "sequences";
+    public static String INPUT_MODE_DEFAULT = INPUT_MODE_WEIGHTED_QUARTETS;
+    public static String TEMP_WEIGHTED_QUARTETS_FILE_TO_REMOVE = "TEMP_FILE_PYTHON_FOR_EMBEDDED_QUARTETS";
+    
+    // default file names
+    public static String INPUT_FILE_NAME_WQRTS_DEFAULT = "input-wqrts-for-jar.wqrts";
+    public static String OUTPUT_FILE_NAME_DEFAULT = "test-output-file-wqfm-java.tre";
+    
     //Helper method for printing quartet's status
     public static String GET_QUARTET_STATUS(int status) {
         switch (status) {

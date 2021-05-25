@@ -45,7 +45,7 @@ public class AnnotationsHandler {
                 + " "
                 + Config.OUTPUT_FILE_NAME;
 
-        Helper.runPythonCommand(cmd);
+        Helper.runSystemCommand(cmd);
     }
 
     private static void handleQuartetSupportNormalizedSum(String tree) {
@@ -61,7 +61,7 @@ public class AnnotationsHandler {
                 + " "
                 + "sum";
 
-        Helper.runPythonCommand(cmd);
+        Helper.runSystemCommand(cmd);
     }
 
     private static void handleQuartetSupportNormalizedMax(String tree) {
@@ -77,7 +77,7 @@ public class AnnotationsHandler {
                 + " "
                 + "max";
 
-        Helper.runPythonCommand(cmd);
+        Helper.runSystemCommand(cmd);
     }
 
     public static String GET_ANNOTATIONS_LEVEL_MESSAGE() {
