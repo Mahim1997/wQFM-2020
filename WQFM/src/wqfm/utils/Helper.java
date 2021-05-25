@@ -22,6 +22,11 @@ import wqfm.configs.DefaultValues;
  */
 public class Helper {
 
+    public static void removeFile(String fileName) {
+        String cmd = "rm -f " + fileName;
+        Helper.runSystemCommand(cmd);
+    }
+
     public static boolean isOptionOn(String option) {
         return !option.toLowerCase().equals(DefaultValues.OFF);
     }
@@ -38,7 +43,7 @@ public class Helper {
         return DefaultValues.NULL;
     }
 
-    public static void runPythonCommand(String cmd) {
+    public static void runSystemCommand(String cmd) {
         System.out.println(cmd);
         try {
             Process p = Runtime.getRuntime().exec(cmd);
@@ -56,7 +61,7 @@ public class Helper {
             }
 
         } catch (IOException ex) {
-            System.out.println("Exception while running python command. Exiting.");
+            System.out.println("Exception while running system command <" + cmd + "> ... Exiting.");
             System.exit(-1);
         }
     }
