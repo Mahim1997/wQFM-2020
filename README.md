@@ -5,10 +5,9 @@
 <!-- Headings -->
 # wQFM
 <!-- Strong -->
-wQFM is a quartet amalgamation method. <!--for estimating species trees.--> 
+**wQFM** is a quartet amalgamation method. <!--for estimating species trees.--> 
 <!--It takes a set of estimated gene trees as input and generates a set of weighted quartets and combines these weighted quartet trees into a tree on the full set of taxa using a heuristic aimed at finding a species tree of minimum distance to the set of weighted quartet trees.
 -->
-
 <!--
 ## Background
 Species tree estimation from genes sampled from throughout the whole genome is complicated due to the gene tree-species tree discordance. Incomplete Lineage Sorting (ILS) is one of the most frequent causes for this discordance.
@@ -27,38 +26,27 @@ of wQMC and ASTRAL.
 -->
 
 ## Execution dependencies
-<!-- OL -->
-1. The tool "triplets.soda2103" must be in the same directory as "quartet-controller.sh". Helper scripts such as "quartet_count.sh", "summarize-quartet-counts.py" should be in the same directory as "quartet-controller.sh" and "triplets.soda2103".
 
-2. Need to have "lib" folder in same path as jar file. (This uses some bytecode from [PhyloNet](https://bioinfocs.rice.edu/phylonet) package by Luay Nakhleh)
-    <!--(Check [ASTRAL's github repo](https://github.com/smirarab/ASTRAL) for more details on lib [uses PhyloNet package])-->
-    (This is needed to reroot the tree with respect to an outgroup.)
-    
-3. Need to have the python scripts "annotate_branches.py", "normalize_weights.py" in the same directory as the jar file.
+### Packages, Programming Languages and Operating Systems Requirements
+- Java (required to run the main wQFM application).
+- Python, Pandas, NumPy, Linux O.S. required to generate weighted quartets. This is done by using the combination of the helper scripts **quartet-controller.sh**, **quartet_count.sh**, **summarize-quartet-counts.py**, **generate-weighted-embedded-quartets.py** and the tool **triplets.soda2103** (requires Linux O.S.)
+- Python, DendroPy needed for branch annotations while using the helper script **annotate_branches.py**.
 
+### Files Structure
 
-## Installation
-<!-- UL -->
-* There is no installation required to run wQFM-v1.2.jar
+- #### If you download the wQFM-v1.2.zip and extract the contents, all the files will be present in the required structure (described below)
 
-* To download, use either of the following approach:
+	1. The tool **triplets.soda2103** must be in the same directory as the helper scripts **quartet-controller.sh**, **quartet_count.sh**, **summarize-quartet-counts.py** and **generate-weighted-embedded-quartets.py**.
 
-    * You can clone/download the whole repository and use required scripts and wQFM-v1.2.jar to run the application.
+	2. Need to have **lib** folder (contains **PhyloNet jar** and **Picocli jar**) in same path as the **wQFM jar** file.
 
-    * Alternatively, you can also download and extract the "wQFM-v1.2.zip" file which contains relevant scripts for generating embedded-weighted-quartets and running wQFM-v1.2.jar
+	3. Need to have the python scripts **annotate_branches.py**, "**normalize_weights.py** in the same directory as the jar file.
 
-* wQFM is a java-based application, and hence should run in any environment (Windows, Linux, Mac, etc.) as long as java is installed.
-
-* To generate embedded-weighted-quartets, **Python** and some modules such as **pandas** and **numpy** need to be installed.
-
-* Linux O.S. is required for using the tool "triplets.soda2103" to generate embedded-weighted-quartets.
-
-* To use branch annotations, the script "annotate_branches.py" uses **DendroPy**. If you would like to use branch annotations, do setup **Python** and **DendroPy**.
 
 ## Input and Output formats for wQFM
 
 ### Input
-wQFM takes as input a **set of weighted quartets** in **Newick format**. Each line contains one quartet, followed by its weight.
+**wQFM** takes as input a **set of weighted quartets** in **Newick format**. Each line contains one quartet, followed by its weight.
 
 	((A,B),(C,D)); 34
 	((A,C),(B,D)); 125
@@ -137,11 +125,16 @@ java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-with
 5. *Relevant Multiple Options*
 
 ```bash
--i, --input_file=<inputFileNameWeightedQuartets>
-	The input file name/path for weighted quartets
+-i, --input_file=<inputFileName>
+	The input file name/path
+	(default: for weighted quartets, see option -im/--input_mode for details)
 	
 -o, --output_file=<outputFileNameSpeciesTree>
 	The output file name/path for (estimated) species tree
+
+im, --input_mode=<inputFileMode>
+                  im=<weighted-quartets> (default)
+                  im=<gene-trees> when input file consists of gene trees
 
 -t, --annotations_level=<annotationsLevel>
 	t=0 for none (default)
