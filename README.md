@@ -45,7 +45,14 @@ The input is a **set of weighted quartets** in **Newick format**. Each line cont
 
 #### Input file containing gene trees (optional). See *-im/--input_mode* option as described below.
 The input is a **set of gene trees** in **Newick format**. Each line contains one gene tree.
-Weighted quartets (with frequency as weight) will be generated automatically in the file named **input-wqrts-for-jar.wqrts**
+
+	((3,((11,(10,((5,6),(9,(7,8))))),4)),2,1);
+	(3,(2,(4,(11,(9,((7,8),((5,6),10)))))),1);
+	(((2,(11,((5,6),((7,8),(10,9))))),3),4,1);
+	(2,((11,(10,((8,7),((6,5),9)))),(4,3)),1);
+	((11,((10,((7,6),(9,8))),5)),((4,2),3),1);
+
+Weighted quartets (with frequency as weight) will be generated automatically in the file named **input-wqrts-for-jar.wqrts** and wQFM will be run on this weighted quartets file.
 
 
 ### Output
