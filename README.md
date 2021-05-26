@@ -6,24 +6,6 @@
 # wQFM
 <!-- Strong -->
 **wQFM** is a quartet amalgamation method. <!--for estimating species trees.--> 
-<!--It takes a set of estimated gene trees as input and generates a set of weighted quartets and combines these weighted quartet trees into a tree on the full set of taxa using a heuristic aimed at finding a species tree of minimum distance to the set of weighted quartet trees.
--->
-<!--
-## Background
-Species tree estimation from genes sampled from throughout the whole genome is complicated due to the gene tree-species tree discordance. Incomplete Lineage Sorting (ILS) is one of the most frequent causes for this discordance.
-Quartet-based summary methods for estimating species trees from a collection of
-gene trees are becoming popular due to their high accuracy and statistical guarantee
-under ILS.
-We present wQFM, a highly accurate method for species tree estimation
-from a collection of gene trees by extending the quartet FM (QFM) algorithm to
-handle weighted quartets. wQFM was assessed on a collection of simulated and real
-biological dataset including the avian phylogeneomic dataset which is one of the
-largest phylongenomic dataset to date. We compared wQFM to wQMC, which is
-the best alternate method for weighted quartet amalgamation, and with ASTRAL
-which is considered to be the most accurate and widely used species tree estimation
-method. Our results suggest that wQFM matches or improves upon the accuracies
-of wQMC and ASTRAL.
--->
 
 ## Execution dependencies
 
@@ -48,7 +30,10 @@ of wQMC and ASTRAL.
 ## Input and Output formats for wQFM
 
 ### Input
-**wQFM** takes as input a **set of weighted quartets** in **Newick format**. Each line contains one quartet, followed by its weight.
+
+#### Input file containing weighted quartets (default)
+<!--**wQFM** takes as input a **set of weighted quartets** in **Newick format**. Each line contains one quartet, followed by its weight.-->
+The input is a **set of weighted quartets** in **Newick format**. Each line contains one quartet, followed by its weight.
 
 	((A,B),(C,D)); 34
 	((A,C),(B,D)); 125
@@ -56,6 +41,12 @@ of wQMC and ASTRAL.
 	((A,B),(E,F)); 256
 	((C,D),(E,F)); 992
 	((A,C),(E,F)); 121	
+
+
+#### Input file containing gene trees (optional). See *-im/--input_mode* option as described below.
+The input is a **set of gene trees** in **Newick format**. Each line contains one gene tree.
+Weighted quartets (with frequency as weight) will be generated automatically in the file named **input-wqrts-for-jar.wqrts**
+
 
 ### Output
 A **newick tree** with or without **branch support** (multiple annotation levels as described below)
