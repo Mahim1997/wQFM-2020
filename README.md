@@ -42,7 +42,7 @@ of wQMC and ASTRAL.
 
 	2. Need to have **lib** folder (contains **PhyloNet jar** and **Picocli jar**) in same path as the **wQFM-v1.2.jar** file.
 
-	3. Need to have the python scripts **annotate_branches.py**, "**normalize_weights.py** in the same directory as the jar file.
+	3. Need to have the python scripts **annotate_branches.py**, **normalize_weights.py** in the same directory as the jar file.
 
 
 ## Input and Output formats for wQFM
@@ -75,7 +75,7 @@ A **newick tree** with or without **branch support** (multiple annotation levels
 
 ## Running the application.
 <!-- OL -->
-####  For generating embedded weighted quartets, use the "quartet-controller.sh" as discussed above.
+####  For generating embedded weighted quartets, use the script "quartet-controller.sh".
    
 <!-- Code Blocks -->
 ```bash
