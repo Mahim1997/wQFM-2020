@@ -75,7 +75,7 @@ A **newick tree** with or without **branch support** (multiple annotation levels
 
 ## Running the application.
 <!-- OL -->
-####  For generating embedded weighted quartets, use the "quartet-controller.sh" as discussed above.
+####  For generating embedded weighted quartets, use the script "quartet-controller.sh".
    
 <!-- Code Blocks -->
 ```bash
