@@ -1,11 +1,16 @@
-# wQFM-2020
-**wQFM (Version 1.2)**
-
-
-<!-- Headings -->
 # wQFM
-<!-- Strong -->
-**wQFM** is a quartet amalgamation method. <!--for estimating species trees.--> 
+#### wQFM (version 1.2)
+This repository contains the official implementation of <!--code and helper scripts of--> our paper [**"wQFM: Highly Accurate Genome-scale Species Tree Estimation from Weighted Quartets"**](https://academic.oup.com/bioinformatics/advance-article-abstract/doi/10.1093/bioinformatics/btab428/6292084) accepted in ***Bioinformatics, 2021***.
+
+## Short Description
+
+**wQFM** is a quartet amalgamation technique for estimating species trees. 
+
+wQFM combines a set of weighted quartets into a tree on the full set of taxa using a heuristic aimed at finding a species tree of minimum distance to the set of weighted quartets
+
+
+<!--wQFM uses a two-step technique in which we first use the input set of estimated gene trees to produce a set of weighted four-taxon trees (*weighted quartets*).-->
+
 
 ## Execution dependencies
 
@@ -231,6 +236,25 @@ as well as includes the bootstrap supports on the species trees estimated by bes
 The contents of this repository are licensed under the **Apache License, Version 2.0**.
 
 See [LICENSE.md](https://github.com/Mahim1997/wQFM-2020/blob/master/LICENSE.md) for the full license text.
+
+## Citation (BibTeX)
+If you wish to use any part of this repository, please do cite our paper.
+
+```
+@article{10.1093/bioinformatics/btab428,
+    author = {Mahbub, Mahim and Wahab, Zahin and Reaz, Rezwana and Rahman, M Saifur and Bayzid, Md. Shamsuzzoha},
+    title = "{wQFM: Highly Accurate Genome-scale Species Tree Estimation from Weighted Quartets}",
+    journal = {Bioinformatics},
+    year = {2021},
+    month = {06},
+    abstract = "{Species tree estimation from genes sampled from throughout the whole genome is complicated due to the gene tree-species tree discordance. Incomplete lineage sorting (ILS) is one of the most frequent causes for this discordance, where alleles can coexist in populations for periods that may span several speciation events. Quartet-based summary methods for estimating species trees from a collection of gene trees are becoming popular due to their high accuracy and statistical guarantee under ILS. Generating quartets with appropriate weights, where weights correspond to the relative importance of quartets, and subsequently amalgamating the weighted quartets to infer a single coherent species tree can allow for a statistically consistent way of estimating species trees. However, handling weighted quartets is challenging.We propose wQFM, a highly accurate method for species tree estimation from multi-locus data, by extending the quartet FM (QFM) algorithm to a weighted setting. wQFM was assessed on a collection of simulated and real biological datasets, including the avian phylogenomic dataset which is one of the largest phylogenomic datasets to date. We compared wQFM with wQMC, which is the best alternate method for weighted quartet amalgamation, and with ASTRAL, which is one of the most accurate and widely used coalescent-based species tree estimation methods. Our results suggest that wQFM matches or improves upon the accuracy of wQMC and ASTRAL.wQFM is available in open source form at https://github.com/Mahim1997/wQFM-2020Supplementary data are available at Bioinformatics online.}",
+    issn = {1367-4803},
+    doi = {10.1093/bioinformatics/btab428},
+    url = {https://doi.org/10.1093/bioinformatics/btab428},
+    note = {btab428},
+    eprint = {https://academic.oup.com/bioinformatics/advance-article-pdf/doi/10.1093/bioinformatics/btab428/38489242/btab428.pdf},
+}
+```
 
 ## Bug Report
 We are always looking to improve our codebase. 
