@@ -13,7 +13,7 @@ public class Config {
     public static boolean SET_RIGHT_TO_1 = false; //false: dual-bin (default), true: right will be set to 1.
     public static double SMALLEPSILON = 1.0E-6; //if cumulative gain of iteration < this_num then stop
     public static boolean DEBUG_DUMMY_NAME = false; //true -> X1, X2 like that & false -> MZCY ... weird name.
-    public static int PARTITION_SCORE_MODE = DefaultValues.PARTITION_SCORE_FULL_DYNAMIC; //0->[s]-[v], 1->[s]-0.5[v], 2->[s]-[v]-[d], 3->3[s]-2[v]
+    public static int PARTITION_SCORE_MODE = DefaultValues.PARITTION_SCORE_COMMAND_LINE; //0->[s]-[v], 1->[s]-0.5[v], 2->[s]-[v]-[d], 3->3[s]-2[v]
     public static boolean BIN_LIMIT_LEVEL_1 = false; // by default: false (bin on all levels); true -> only bin level 1
     public static double CUT_OFF_LIMIT_BINNING = 0.1; // use 0.1 [default]
     

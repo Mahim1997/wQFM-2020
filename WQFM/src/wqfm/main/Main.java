@@ -15,8 +15,8 @@ import wqfm.utils.TreeHandler;
 @CommandLine.Command(name = "wQFM", mixinStandardHelpOptions = true, version = Main.WQFM_VERSION,
         description = "Runing " + Main.WQFM_VERSION)
 public class Main implements Callable<Integer> {
-
-    public static boolean DEBUG_MODE = false;
+    
+    public static boolean DEBUG_MODE = true;
 
     //    public static String INPUT_FILE_NAME = "input_files/weighted_quartets_avian_biological_dataset";
     public static String INPUT_FILE_NAME_PLACE_HOLDER = "input_files/wqrts_11Tax_est_5G_R1";
@@ -58,6 +58,10 @@ public class Main implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception { // your business logic goes here...
+        return runwQFM_CommandLine();
+    }
+    
+    private int runwQFM_CommandLine(){
         Config.INPUT_FILE_NAME = this.inputFileName;
         Config.OUTPUT_FILE_NAME = this.outputFileNameSpeciesTree;
         
@@ -129,7 +133,7 @@ public class Main implements Callable<Integer> {
         return 0;
     }
 
-    private static void runwQFM() {
+    public static void runwQFM() {
         // Call wQFM runner here. ?
         System.out.println("================= **** ========== Running " + WQFM_VERSION + " ============== **** ====================");
 
