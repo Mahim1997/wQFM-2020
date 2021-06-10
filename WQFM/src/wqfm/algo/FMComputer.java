@@ -46,6 +46,10 @@ public class FMComputer {
     private Map<Integer, Bipartition_8_values> mapCandidateTax_vs_8vals; //after hypothetical swap [i.e. IF this is taken as snapshot, no need to recalculate]
     private final List<StatsPerPass> listOfPerPassStatistics;
 
+    // for not going up in endless loop condition.
+    private double prevCumulativeMax;
+    private boolean isFirstTime;
+
     public FMComputer(CustomDSPerLevel customDS,
             Map<Integer, Integer> mapInitialBipartition,
             Bipartition_8_values initialBip_8_vals, int level) {
@@ -363,6 +367,13 @@ public class FMComputer {
         //only when max-cumulative-gain is GREATER than zero, we will change, otherwise return the initial bipartition of this iteration
 
         if (max_cumulative_gain_of_current_iteration > Config.SMALLEPSILON) {
+//            System.out.println("L 364. max_cumulative_gain_of_current_iteration = " + max_cumulative_gain_of_current_iteration + " , return true, repeat.");
+
+            // Check if this is not first time, and previous was the same as this one.
+            if((this.isFirstTime == false) && (max_cumulative_gain_of_current_iteration == this.prevCumulativeMax)){
+                return false;
+            }
+            
             this.bipartitionMap = new HashMap<>(statOfMaxCumulativeGainBox.map_final_bipartition);
             this.initialBipartition_8_values = statOfMaxCumulativeGainBox._8_values_chosen_for_this_pass;
             this.listOfPerPassStatistics.clear();
@@ -371,8 +382,15 @@ public class FMComputer {
             for (int tax : this.customDS.taxa_list_int) {
                 this.lockedTaxaBooleanMap.put(tax, Boolean.FALSE);
             }
+            
+            // change prev to this cumulative max
+            this.prevCumulativeMax = max_cumulative_gain_of_current_iteration;
+            
             return true;
         }
+
+//        System.out.println("L 376. level = " + this.level + " , max_cumulative_gain_of_current_iteration = "
+//         + max_cumulative_gain_of_current_iteration + " , small_epsilone = " + Config.SMALLEPSILON + " , return false.");
         //Set initial map to list's 1st item's map.
         return false;
     }
@@ -382,6 +400,7 @@ public class FMComputer {
         Map<Integer, Integer> map_previous_iteration;//= new HashMap<>();
         boolean willIterateMore = true;
         int iterationsFM = 0; //can have stopping criterion for 10k iterations ?
+
         while (true) { //stopping condition
             if (iterationsFM > Config.MAX_ITERATIONS_LIMIT) { //another stopping criterion.
                 System.out.println("[FMComputer L258.] Thread (" + Thread.currentThread().getName()
@@ -397,6 +416,7 @@ public class FMComputer {
             } catch (InterruptedException ex) {
                 Logger.getLogger(FMComputer.class.getName()).log(Level.SEVERE, null, ex);
             }
+
             willIterateMore = changeAndCheckAfterFMSingleIteration();
             if (willIterateMore == false) {
                 this.bipartitionMap = map_previous_iteration; // just change as previous map
@@ -409,6 +429,7 @@ public class FMComputer {
             if (willIterateMore == false) {
                 break;
             }
+            this.isFirstTime = false;
         }
 
         FMResultObject object = new FMResultObject(this.customDS, this.level); //pass the parent's customDS as reference
