@@ -124,7 +124,14 @@ public class CustomDSPerLevel {
                 .reduce(s, String::concat);
         return s;
     }
-    
+
+    public String onlyQuartets() {
+        return this.quartet_indices_list_unsorted
+                .stream()
+                .map(x -> this.initial_table1_of_list_of_quartets.get(x))
+                .map(String::valueOf)
+                .collect(Collectors.joining("\n"));
+    }
 
     public void printSortedQuartetsTable() {
 

@@ -47,7 +47,7 @@ public class FMRunner {
         String final_tree_decoded = Helper.getFinalTreeFromMap(final_tree, InitialTable.map_of_int_vs_str_tax_list);
         System.out.println(final_tree_decoded);
         Helper.writeToFile(final_tree_decoded, Config.OUTPUT_FILE_NAME);
-        
+
         return final_tree_decoded;
     }
 
@@ -78,7 +78,6 @@ public class FMRunner {
         InitialBipartition initialBip = new InitialBipartition();
         Map<Integer, Integer> mapInitialBipartition = initialBip.getInitialBipartitionMap(customDS_this_level);
 
-
         if (Config.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
             System.out.println("L 84. FMComputer. Printing initialBipartition.");
             Helper.printPartition(mapInitialBipartition, DefaultValues.LEFT_PARTITION, DefaultValues.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list);
@@ -94,14 +93,19 @@ public class FMRunner {
         CustomDSPerLevel customDS_left = fmResultObject.customDS_left_partition;
         CustomDSPerLevel customDS_right = fmResultObject.customDS_right_partition;
 
-        //Debug printing begin
-        //        System.out.println("-------------- After Level " + level + " LEFT Quartets -------------------- ");
-        //        System.out.println(customDS_left.onlyQuartetIndices());
-        //        System.out.println(customDS_left.taxa_list_int);
-        //        System.out.println("============== After Level " + level + " RIGHT Quartets ==================== ");
-        //        System.out.println(customDS_right.onlyQuartetIndices());
-        //        System.out.println(customDS_right.taxa_list_int);
-        //Debug printing end
+//        Debug printing begin
+        System.out.println("-------------- After Level " + level + " LEFT Quartets -------------------- ");
+        System.out.println(customDS_left.onlyQuartets());
+
+        System.out.print("LEFT TAXA LIST: ");
+        System.out.println(customDS_left.taxa_list_int);
+
+        System.out.println("============== After Level " + level + " RIGHT Quartets ==================== ");
+        System.out.println(customDS_right.onlyQuartets());
+
+        System.out.print("RIGHT TAXA LIST: ");
+        System.out.println(customDS_right.taxa_list_int);
+//        Debug printing end
         /////////////////// Beginning of Recursion \\\\\\\\\\\\\\\\\\\\\\\\\\\
         int dummyTaxon = fmResultObject.dummyTaxonThisLevel;
         String left_tree_unrooted = recursiveDivideAndConquer(customDS_left, level, initialTable);

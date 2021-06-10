@@ -11,7 +11,7 @@ public class Config {
     public static double STEP_SIZE_BINNING = 0.01; //always used 0.01 for experiments (default)
     public static double THRESHOLD_BINNING = 0.9; // use 0.9 [default]
     public static boolean SET_RIGHT_TO_1 = false; //false: dual-bin (default), true: right will be set to 1.
-    public static double SMALLEPSILON = 1.0E-6; //if cumulative gain of iteration < this_num then stop
+    public static double SMALLEPSILON = 0; //if cumulative gain of iteration < this_num then stop
     public static boolean DEBUG_DUMMY_NAME = false; //true -> X1, X2 like that & false -> MZCY ... weird name.
     public static int PARTITION_SCORE_MODE = DefaultValues.PARITTION_SCORE_COMMAND_LINE; //0->[s]-[v], 1->[s]-0.5[v], 2->[s]-[v]-[d], 3->3[s]-2[v]
     public static boolean BIN_LIMIT_LEVEL_1 = false; // by default: false (bin on all levels); true -> only bin level 1
@@ -19,7 +19,7 @@ public class Config {
     
     public static boolean DEBUG_MODE_TESTING = true; // true -> while running from netbeans, false -> run from cmd
     public static boolean NORMALIZE_DUMMY_QUARTETS = true; // true -> divide by count (use mean), false -> simply sum
-    public static boolean DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS = false; // printing gains, default: false (otherwise too much cluttered)
+    public static boolean DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS = true; // printing gains, default: false (otherwise too much cluttered)
 
     public static int MAX_ITERATIONS_LIMIT = 1000000; //can we keep it as another stopping-criterion ? [100k]
 
