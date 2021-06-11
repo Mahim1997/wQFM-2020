@@ -169,9 +169,9 @@ public class FMComputer {
         3.  LOCK the bestTaxaToMove and put corresponding stats in map
          */
         if (this.mapCandidateGainsPerListTax.isEmpty() == true) {
-            for (int key : this.lockedTaxaBooleanMap.keySet()) {
+            this.lockedTaxaBooleanMap.keySet().forEach((key) -> {
                 this.lockedTaxaBooleanMap.put(key, Boolean.TRUE); //ALL LEAD TO SINGLETON BIPARTITION .... [LOCK ALL THE TAXA]
-            }
+            });
         }//do not add the prospective steps thing.
         else {
 
@@ -301,7 +301,6 @@ public class FMComputer {
                 + Helper.getPartition(bipartitionMap, DefaultValues.LEFT_PARTITION, DefaultValues.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list)
                 + " , small_epsilon = " + Config.SMALLEPSILON + " , return false.");
          */
-        //Set initial map to list's 1st item's map.
         return false;
     }
 
@@ -334,21 +333,7 @@ public class FMComputer {
             this.isFirstTime = false;
         }
 
-        /////////////////////////////////////// DEBUGGING \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-//        System.out.println("");
-//        if (this.bipartitionMap.equals(this.initial_bipartition_map_this_level_FIXED)) {
-//            System.out.println(">>>>>>>>>>>>>>>> INITIAL MAP SAME AS RETURNED MAP OF FM PASS this level = " + this.level);
-//
-//        } else {
-//            System.out.println(">>>><<<<<-------- NOT EQUAL MAP AS RETURNED MAP OF FM PASS this level = " + this.level);
-//        }
-//
-//        System.out.println("INITIAL  ==> " + this.initial_bipartition_8_values_FIXED.toString());
-//        Helper.printPartition(this.initial_bipartition_map_this_level_FIXED, Status.LEFT_PARTITION, Status.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list);
-//
-//        System.out.println("RETURNED ==> " + this.initialBipartition_8_values.toString());
-//        Helper.printPartition(bipartitionMap, Status.LEFT_PARTITION, Status.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list);
-        //////////////////////////////////// Create results and return \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        // Create results and return
         FMResultObject object = new FMResultObject(this.customDS, this.level); //pass the parent's customDS as reference
         object.createFMResultObjects(this.bipartitionMap); //pass THIS level's final-bipartition to get P_left,Q_left,P_right,Q_right
         return object;
