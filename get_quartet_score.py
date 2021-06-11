@@ -26,42 +26,30 @@ def get_input_wqrts(input_file_wqrts):
 
 
 """Compute the satisfied quartets for one branch"""
-def compute_satisfied_wqrts_one_branch(bipartition, dict_quartets, dictionary_quartets_satisfied, taxon_namespace):
+def compute_satisfied_wqrts_one_branch(bipartition, dict_quartets, taxon_namespace):
     map_bipartition = getPartitionMap(str(bipartition), taxon_namespace)
-    print(map_bipartition)
+    
+    satisfied_wqrts = 0
 
-    for quartet in dict_quartets:
-        (t1, t2, t3, t4) = quartet
-        if isQuartetSatisfied(map_bipartition, quartet):
-            dictionary_quartets_satisfied[dictionary_quartets_satisfied] = dict_quartets[quartet]
+    # https://stackoverflow.com/questions/11941817/how-to-avoid-runtimeerror-dictionary-changed-size-during-iteration-error
+    for quartet in list(dict_quartets):
+        if isQuartetSatisfied(map_bipartition, quartet, includes_weight=False):
+            satisfied_wqrts += dict_quartets[quartet]
+            dict_quartets.pop(quartet, None) # remove from dictionary of quartets
 
+    return satisfied_wqrts
 
 """Compute the satisfied quartets for all branches of the tree"""
 def compute_satisfied_wqrts(tree, dict_quartets):
-    dictionary_quartets_satisfied = {}
-
     tree.encode_bipartitions() ## encode bipartitions to bitmaps
-    support_values = {} ## Map for support values
+    satisfied_wqrts = 0
 
     for nd in tree:
         if nd.bipartition.is_trivial() == False:
+            # print(f"\nBip = {nd.bipartition.leafset_as_newick_string(taxon_namespace=tree.taxon_namespace)})
+            satisfied_wqrts += compute_satisfied_wqrts_one_branch(nd.bipartition, dict_quartets, tree.taxon_namespace)
 
-            # print(f"\nBip = {nd.bipartition.leafset_as_newick_string(taxon_namespace=tree.taxon_namespace)}, \
-                # is_trivial = {nd.bipartition.is_trivial()}")
-
-            compute_satisfied_wqrts_one_branch(nd.bipartition, dict_quartets, dictionary_quartets_satisfied, tree.taxon_namespace)
-
-            # support_values[nd.bipartition] = get_support_value(nd.bipartition) if nd.label is not None else 1.0
-            # support_values[nd.bipartition] = get_support_value(nd.bipartition, tree.taxon_namespace, list_quartets) if nd.label is None else -1.0
-
-    # tree.encode_bipartitions()
-
-    # TOTAL_SATISFIED_QUARTETS = -1
-
-    # for nd in tree:
-    #     # nd.label = support_values.get(nd.bipartition, float(TOTAL_SATISFIED_QUARTETS))
-    #     nd.label = support_values.get(nd.bipartition, "")
-    # return tree
+    return satisfied_wqrts
 
 
 def main(input_file_wqrts, stree_file, qscore_level, qscore_output_file=None):
@@ -69,8 +57,12 @@ def main(input_file_wqrts, stree_file, qscore_level, qscore_output_file=None):
 
     tree = read_tree(stree_file)
 
-    compute_satisfied_wqrts(tree, dict_quartets)
+    satisfied_wqrts = compute_satisfied_wqrts(tree, dict_quartets)
 
+    print(satisfied_wqrts, total_weight_wqrts)
+
+
+#################################################################################################
 
 if __name__ == '__main__':
     

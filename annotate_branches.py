@@ -65,8 +65,11 @@ def getPartitionMap(bipartition, taxon_namespace):
 
 """ Function to check if given quartet is satisfied or not.
 """
-def isQuartetSatisfied(map_bipartition, quartet):
-    (t0, t1, t2, t3, _) = quartet ## unwrap the quartet
+def isQuartetSatisfied(map_bipartition, quartet, includes_weight=True):
+    if includes_weight == False:
+        (t0, t1, t2, t3) = quartet
+    else: # by default
+        (t0, t1, t2, t3, _) = quartet ## unwrap the quartet
     cond1 = map_bipartition[t0] == map_bipartition[t1] ## check if sisters 1 are in same side
     cond2 = map_bipartition[t2] == map_bipartition[t3] ## check if sisters 2 are in same side
     cond3 = map_bipartition[t0] != map_bipartition[t2] ## check if both sisters are in opposite sides.
