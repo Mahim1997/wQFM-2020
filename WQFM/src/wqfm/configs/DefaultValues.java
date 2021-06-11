@@ -6,8 +6,7 @@ package wqfm.configs;
  */
 public interface DefaultValues {
 
-    // script names.
-    public static String SCRIPT_BRANCH_ANNOTATIONS_QUARTET_SUPPORT = "annotate_branches.py";
+
 //    public static String SCRIPT_BRANCH_ANNOTATIONS_QUARTET_SUPPORT = "src/wqfm/scripts/annotate_branches.py";
 
     // Use this for logical biparititoning
@@ -93,6 +92,7 @@ public interface DefaultValues {
     public static int QUARTET_SCORE_LEVEL_0_NONE = 0;
     public static int QUARTET_SCORE_LEVEL_1_WQRTS = 1;
     public static int QUARTET_SCORE_LEVEL_2_WQRTS_PERCENT_TOTAL_QUARTETS = 2;
+
     
     //Helper method for printing quartet's status
     public static String GET_QUARTET_STATUS(int status) {

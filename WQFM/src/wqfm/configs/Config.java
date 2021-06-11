@@ -31,5 +31,7 @@ public class Config {
     
     public static String INPUT_MODE = DefaultValues.INPUT_MODE_DEFAULT;
     
+    
+    public static String QUARTET_SCORE_OUTPUT_FILE = "quartet-score-output-file.log";
 
 }
