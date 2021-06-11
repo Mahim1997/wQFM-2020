@@ -24,7 +24,7 @@ public class Main implements Callable<Integer> {
     public static String SPECIES_TREE_FILE_NAME = Config.OUTPUT_FILE_NAME; // for now both will be the same
     
     
-    public static final String WQFM_VERSION = "wQFM v1.2";
+    public static final String WQFM_VERSION = "wQFM v1.3";
     public static String PYTHON_ENGINE = "python3";
 
 //    @CommandLine.Option(names = {"-i", "--input_file"}, required = false, description = "The input file name/path for weighted quartets")
