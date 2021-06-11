@@ -1,15 +1,32 @@
 '''
     Prints/Outputs the total satisfied weighted quartets, total quartets of input wqrt file, percent of quartets satisfied
 '''
-
-from annotate_branches import getSortedQuartet, read_tree, getPartitionMap, isQuartetSatisfied, LEFT, RIGHT
+import re
 import sys
-import dendropy
-
+import os
+import subprocess
 
 def printUsageExit():
     print("python get_quartet_score.py <input-wqrts> <stree-reference> <quartet-score-level> [quartet-score-output-file]")
     sys.exit()
+
+""" Get sorted quartets a,b|c,d: w ... ALWAYS ascending order """
+def getSortedQuartet(line):
+    stringsReplace = ["\n", ";", "(", ")"]
+    for s in stringsReplace:
+        line = line.replace(s, "") ## remove these chars
+        
+    line = line.replace(" ", ",")  ## replace WHITESPACE with COMMA    
+    arr = line.split(",") ## split by COMMA
+
+    arr[0:2] = sorted(arr[0:2])
+    arr[2:4] = sorted(arr[2:4])
+
+    if arr[0] > arr[2]:
+        arr[0:2], arr[2:4] = arr[2:4], arr[0:2]
+
+    return (arr[0], arr[1], arr[2], arr[3], float(arr[4]))
+    
 
 
 """Get dictionary of input weighted list_quartets"""
@@ -27,65 +44,74 @@ def get_input_wqrts(input_file_wqrts):
     return d, total_weight_wqrts
 
 
-
-"""Compute the satisfied quartets for one branch"""
-def compute_satisfied_wqrts_one_branch(bipartition, dict_quartets, taxon_namespace):
-    map_bipartition = getPartitionMap(str(bipartition), taxon_namespace)
-    
-    satisfied_wqrts = 0
-
-    # https://stackoverflow.com/questions/11941817/how-to-avoid-runtimeerror-dictionary-changed-size-during-iteration-error
-    for quartet in list(dict_quartets):
-        if isQuartetSatisfied(map_bipartition, quartet, includes_weight=False):
-            satisfied_wqrts += dict_quartets[quartet]
-            dict_quartets.pop(quartet, None) # remove from dictionary of quartets
-
-    return satisfied_wqrts
-
-"""Compute the satisfied quartets for all branches of the tree"""
-def compute_satisfied_wqrts(tree, dict_quartets):
-    tree.encode_bipartitions() ## encode bipartitions to bitmaps
-    satisfied_wqrts = 0
-
-    for nd in tree:
-        if nd.bipartition.is_trivial() == False:
-            # print(f"\nBip = {nd.bipartition.leafset_as_newick_string(taxon_namespace=tree.taxon_namespace)})
-            satisfied_wqrts += compute_satisfied_wqrts_one_branch(nd.bipartition, dict_quartets, tree.taxon_namespace)
-
-    return satisfied_wqrts
-
-
-def get_string_output(qscore_level, satisfied_wqrts, total_weight_wqrts):
-    if qscore_level == 1:
-        s = str(satisfied_wqrts)
-    
-    elif qscore_level == 2:
-        if total_weight_wqrts == 0:
-            percent_satisfied = 0
-        else:
-            percent_satisfied = float(satisfied_wqrts) / float(total_weight_wqrts)
+def get_sorted_weights(dict_quartets, dict_quartets_stree):
+    # dict_quartets may/may not be sorted wqrts
+    for quartet in dict_quartets:
         
-        s = str(satisfied_wqrts) + "\t" + str(total_weight_wqrts) + "\t" + str(percent_satisfied)
-    else:
-        s = ""
-    return s
+        print(quartet)
+        
+        w = dict_quartets[quartet]
+
+        quartet_sorted = getSortedQuartetFrom4TaxSequence(quartet[0], quartet[1], quartet[2], quartet[3], w)
+        
+        print(quartet_sorted)
+        break
+
+def get_dictionary_quartets(inputFile):
+    os.system("chmod u+x triplets.soda2103")
+    dict_quartets = {} # empty dictionary
+    tmp_file_name = "TEMP_FILE_PYTHON_FOR_EMBEDDED_QUARTETS"
+
+    with open(inputFile) as fin:
+        for line in fin: # for each gene tree
+            line = line.replace("\n", "")
+            # print("<", line, ">")
+            with open(tmp_file_name, 'w') as f_out_temp:
+                f_out_temp.write(line) # write that gene tree to temporary file.
+
+            result = subprocess.run(['./triplets.soda2103', 'printQuartets', tmp_file_name], stdout=subprocess.PIPE)
+            results_str = result.stdout.decode('utf-8')
+            results_str = results_str.strip() # remove the empty line at the end
+            results_str = re.sub(".*: ", "", results_str) # remove alpha,beta,gamma names
+            # starting, add (( [two open brackets]
+            results_str = re.sub("\n", "));\n((", results_str) # add initial brackets
+            results_str = re.sub("^", "((", results_str) # for the very first quartet
+            results_str = re.sub("$", "));", results_str) # for the very last quartet
+
+            results_str = re.sub(" ", ",", results_str) # change white space to comma, ((11,9,|,5,6));
+            results_str = re.sub(",\|,", "),(", results_str) # change ,|, to ),( to form ((11,9),(5,6));
+
+            results_array = results_str.split("\n") # split to form each quartets
+
+            # print(results_array)
+
+            for line_result in results_array:
+                if line_result not in dictionary_line: # THIS line doesn't exist in dictionary
+                    dictionary_line[line_result] = 1 # initialize to 1
+                else: # THIS line does exist in dictionary, so increment
+                    dictionary_line[line_result] += 1
+
+    os.remove(tmp_file_name)
+    return dict_quartets
+
 
 def main(input_file_wqrts, stree_file, qscore_level, qscore_output_file=None):
     dict_quartets, total_weight_wqrts = get_input_wqrts(input_file_wqrts)
 
-    tree = read_tree(stree_file)
+    dict_quartets_stree = get_dictionary_quartets(stree_file)
 
-    satisfied_wqrts = compute_satisfied_wqrts(tree, dict_quartets)
+    get_sorted_weights(dict_quartets, dict_quartets_stree)
 
+    print(dict_quartets)
+    print(dict_quartets_stree)
 
+    # s = get_string_output(qscore_level, satisfied_wqrts, total_weight_wqrts)
+    # print(s)
 
-    s = get_string_output(qscore_level, satisfied_wqrts, total_weight_wqrts)
-    print(s)
-
-    if qscore_output_file != None:
-        with open(qscore_output_file, mode='w') as fout:
-            fout.write(s)
-            fout.write("\n")
+    # if qscore_output_file != None:
+    #     with open(qscore_output_file, mode='w') as fout:
+    #         fout.write(s)
+    #         fout.write("\n")
 
 
 #################################################################################################
