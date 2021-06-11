@@ -10,16 +10,6 @@ import wqfm.configs.DefaultValues;
  * @author mahim
  */
 public class TaxaUtils {
-//    public static String getDummyTaxonName(int level) {
-//        if (Main.DEBUG_DUMMY_NAME == true) {
-//            String dummyTax = "X" + String.valueOf(level); //debug
-//            return dummyTax;
-//        } else {
-//            String dummyTax = "DUMMY_MZCR_" + String.valueOf(level); //arbitrary names so as to not get mixed up with actual names
-//            return dummyTax;
-//        }
-//    }
-    
 
     public static int getDummyTaxonName(int level) {
         return (InitialTable.TAXA_COUNTER + level); //0->47 [original tax], then 48 and above ar DUMMY taxa
@@ -55,7 +45,9 @@ public class TaxaUtils {
             return DefaultValues.DEFERRED;
         }
         //Satisfied check: left are equal, right are equal AND left(any one) != right(any one)
-        if ((left_sis1_bip == left_sis2_bip) && (right_sis1_bip == right_sis2_bip) && (left_sis1_bip != right_sis1_bip)) {
+        if ((left_sis1_bip == left_sis2_bip)
+                && (right_sis1_bip == right_sis2_bip)
+                && (left_sis1_bip != right_sis1_bip)) {
             return DefaultValues.SATISFIED;
         }
         //All check fails, Violated quartet
@@ -92,25 +84,3 @@ public class TaxaUtils {
 
 }
 
-//----------------------------------------------------------- NOT USED FOR NOW ---------------------------------------------------------
-/*public static int findQuartetStatus(int[] left_sisters_bip, int[] right_sisters_bip) {
-        int[] four_bipartitions = {left_sisters_bip[0], left_sisters_bip[1], right_sisters_bip[0], right_sisters_bip[1]};
-
-        int sum_four_bipartitions = Helper.sumArray(four_bipartitions);
-        //Blank check: Easier to check if blank quartet (all four are same) [priority wise first]
-//        if ((left_sisters_bip[0] == left_sisters_bip[1]) && (right_sisters_bip[0] == right_sisters_bip[1]) && (left_sisters_bip[0] == right_sisters_bip[0])) {
-
-        if (Math.abs(sum_four_bipartitions) == 4) { // -1,-1,-1,-1 or +1,+1,+1,+1 all will lead to sum == 4
-            return Status.BLANK;
-        }
-        //Deferred Check: sum == 2 check [otherwise, permutations will be huge]
-        if (Math.abs(sum_four_bipartitions) == 2) { //-1,+1 ,+1,+1  => +2 or +1,-1 , -1,-1 => -2 
-            return Status.DEFERRED;
-        }
-        //Satisfied check: left are equal, right are equal AND left(any one) != right(any one)
-        if ((left_sisters_bip[0] == left_sisters_bip[1]) && (right_sisters_bip[0] == right_sisters_bip[1]) && (left_sisters_bip[0] != right_sisters_bip[0])) {
-            return Status.SATISFIED;
-        }
-        //All check fails, Violated quartet
-        return Status.VIOLATED;
-    }*/

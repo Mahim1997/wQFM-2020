@@ -141,8 +141,6 @@ public class FMResultObject {
 
     private int findCommonBipartition(int[] arr) {
         //Three will be same, one will be different
-//        int sum = arr[0] + arr[1] + arr[2] + arr[3];
-        int sum = Arrays.stream(arr).sum();
         if (Arrays.stream(arr).sum() < 0) {
             return DefaultValues.LEFT_PARTITION;
         } else {

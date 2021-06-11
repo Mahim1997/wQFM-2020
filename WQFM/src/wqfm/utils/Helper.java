@@ -133,11 +133,7 @@ public class Helper {
     }
 
     public static int sumArray(int[] arr) {
-        int sum = 0;
-        for (int i = 0; i < arr.length; i++) {
-            sum += arr[i];
-        }
-        return sum;
+        return Arrays.stream(arr).sum();
     }
 
     public static int sumList(List<Integer> list) {
@@ -168,8 +164,7 @@ public class Helper {
 
         StringBuilder bld = new StringBuilder();
 
-        bld
-                .append("LEFT: ")
+        bld.append("LEFT: ")
                 .append(getKeysWithSpecifiedValue(partition_map, left_partition, reverse_mapping))
                 .append("\n")
                 .append("RIGHT: ")
@@ -270,7 +265,7 @@ public class Helper {
             int leftPartition, int rightPartition, int unassignedPartition) {
 
         // check if normally equal.
-        if(map1.equals(map2)){
+        if (map1.equals(map2)) {
             return true;
         }
 
@@ -278,11 +273,8 @@ public class Helper {
         map2.keySet().forEach((key) -> {
             newFinalMap.put(key, (map2.get(key) == unassignedPartition) ? unassignedPartition : ((map2.get(key) == leftPartition) ? rightPartition : leftPartition)); // only non-zeros will be flipped
         });
-        
-        
+
 //        System.out.println("COMPARING two maps function\nmap1 = " + map1 + "\nmap2 = " + map2 + "\nnewFinalMap = " + newFinalMap);
-        
-        
         return (map1.equals(newFinalMap));
     }
 
