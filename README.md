@@ -17,7 +17,7 @@ wQFM combines a set of weighted quartets into a tree on the full set of taxa usi
 ### Packages, Programming Languages and Operating Systems Requirements
 - Java (required to run the main wQFM application).
 
-- Python, Pandas, NumPy, Linux O.S. required to generate weighted quartets. This is done by using the combination of the helper scripts **quartet-controller.sh**, **quartet_count.sh**, **summarize-quartet-counts.py**, **generate-weighted-embedded-quartets.py** and the tool **triplets.soda2103** (requires Linux O.S.)
+- Python, Pandas, NumPy, Linux O.S. required to generate weighted quartets. This is done by using the combination of the helper scripts **quartet-controller.sh**, **quartet_count.sh**, **summarize-quartet-counts.py**, **generate_wqrts.py** and the tool **triplets.soda2103** (requires Linux O.S.)
 
 - Python, DendroPy needed for branch annotations while using the helper script **annotate_branches.py**.
 
@@ -25,12 +25,12 @@ wQFM combines a set of weighted quartets into a tree on the full set of taxa usi
 
 - #### If you download the wQFM-v1.2.zip and extract the contents, all the files will be present in the required structure (described below)
 
-	1. The tool **triplets.soda2103** must be in the same directory as the helper scripts **quartet-controller.sh**, **quartet_count.sh**, **summarize-quartet-counts.py** and **generate-weighted-embedded-quartets.py**. Make sure the scripts have executable permission.
+	1. The tool **triplets.soda2103** must be in the same directory as the helper scripts **quartet-controller.sh**, **quartet_count.sh**, **summarize-quartet-counts.py** and **generate_wqrts.py**. Make sure the scripts have executable permission.
 
 	2. Need to have **lib** folder (contains **PhyloNet jar** and **Picocli jar**) in same path as the **wQFM-v1.2.jar** file.
 
-	3. Need to have the python scripts **annotate_branches.py**, **normalize_weights.py** in the same directory as the jar file.
-
+	3. Need to have the python scripts **annotate_branches.py**, **normalize_weights.py**, **compute_quartet_score.py** in the same directory as the jar file.
+	
 
 ## Input and Output formats for wQFM
 
