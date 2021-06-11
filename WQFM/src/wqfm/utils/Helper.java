@@ -45,7 +45,6 @@ public class Helper {
     }
 
     public static void runSystemCommand(String cmd) {
-        System.out.println(cmd);
         try {
             Process p = Runtime.getRuntime().exec(cmd);
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
