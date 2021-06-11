@@ -1,15 +1,12 @@
 package wqfm.configs;
 
-import wqfm.bip.WeightedPartitionScores;
-
 /**
  *
  * @author mahim
  */
 public interface DefaultValues {
 
-    // script names.
-    public static String SCRIPT_BRANCH_ANNOTATIONS_QUARTET_SUPPORT = "annotate_branches.py";
+
 //    public static String SCRIPT_BRANCH_ANNOTATIONS_QUARTET_SUPPORT = "src/wqfm/scripts/annotate_branches.py";
 
     // Use this for logical biparititoning
@@ -90,6 +87,12 @@ public interface DefaultValues {
     // default file names
     public static String INPUT_FILE_NAME_WQRTS_DEFAULT = "input-wqrts-for-jar.wqrts";
     public static String OUTPUT_FILE_NAME_DEFAULT = "test-output-file-wqfm-java.tre";
+    
+    // quartet score level.
+    public static int QUARTET_SCORE_LEVEL_0_NONE = 0;
+    public static int QUARTET_SCORE_LEVEL_1_WQRTS = 1;
+    public static int QUARTET_SCORE_LEVEL_2_WQRTS_PERCENT_TOTAL_QUARTETS = 2;
+
     
     //Helper method for printing quartet's status
     public static String GET_QUARTET_STATUS(int status) {

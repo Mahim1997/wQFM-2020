@@ -1,9 +1,9 @@
 package wqfm.ds;
 
+import java.util.Arrays;
 import wqfm.configs.Config;
 import java.util.HashMap;
 import java.util.Map;
-import wqfm.main.Main;
 import wqfm.utils.CustomPair;
 import wqfm.utils.TaxaUtils;
 import wqfm.configs.DefaultValues;
@@ -20,8 +20,8 @@ public class FMResultObject {
     public final int dummyTaxonThisLevel;
     private final CustomDSPerLevel customDS_initial_this_level;
 
-    private Map<Quartet, CustomPair> map_quartet_of_dummy_with_added_weights_and_partition;
-    private Map<Quartet, Integer> map_quartet_dummy_with_counts;
+    private final Map<Quartet, CustomPair> map_quartet_of_dummy_with_added_weights_and_partition;
+    private final Map<Quartet, Integer> map_quartet_dummy_with_counts;
 
     public FMResultObject(CustomDSPerLevel customDS_this_level, int level) {
         this.customDS_initial_this_level = customDS_this_level;
@@ -40,14 +40,14 @@ public class FMResultObject {
     }
 
     public void createFMResultObjects(Map<Integer, Integer> mapOfBipartition) {
-        //Initially just transfer all to P_left and P_right. [Then for quartets-with-dummy, just pass the dummy node] 
-        for (int key_taxon : mapOfBipartition.keySet()) {
+        //Initially just transfer all to P_left and P_right. [Then for quartets-with-dummy, just pass the dummy node]
+        mapOfBipartition.keySet().forEach((key_taxon) -> {
             if (mapOfBipartition.get(key_taxon) == DefaultValues.LEFT_PARTITION) {
                 this.customDS_left_partition.taxa_list_int.add(key_taxon);
             } else if (mapOfBipartition.get(key_taxon) == DefaultValues.RIGHT_PARTITION) {
                 this.customDS_right_partition.taxa_list_int.add(key_taxon);
             }
-        }
+        });
 
         //Add dummy taxon to both partitions.
         this.customDS_left_partition.taxa_list_int.add(dummyTaxonThisLevel);
@@ -89,16 +89,16 @@ public class FMResultObject {
                     CustomPair pair_value_from_map = this.map_quartet_of_dummy_with_added_weights_and_partition.get(newQuartetWithDummy);
                     int count = this.map_quartet_dummy_with_counts.get(newQuartetWithDummy);
 
-                    double new_weight = 0;
+                    double newWeight;
                     if (Config.NORMALIZE_DUMMY_QUARTETS == true) {
                         //// averaging
-                        new_weight = (double) ((count * pair_value_from_map.weight_double) + newQuartetWithDummy.weight) / (double) (count + 1);
+                        newWeight = (double) ((count * pair_value_from_map.weight_double) + newQuartetWithDummy.weight) / (double) (count + 1);
                     } else {
                         //// summing
-                        new_weight = pair_value_from_map.weight_double + newQuartetWithDummy.weight;
+                        newWeight = pair_value_from_map.weight_double + newQuartetWithDummy.weight;
                     }
 
-                    CustomPair new_pair = new CustomPair(new_weight, pair_value_from_map.partition_int);
+                    CustomPair new_pair = new CustomPair(newWeight, pair_value_from_map.partition_int);
                     //this will update the added weights while maintaining the same bipartition.
                     this.map_quartet_of_dummy_with_added_weights_and_partition.put(newQuartetWithDummy, new_pair);
 
@@ -108,32 +108,32 @@ public class FMResultObject {
                 }
 
                 /// for some reason, pair doesn't seem to work hence custom-class [is there a way to do it more efficiently?]
-////                this.map_quartet_of_dummy_with_added_weights_and_partition.put(newQuartetWithDummy, new_pair);
             }
 
         }
+
         //2. Now keep adding the corrected-weighted-quartets to initial-table
-        for (Quartet q_with_dummy : this.map_quartet_of_dummy_with_added_weights_and_partition.keySet()) {
+        this.map_quartet_of_dummy_with_added_weights_and_partition.keySet().forEach((q_with_dummy) -> {
             CustomPair pair_val = this.map_quartet_of_dummy_with_added_weights_and_partition.get(q_with_dummy);
-////            Pair<Double, Integer> pair_val = this.map_quartet_of_dummy_with_added_weights_and_partition.get(q_with_dummy);
             Quartet new_quartet = new Quartet(q_with_dummy.taxa_sisters_left[0],
                     q_with_dummy.taxa_sisters_left[1],
                     q_with_dummy.taxa_sisters_right[0],
                     q_with_dummy.taxa_sisters_right[1],
-                    pair_val.weight_double);
-            //update the weight now.
+                    pair_val.weight_double); //update the weight now.
+
             //push to initial table.
             this.customDS_initial_this_level.initial_table1_of_list_of_quartets.addToListOfQuartets(new_quartet);
+
             //obtain the index i.e. size - 1
             int idx_quartet_newly_added = this.customDS_initial_this_level.initial_table1_of_list_of_quartets.sizeTable() - 1;
+
             //push to which partition depending on the pair_value's bipartition stored.
-            int bipartition_val = pair_val.partition_int;
-            if (bipartition_val == DefaultValues.LEFT_PARTITION) {
+            if (pair_val.partition_int == DefaultValues.LEFT_PARTITION) {
                 this.customDS_left_partition.quartet_indices_list_unsorted.add(idx_quartet_newly_added);
-            } else if (bipartition_val == DefaultValues.RIGHT_PARTITION) {
+            } else if (pair_val.partition_int == DefaultValues.RIGHT_PARTITION) {
                 this.customDS_right_partition.quartet_indices_list_unsorted.add(idx_quartet_newly_added);
             }
-        }
+        });
         //finally add the references to left and right partitions.
         this.customDS_left_partition.initial_table1_of_list_of_quartets.assignByReference(this.customDS_initial_this_level.initial_table1_of_list_of_quartets);
         this.customDS_right_partition.initial_table1_of_list_of_quartets.assignByReference(this.customDS_initial_this_level.initial_table1_of_list_of_quartets);
@@ -141,8 +141,9 @@ public class FMResultObject {
 
     private int findCommonBipartition(int[] arr) {
         //Three will be same, one will be different
-        int sum = arr[0] + arr[1] + arr[2] + arr[3];
-        if (sum < 0) {
+//        int sum = arr[0] + arr[1] + arr[2] + arr[3];
+        int sum = Arrays.stream(arr).sum();
+        if (Arrays.stream(arr).sum() < 0) {
             return DefaultValues.LEFT_PARTITION;
         } else {
             return DefaultValues.RIGHT_PARTITION;

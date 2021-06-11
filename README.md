@@ -1,5 +1,5 @@
 # wQFM
-#### wQFM (version 1.2)
+#### wQFM (version 1.3)
 This repository contains the official implementation of <!--code and helper scripts of--> our paper [**"wQFM: Highly Accurate Genome-scale Species Tree Estimation from Weighted Quartets"**](https://academic.oup.com/bioinformatics/advance-article-abstract/doi/10.1093/bioinformatics/btab428/6292084) accepted in ***Bioinformatics, 2021***.
 
 ## Short Description
@@ -17,20 +17,20 @@ wQFM combines a set of weighted quartets into a tree on the full set of taxa usi
 ### Packages, Programming Languages and Operating Systems Requirements
 - Java (required to run the main wQFM application).
 
-- Python, Pandas, NumPy, Linux O.S. required to generate weighted quartets. This is done by using the combination of the helper scripts **quartet-controller.sh**, **quartet_count.sh**, **summarize-quartet-counts.py**, **generate-weighted-embedded-quartets.py** and the tool **triplets.soda2103** (requires Linux O.S.)
+- Python, Pandas, NumPy, Linux O.S. required to generate weighted quartets. This is done by using the combination of the helper scripts **quartet-controller.sh**, **quartet_count.sh**, **summarize-quartet-counts.py**, **generate_wqrts.py** and the tool **triplets.soda2103** (requires Linux O.S.)
 
 - Python, DendroPy needed for branch annotations while using the helper script **annotate_branches.py**.
 
 ### Files Structure
 
-- #### If you download the wQFM-v1.2.zip and extract the contents, all the files will be present in the required structure (described below)
+- #### If you download the wQFM-v1.3.zip and extract the contents, all the files will be present in the required structure (described below)
 
-	1. The tool **triplets.soda2103** must be in the same directory as the helper scripts **quartet-controller.sh**, **quartet_count.sh**, **summarize-quartet-counts.py** and **generate-weighted-embedded-quartets.py**. Make sure the scripts have executable permission.
+	1. The tool **triplets.soda2103** must be in the same directory as the helper scripts **quartet-controller.sh**, **quartet_count.sh**, **summarize-quartet-counts.py** and **generate_wqrts.py**. Make sure the scripts have executable permission.
 
-	2. Need to have **lib** folder (contains **PhyloNet jar** and **Picocli jar**) in same path as the **wQFM-v1.2.jar** file.
+	2. Need to have **lib** folder (contains **PhyloNet jar** and **Picocli jar**) in same path as the **wQFM-v1.3.jar** file.
 
-	3. Need to have the python scripts **annotate_branches.py**, **normalize_weights.py** in the same directory as the jar file.
-
+	3. Need to have the python scripts **annotate_branches.py**, **normalize_weights.py**, **compute_quartet_score.py** in the same directory as the jar file.
+	
 
 ## Input and Output formats for wQFM
 
@@ -91,39 +91,64 @@ A **newick tree** with or without **branch support** (multiple annotation levels
 <!-- Code Blocks -->
   ```bash
 # Default mode, uses [s] - [v] as partition score.
-java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name"
+java -jar wQFM-v1.3.jar -i "input-file-name" -o "output-file-name"
   ```
 
 #### To run directly using gene trees, use -im/--input_mode argument.
   ```bash
 # Uses the -im/--input_mode as gene-trees (see Relevant Multiple Options below for details).
-java -jar wQFM-v1.2.jar -i "input-file-gene-trees" -o "output-file-name" -im gene-trees
+java -jar wQFM-v1.3.jar -i "input-file-gene-trees" -o "output-file-name" -im gene-trees
   ```
 
 
-### **To infer branch supports**
+### To infer branch supports
 
 wQFM can annotate the branches in the output tree with the quartet support which is defined as the number of quartets in the input set of gene trees that agree with a branch.
 
-* Annotating the output species tree with -t flag 
+* Annotating the output species tree with **-t** flag 
 ```bash
 # Annotate branches with average quartet support (the average weights of quartets in your gene trees that agree with a branch)
-java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 1 
+java -jar wQFM-v1.3.jar -i "input-file-name" -o "output-file-name" -t 1 
 
 # Annotate branches with normalized average quartet support (the proportion of quartets in your gene trees that agree with a branch)
-java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 2 
+java -jar wQFM-v1.3.jar -i "input-file-name" -o "output-file-name" -t 2 
 
 # Annotate branches with normalized average quartet support (normalized over the most dominant topology's weight, so this option will provide highest possible branch support if all dominant quartets agree with a branch)
-java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 3
+java -jar wQFM-v1.3.jar -i "input-file-name" -o "output-file-name" -t 3
 
-## Eg. if you have python setup instead of python3. Now, the scripts will be called using "python ..."
-java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 1 -pe python
+## Eg. if you have python setup instead of python3. Now, the scripts will be called using "python <script-name.py> [args]"
+java -jar wQFM-v1.3.jar -i "input-file-name" -o "output-file-name" -t 1 -pe python
 ```
     
 * If you want to annotate the branches of a given species tree with quartet support with respect to a set of weighted quartets
 ```bash
 # eg. using annotations level of 1 (use -pe python if you have python setup instead of python3)
-java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-without-annotations" -o "species-tree-with-annotations" -t 1
+java -jar wQFM-v1.3.jar -i "input-file-weighted-quartets" -st "species-tree-without-annotations" -o "species-tree-with-annotations" -t 1
+```
+
+### To infer quartet scores
+We can use the jar file to compute quartet scores of a reference species tree with respect to a set of weighted quartets. (See Relevant Multiple Options below for details)
+
+* Quartet Scores with **-q** flag to control level of verbosity, and **-qo** to indicate the file path where the quartet scores will be written to (tab separated)
+```bash
+
+# Use q = 1 to get only the total weight of quartets that are satisfied by the given produced species tree
+# Use q = 2 to get total weight of satisfied quartets, total weight of quartets present in the input wqrts file, and proportion of quartets satisfied.
+
+# Run wQFM input and output using quartet scores
+java -jar wQFM-v1.3.jar -i "input-file-name" -o "output-file-name" -q 1 # just prints quartet score details on console.
+java -jar wQFM-v1.3.jar -i "input-file-name" -o "output-file-name" -q 1 -qo "qscore-details.txt" # for convenience, dumps to a file.
+
+## Eg. if you have python setup instead of python3. Now, the scripts will be called using "python <script-name.py> [args]"
+java -jar wQFM-v1.3.jar -i "input-file-name" -o "output-file-name" -q 2 -pe python
+```
+    
+* If you want to find the quartet score without generating species tree (i.e. without running wQFM algorithm)
+```bash
+# Just to get the quartet scores without generating any estimated species tree
+
+java -jar wQFM-v1.3.jar -i "input-file-weighted-quartets" -st "species-tree-file" -q 2 # to print on console
+java -jar wQFM-v1.3.jar -i "input-file-weighted-quartets" -st "species-tree-file" -q 2 -qo "qscore-details.txt" # to dump to a file
 ```
 
 #### Relevant Multiple Options
@@ -155,12 +180,22 @@ java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-with
 	beta=<BETA> for 1[ws] - <BETA>[wv] partition score
 	beta="dyanmic" then dynamic bin heuristic is used.
 
--h, --help      Show this help message and exit.
+-q, --quartet_score_level=<quartetScoreLevel>
+	q=0: do not show quartet score(default)
+	q=1: show quartet score only
+	q=2: show quartet score, total weight of quartets, proportion of quartets satisfied
+
+-qo, --quartet_score_output_file=<quartetScoreOutputFile>
+    (default) null
+    If given, quartet scores will be output here.
 
 -pe, --python_engine=<pythonEngine>
 	(default) python3
 	(otherwise) python
-	i.e. If you have "python" setup in your O.S., then scripts will be run using "python <script.py>"
+	i.e. If you have "python" setup in your O.S., then scripts will be run using "python <script.py> [args]"
+
+
+-h, --help      Show this help message and exit.
 
 -V, --version   Print version information and exit.
 ```
@@ -170,7 +205,7 @@ java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-with
 ```bash
 # Example: To supply 8GB of free memory.
 
-java -Xmx8000M -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" 
+java -Xmx8000M -jar wQFM-v1.3.jar -i "input-file-name" -o "output-file-name" 
 ```
 
 #### For now, wQFM cannot handle **stars** which is induced due to polytomy in gene trees.
@@ -204,10 +239,10 @@ The following files are available for each aforementioned datasets.
 | all_gt.tre		  |Estimated/True Gene trees (depending on model condition)|
 | weighted_quartets   |Embedded weighted-quartets generated on "all_gt.tre"    |
 | model_tree/true_tree_trimmed |Model Tree **only for simulated datasets**|
-| wQFM-v1.2-all.tre    |Species tree generated by wQFM-v1.2 run on "weighted_quartets"|
+| wQFM-v1.2-all.tre    |Species tree generated by wQFM-v1.2 (and wQFM-v1.3) run on "weighted_quartets"|
 | wqmc-26-July.tre    |Species tree generated by wQMC run on "weighted_quartets"|
 | astral-July26.5.7.3.tre    |Species tree generated by ASTRAL-5.7.3 run on "all_gt.tre"|
-| wQFM-v1.2-best.tre    |Species tree generated by wQFM-v1.2 run on "best_weighted_quartets" i.e. dominant quartets|
+| wQFM-v1.2-best.tre    |Species tree generated by wQFM-v1.2 (and wQFM-v1.3) run on "best_weighted_quartets" i.e. dominant quartets|
 | qfm-best.tre    |Species tree generated by QFM run on "best_weighted_quartets" with weights as 1|
 | wQFM-26-July.tre    |Species tree generated by wQFM-v1.1 (bin-ratio heuristic on all levels) run on "weighted_quartets"|
 
