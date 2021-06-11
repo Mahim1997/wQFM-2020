@@ -11,7 +11,7 @@ def printUsageExit():
     sys.exit()
 
 """ Get sorted quartets a,b|c,d: w ... ALWAYS ascending order """
-def getSortedQuartet(line):
+def getSortedQuartet(line, use_weight=True):
     stringsReplace = ["\n", ";", "(", ")"]
     for s in stringsReplace:
         line = line.replace(s, "") ## remove these chars
@@ -25,8 +25,10 @@ def getSortedQuartet(line):
     if arr[0] > arr[2]:
         arr[0:2], arr[2:4] = arr[2:4], arr[0:2]
 
-    return (arr[0], arr[1], arr[2], arr[3], float(arr[4]))
-    
+    if use_weight == True:
+        return (arr[0], arr[1], arr[2], arr[3], float(arr[4]))
+    else:
+        return (arr[0], arr[1], arr[2], arr[3])
 
 
 """Get dictionary of input weighted list_quartets"""
@@ -43,20 +45,6 @@ def get_input_wqrts(input_file_wqrts):
 
     return d, total_weight_wqrts
 
-
-def get_sorted_weights(dict_quartets, dict_quartets_stree):
-    # dict_quartets may/may not be sorted wqrts
-    for quartet in dict_quartets:
-        
-        print(quartet)
-        
-        w = dict_quartets[quartet]
-
-        quartet_sorted = getSortedQuartetFrom4TaxSequence(quartet[0], quartet[1], quartet[2], quartet[3], w)
-        
-        print(quartet_sorted)
-        break
-
 def get_dictionary_quartets(inputFile):
     os.system("chmod u+x triplets.soda2103")
     dict_quartets = {} # empty dictionary
@@ -65,34 +53,42 @@ def get_dictionary_quartets(inputFile):
     with open(inputFile) as fin:
         for line in fin: # for each gene tree
             line = line.replace("\n", "")
-            # print("<", line, ">")
+            
             with open(tmp_file_name, 'w') as f_out_temp:
                 f_out_temp.write(line) # write that gene tree to temporary file.
-
+            
             result = subprocess.run(['./triplets.soda2103', 'printQuartets', tmp_file_name], stdout=subprocess.PIPE)
+            
             results_str = result.stdout.decode('utf-8')
             results_str = results_str.strip() # remove the empty line at the end
             results_str = re.sub(".*: ", "", results_str) # remove alpha,beta,gamma names
-            # starting, add (( [two open brackets]
             results_str = re.sub("\n", "));\n((", results_str) # add initial brackets
             results_str = re.sub("^", "((", results_str) # for the very first quartet
             results_str = re.sub("$", "));", results_str) # for the very last quartet
-
             results_str = re.sub(" ", ",", results_str) # change white space to comma, ((11,9,|,5,6));
             results_str = re.sub(",\|,", "),(", results_str) # change ,|, to ),( to form ((11,9),(5,6));
-
             results_array = results_str.split("\n") # split to form each quartets
 
-            # print(results_array)
-
             for line_result in results_array:
-                if line_result not in dictionary_line: # THIS line doesn't exist in dictionary
-                    dictionary_line[line_result] = 1 # initialize to 1
+                quartet = getSortedQuartet(line_result, use_weight=False)
+                if line_result not in dict_quartets: # THIS line doesn't exist in dictionary
+                    dict_quartets[quartet] = 1 # initialize to 1
                 else: # THIS line does exist in dictionary, so increment
-                    dictionary_line[line_result] += 1
+                    dict_quartets[quartet] += 1
 
-    os.remove(tmp_file_name)
+    os.remove(tmp_file_name) # remove the temp. file
     return dict_quartets
+
+"""Return the total weight of satisfied quartets"""
+def get_satisfied_weights(dict_quartets, dict_quartets_stree):
+    # dict_quartets may/may not be sorted wqrts
+    satisfied_weights = 0
+
+    for quartet in dict_quartets:
+        if quartet in dict_quartets_stree:
+            satisfied_weights += dict_quartets[quartet]
+        
+    return satisfied_weights
 
 
 def main(input_file_wqrts, stree_file, qscore_level, qscore_output_file=None):
@@ -100,10 +96,9 @@ def main(input_file_wqrts, stree_file, qscore_level, qscore_output_file=None):
 
     dict_quartets_stree = get_dictionary_quartets(stree_file)
 
-    get_sorted_weights(dict_quartets, dict_quartets_stree)
+    satisfied_weights = get_satisfied_weights(dict_quartets, dict_quartets_stree)
 
-    print(dict_quartets)
-    print(dict_quartets_stree)
+    print(satisfied_weights, total_weight_wqrts)
 
     # s = get_string_output(qscore_level, satisfied_wqrts, total_weight_wqrts)
     # print(s)
