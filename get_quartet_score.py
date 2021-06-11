@@ -1,7 +1,10 @@
+'''
+    Prints/Outputs the total satisfied weighted quartets, total quartets of input wqrt file, percent of quartets satisfied
+'''
+
 from annotate_branches import getSortedQuartet, read_tree, getPartitionMap, isQuartetSatisfied, LEFT, RIGHT
 import sys
 import dendropy
-
 
 
 def printUsageExit():
@@ -52,6 +55,21 @@ def compute_satisfied_wqrts(tree, dict_quartets):
     return satisfied_wqrts
 
 
+def get_string_output(qscore_level, satisfied_wqrts, total_weight_wqrts):
+    if qscore_level == 1:
+        s = str(satisfied_wqrts)
+    
+    elif qscore_level == 2:
+        if total_weight_wqrts == 0:
+            percent_satisfied = 0
+        else:
+            percent_satisfied = float(satisfied_wqrts) / float(total_weight_wqrts)
+        
+        s = str(satisfied_wqrts) + "\t" + str(total_weight_wqrts) + "\t" + str(percent_satisfied)
+    else:
+        s = ""
+    return s
+
 def main(input_file_wqrts, stree_file, qscore_level, qscore_output_file=None):
     dict_quartets, total_weight_wqrts = get_input_wqrts(input_file_wqrts)
 
@@ -59,7 +77,15 @@ def main(input_file_wqrts, stree_file, qscore_level, qscore_output_file=None):
 
     satisfied_wqrts = compute_satisfied_wqrts(tree, dict_quartets)
 
-    print(satisfied_wqrts, total_weight_wqrts)
+
+
+    s = get_string_output(qscore_level, satisfied_wqrts, total_weight_wqrts)
+    print(s)
+
+    if qscore_output_file != None:
+        with open(qscore_output_file, mode='w') as fout:
+            fout.write(s)
+            fout.write("\n")
 
 
 #################################################################################################
@@ -71,7 +97,7 @@ if __name__ == '__main__':
     if (lens == 4) or (lens == 5):
         input_file_wqrts = sys.argv[1]
         stree_file = sys.argv[2]
-        qscore_level = int(sys.argv[3])
+        qscore_level = int(sys.argv[3]) # nothing done here.
         
         if lens == 5:
             qscore_output_file = sys.argv[4]
