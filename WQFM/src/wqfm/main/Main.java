@@ -50,6 +50,11 @@ public class Main implements Callable<Integer> {
     // for input file mode -> wqrts, gene_trees, qrts, sequences
     @CommandLine.Option(names = {"-im", "--input_mode"}, required = false, description = "im=<" + DefaultValues.INPUT_MODE_WEIGHTED_QUARTETS + ">" + " (default)\n" + "im=<" + DefaultValues.INPUT_MODE_GENE_TREES + ">" + " when input file consists of gene trees")
     private String inputFileMode = Config.INPUT_MODE;
+
+    // for quartet score level
+    @CommandLine.Option(names = {"-q", "--quartet_score_level"}, required = false, description = "q=0 for none(default)\nq=1 for total weight of satisfied quartets\nq=2 for total weight of satisfied quartets as well as proportion of satisfied quartets")
+    private int quartetScoreLevel = DefaultValues.QUARTET_SCORE_LEVEL_0_NONE;
+
     
     private static void goDebugMode() {
         Config.ANNOTATIONS_LEVEL = DefaultValues.ANNOTATIONS_LEVEL3_QUARTET_SUPPORT_NORMALIZED_MAX;
