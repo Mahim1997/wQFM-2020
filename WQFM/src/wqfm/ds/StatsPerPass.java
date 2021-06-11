@@ -9,14 +9,14 @@ import wqfm.bip.Bipartition_8_values;
  */
 public class StatsPerPass {
 
-    public String whichTaxaWasPassed;
+    public int whichTaxaWasPassed;
     public double maxGainOfThisPass;
     public Bipartition_8_values _8_values_chosen_for_this_pass;
-    public final Map<String, Integer> map_final_bipartition;
+    public final Map<Integer, Integer> map_final_bipartition;
 
-    public StatsPerPass(String whichTaxaWasPassed, double maxGainOfThisPass,
+    public StatsPerPass(int whichTaxaWasPassed, double maxGainOfThisPass,
             Bipartition_8_values _8_vals,
-            Map<String, Integer> map) {
+            Map<Integer, Integer> map) {
         this.whichTaxaWasPassed = whichTaxaWasPassed;
         this.maxGainOfThisPass = maxGainOfThisPass;
         this._8_values_chosen_for_this_pass = new Bipartition_8_values(_8_vals);

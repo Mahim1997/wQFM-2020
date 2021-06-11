@@ -5,13 +5,17 @@
  */
 package wqfm.feature;
 
+import wqfm.configs.Config;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import wqfm.ds.Bin;
+import java.util.Map;
 import wqfm.ds.Quartet;
-import wqfm.utils.WeightedPartitionScores;
+import wqfm.bip.WeightedPartitionScores;
+import wqfm.main.Main;
+import wqfm.configs.DefaultValues;
 
 /**
  *
@@ -19,165 +23,145 @@ import wqfm.utils.WeightedPartitionScores;
  */
 public class FeatureComputer {
 
-    Double F1;
-    Double F2;
-    Double F3;
-    Double F4;
-    Double F5;
-
-    public static List<String> SortTaxaWithinQuartets(String tax1, String tax2, String tax3, String tax4) {
-        List<String> temp = new ArrayList<>(4);
-        temp.add(tax1);
-        temp.add(tax2);
-        temp.add(tax3);
-        temp.add(tax4);
-        Collections.sort(temp);
-        return temp;
-
+    public static List<Integer> sortTaxaWithinQuartets(int tax1, int tax2, int tax3, int tax4) {
+//        int[] arr = {tax1, tax2, tax3, tax4};
+        List<Integer> list = new ArrayList<>(Arrays.asList(tax1, tax2, tax3, tax4));
+        Collections.sort(list);
+        return list;
     }
 
     public static boolean is_within_range(double v1, double v2, double threshold) {
         return (v1 - v2) / ((v1 + v2) / 2) <= threshold;
     }
 
-    public static void Compute_Feature(HashMap<List<String>, List<Quartet>> dictionary_4Tax_sequence, HashMap<List<String>, List<Double>> dictionary_4Tax_sequence_weight) {
-
-        //     makeDictionary(quartets_list);
-        int features = 5;
-        //    double[},{] results_table= new double[dictionary_4Tax_sequence.keySet().size()},{features];
-
-        // int row = 0;
-        List<Double> list_ratios = new ArrayList<>();
-        int num_four_tax_seq_with_3_qrts = 0;
-        for (List<String> threeTax : dictionary_4Tax_sequence_weight.keySet()) {
-            //  System.out.println("Key: " + threeTax.get(0) + "," + threeTax.get(1) + ","
-            //     + threeTax.get(2) + "," + threeTax.get(3));
-            List<Double> weights_under_this_3_tax_seq = dictionary_4Tax_sequence_weight.get(threeTax);
-            Collections.sort(weights_under_this_3_tax_seq, Collections.reverseOrder());
-//             for(int i=0;i<weights_under_this_3_tax_seq.size();i++){
-//                 System.out.print(weights_under_this_3_tax_seq.get(i)+" ");
-//             }
-            if (weights_under_this_3_tax_seq.size() == 3) {
-                list_ratios.add(weights_under_this_3_tax_seq.get(0) / (weights_under_this_3_tax_seq.get(1) + weights_under_this_3_tax_seq.get(2)));
-                num_four_tax_seq_with_3_qrts++;
-            }
-            //System.out.println("");
-            //  row++;
-
+    public static void computeBinningFeatureUsingLevel1(Map<List<Integer>, List<Double>> dictionary_4Tax_sequence_weight,
+            int level) {
+        if (level > 1) {
+            System.out.println("Bin only level 1, current level = " + level + " , not binning, beta = " + WeightedPartitionScores.BETA_PARTITION_SCORE);
+            return;
         }
-        // System.out.println("LIST_RATIOS DONE SIZE: "+list_ratios.size());
-        if (list_ratios.size() == 0) {
-            System.out.println("Ratio (beta): 1");
-            WeightedPartitionScores.ALPHA_PARTITION_SCORE = 1;
-            WeightedPartitionScores.BETA_PARTITION_SCORE = 1;
-        } else {
-            double weighted_avg_bin_ratio = findInBins(list_ratios);
-            System.out.println("Ratio (beta): " + weighted_avg_bin_ratio);
-            WeightedPartitionScores.ALPHA_PARTITION_SCORE = 1;
-            WeightedPartitionScores.BETA_PARTITION_SCORE = weighted_avg_bin_ratio;
+        // Only do computations for level 1 i.e. if level == 1
+
+        List<Double> list_ratios = new ArrayList<>();
+
+        for (List<Integer> four_tax_seq : dictionary_4Tax_sequence_weight.keySet()) {
+            List<Double> weights_under_this_4_tax_seq = dictionary_4Tax_sequence_weight.get(four_tax_seq);
+            Collections.sort(weights_under_this_4_tax_seq, Collections.reverseOrder());
+            if (weights_under_this_4_tax_seq.size() == 3) {
+                list_ratios.add(weights_under_this_4_tax_seq.get(0) / (weights_under_this_4_tax_seq.get(1) + weights_under_this_4_tax_seq.get(2)));
+            }
+        }
+        if (list_ratios.isEmpty()) { // empty ratios -> no 4-tax-seq exists.
+            System.out.println("Empty list of 4-tax-seq with 3-quartet-config. (default ratio): " + DefaultValues.BETA_DEFAULT_VAL);
+            WeightedPartitionScores.ALPHA_PARTITION_SCORE = DefaultValues.ALPHA_DEFAULT_VAL;
+            WeightedPartitionScores.BETA_PARTITION_SCORE = DefaultValues.BETA_DEFAULT_VAL; // beta default = 1
+            if (level == 1) {
+                System.out.println("ZERO 4-tax-seq exists with 3-qrt-config. DONT'T BIN FURTHER.");
+                Bin.WILL_DO_DYNAMIC = false;
+            }
+
+        } else { //calculate bins [list-ratios do exist]
+
+            double weighted_avg_bin_ratio = DefaultValues.BETA_DEFAULT_VAL;
+
+            if (Bin.WILL_DO_DYNAMIC == true) { //only compute on Bin.true
+                weighted_avg_bin_ratio = Bin.calculateBinsAndFormScores(list_ratios); //forms bins and calculates scores..
+
+                System.out.println("\nNow, P(0.5," + Config.THRESHOLD_BINNING + ") = " + Bin.proportion_left_thresh
+                        + ", P(" + Config.THRESHOLD_BINNING + ",1) = "
+                        + Bin.proportion_after_thresh_before_1 + ", P(>=1) = " + Bin.proportion_greater_or_equal_1);
+                Bin.WILL_DO_DYNAMIC = false;
+                WeightedPartitionScores.BETA_PARTITION_SCORE = weighted_avg_bin_ratio;
+                System.out.println("Bin only level 1, beta = " + WeightedPartitionScores.BETA_PARTITION_SCORE);
+
+            }
+
         }
 
     }
 
-    public static double findInBins(List<Double> list_ratios) {
+    public static void computeBinningFeatureUsingAllLevels(Map<List<Integer>, List<Double>> dictionary_4Tax_sequence_weight,
+            int level) {
+        //check on level==0 if is on the right side, don't bin further ...
+        List<Double> list_ratios = new ArrayList<>();
 
-        double highest_ratio = Collections.max(list_ratios);
-        // double [][] bins = {{0.5,0.6},{0.6,0.7},{0.7,0.8},{0.8,0.9},{1,highest_ratio}} ;
-        List<Bin> bins = new ArrayList<>();
-//        bins.add(new Bin(0.5, 0.6));
-//        bins.add(new Bin(0.6, 0.7));
-//        bins.add(new Bin(0.7, 0.8));
-
-        bins.add(new Bin(0.50, 0.51));
-        bins.add(new Bin(0.51, 0.52));
-        bins.add(new Bin(0.52, 0.53));
-        bins.add(new Bin(0.53, 0.54));
-        bins.add(new Bin(0.54, 0.55));
-        bins.add(new Bin(0.55, 0.56));
-        bins.add(new Bin(0.56, 0.57));
-        bins.add(new Bin(0.57, 0.58));
-        bins.add(new Bin(0.58, 0.59));
-        bins.add(new Bin(0.59, 0.60));
-        bins.add(new Bin(0.60, 0.61));
-        bins.add(new Bin(0.61, 0.62));
-        bins.add(new Bin(0.62, 0.63));
-        bins.add(new Bin(0.63, 0.64));
-        bins.add(new Bin(0.64, 0.65));
-        bins.add(new Bin(0.65, 0.66));
-        bins.add(new Bin(0.66, 0.67));
-        bins.add(new Bin(0.67, 0.68));
-        bins.add(new Bin(0.68, 0.69));
-        bins.add(new Bin(0.69, 0.70));
-        bins.add(new Bin(0.70, 0.71));
-        bins.add(new Bin(0.71, 0.72));
-        bins.add(new Bin(0.72, 0.73));
-        bins.add(new Bin(0.73, 0.74));
-        bins.add(new Bin(0.74, 0.75));
-        bins.add(new Bin(0.75, 0.76));
-        bins.add(new Bin(0.76, 0.77));
-        bins.add(new Bin(0.77, 0.78));
-        bins.add(new Bin(0.78, 0.79));
-        bins.add(new Bin(0.79, 0.80)); //thresh = 0.80, step-size = 0.01 [7, 7]
-        bins.add(new Bin(0.80, 0.81));
-        bins.add(new Bin(0.81, 0.82));
-        bins.add(new Bin(0.82, 0.83));
-        bins.add(new Bin(0.83, 0.84));
-        bins.add(new Bin(0.84, 0.85)); //thresh = 0.85, step-size = 0.01 [7, 7]
-        bins.add(new Bin(0.85, 0.86));
-        bins.add(new Bin(0.86, 0.87));
-        bins.add(new Bin(0.87, 0.88));
-        bins.add(new Bin(0.88, 0.89));
-        bins.add(new Bin(0.89, 0.90)); //thresh = 0.90, step-size = 0.01 [6, 6]
-//        bins.add(new Bin(0.91, 0.92));
-//        bins.add(new Bin(0.92, 0.93));
-//        bins.add(new Bin(0.93, 0.94));
-//        bins.add(new Bin(0.94, 0.95));
-//        bins.add(new Bin(0.95, 0.96));
-//        bins.add(new Bin(0.96, 0.97));
-//        bins.add(new Bin(0.97, 0.98));
-//        bins.add(new Bin(0.98, 0.99));
-//        bins.add(new Bin(0.99, 1.00)); //thresh = 1.0, step-size = 0.01 [7, 7]
-
-        HashMap<Bin, Integer> dictionary_bins = new HashMap<>();
-        for (int i = 0; i < bins.size(); i++) {
-            dictionary_bins.put(bins.get(i), 0);
+        for (List<Integer> four_tax_seq : dictionary_4Tax_sequence_weight.keySet()) {
+            List<Double> weights_under_this_4_tax_seq = dictionary_4Tax_sequence_weight.get(four_tax_seq);
+            Collections.sort(weights_under_this_4_tax_seq, Collections.reverseOrder());
+            if (weights_under_this_4_tax_seq.size() == 3) {
+                list_ratios.add(weights_under_this_4_tax_seq.get(0) / (weights_under_this_4_tax_seq.get(1) + weights_under_this_4_tax_seq.get(2)));
+            }
+            if (weights_under_this_4_tax_seq.size() > 3) {
+                System.out.println("-->>L 71. FeatureComputer. ratios.size exceeded 3. Check inputs.");
+                System.out.println("Printing this ratios, and sequences." + weights_under_this_4_tax_seq
+                        + " , " + (four_tax_seq));
+            }
         }
-        //  System.out.println("L 89. Initialized bins");
-        for (double ratio : list_ratios) {
-            for (Bin _bin : bins) {
-                double lower_lim = _bin.lower_lim;
-                double upper_lim = _bin.upper_lim;
-                if (ratio >= lower_lim && ratio < upper_lim) {
-                    int counter = dictionary_bins.get(_bin);
-                    counter++;
-                    dictionary_bins.put(_bin, counter);
+
+        if (list_ratios.isEmpty()) {
+            System.out.println("Empty list of 4-tax-seq with 3-quartet-config. (default ratio): " + DefaultValues.BETA_DEFAULT_VAL);
+            WeightedPartitionScores.ALPHA_PARTITION_SCORE = DefaultValues.ALPHA_DEFAULT_VAL;
+            WeightedPartitionScores.BETA_PARTITION_SCORE = DefaultValues.BETA_DEFAULT_VAL; // beta default = 1
+            if (level == 1) {
+                System.out.println("ZERO 4-tax-seq exists with 3-qrt-config. DONT'T BIN FURTHER.");
+                Bin.WILL_DO_DYNAMIC = false;
+            }
+
+        } else { //calculate bins [list-ratios do exist]
+
+//            System.out.println("List-ratios not empty, printing dictionary.");
+//            printDictionary(dictionary_4Tax_sequence, dictionary_4Tax_sequence_weight);
+            double weighted_avg_bin_ratio = DefaultValues.BETA_DEFAULT_VAL;
+
+            if (Bin.WILL_DO_DYNAMIC == true) { //only compute on Bin.true
+                weighted_avg_bin_ratio = Bin.calculateBinsAndFormScores(list_ratios); //forms bins and calculates scores..
+
+            }
+
+            if (level == 1) { //check on level == 1 and set accordingly.
+                if (Bin.proportion_left_thresh < Config.CUT_OFF_LIMIT_BINNING) { //level == 1 has no good distribution ... so do no more.
+                    //stop ... don't bin on any levels. set to 1.
+                    Bin.WILL_DO_DYNAMIC = false; //DEBUGGING FOR NOW
+                    System.out.println("\nNow, P(0.5," + Config.THRESHOLD_BINNING + ") = " + Bin.proportion_left_thresh
+                            + ", P(" + Config.THRESHOLD_BINNING + ",1) = "
+                            + Bin.proportion_after_thresh_before_1 + ", P(>=1) = " + Bin.proportion_greater_or_equal_1);
+
+                    System.out.println(">> DON'T BIN ON NEXT LEVELS. Level 1 has good distribution above threshold = " + Config.THRESHOLD_BINNING
+                            + " set BETA = " + DefaultValues.BETA_DEFAULT_VAL);
+                    WeightedPartitionScores.BETA_PARTITION_SCORE = DefaultValues.BETA_DEFAULT_VAL; // set to 1 
                 }
 
             }
-        }
-        int idx_bin = 0;
-        double total_weights_to_divide_without_1 = 0;
-        double cumulative_weighted_mid_ratio = 0;
-        for (Bin _bin : bins) {
-            double lower_lim = _bin.lower_lim;
-            double upper_lim = _bin.upper_lim;
-            if (lower_lim != 1.0) {
-                double mid_point = 0.5 * (lower_lim + upper_lim);
-                double weighted_mid_ratio = mid_point * dictionary_bins.get(_bin);
-                total_weights_to_divide_without_1 += dictionary_bins.get(_bin);
-                cumulative_weighted_mid_ratio += weighted_mid_ratio;
+            if (Bin.WILL_DO_DYNAMIC == true) { //only bin on true conditions.
+                //set p.score as ratio.
+                WeightedPartitionScores.BETA_PARTITION_SCORE = weighted_avg_bin_ratio;
+                System.out.println("\nP(0.5," + Config.THRESHOLD_BINNING + ") = " + Bin.proportion_left_thresh
+                        + ", P(" + Config.THRESHOLD_BINNING + ",1) = "
+                        + Bin.proportion_after_thresh_before_1 + ", P(>=1) = " + Bin.proportion_greater_or_equal_1);
+
+                System.out.println("Level" + level + ", Weighted-Avg-Bin-Ratio (to set BETA) = " + weighted_avg_bin_ratio);
+
             }
+
         }
-        if (total_weights_to_divide_without_1 == 0) { //BETA = 1 here.
-            return 1;
-        }
-        double weighted_avg_bin_ratio = cumulative_weighted_mid_ratio / total_weights_to_divide_without_1;
-        //  double proportion_with_greater_than_or_equal_to_1 = dictionary_bins.get(_bin) / (total_weights_to_divide_without_1 + dictionary_bins.get(_bin));
-        return weighted_avg_bin_ratio;
 
     }
 
-    public static void printDictionary(HashMap<List<String>, List<Quartet>> dictionary_4Tax_sequence, HashMap<List<String>, List<Double>> dictionary_4Tax_sequence_weight) {
+    public static void computeBinningFeature(Map<List<Integer>, List<Double>> dictionary_4Tax_sequence_weight,
+            int level) {
+
+        if (Config.BIN_LIMIT_LEVEL_1 == true) {
+            System.out.println("Binning only at level 1.");
+            FeatureComputer.computeBinningFeatureUsingLevel1(dictionary_4Tax_sequence_weight, level);
+        } else {
+            System.out.println("Binning on all levels.");
+            FeatureComputer.computeBinningFeatureUsingAllLevels(dictionary_4Tax_sequence_weight, level);
+        }
+
+    }
+
+    public static void printDictionary(HashMap<List<String>, List<Quartet>> dictionary_4Tax_sequence,
+            HashMap<List<String>, List<Double>> dictionary_4Tax_sequence_weight) {
         for (List<String> i : dictionary_4Tax_sequence.keySet()) {
             System.out.print("Key: " + i.get(0) + " " + i.get(1) + " " + i.get(2) + " " + i.get(3) + " --> ");
             System.out.print("Size: " + dictionary_4Tax_sequence.get(i).size() + "---> " + dictionary_4Tax_sequence.get(i));
@@ -186,24 +170,23 @@ public class FeatureComputer {
         }
     }
 
-    public static void makeDictionary(Quartet q, HashMap<List<String>, List<Quartet>> dictionary_4Tax_sequence, HashMap<List<String>, List<Double>> dictionary_4Tax_sequence_weight) {
+    public static void makeDictionary(Quartet q, Map<List<Integer>, List<Double>> map_weights_four_tax_seq) {
+        List<Integer> four_tax_sequence = sortTaxaWithinQuartets(q.taxa_sisters_left[0], q.taxa_sisters_left[1],
+                q.taxa_sisters_right[0], q.taxa_sisters_right[1]);
 
-        List<String> four_tax_sequence = SortTaxaWithinQuartets(q.taxa_sisters_left[0], q.taxa_sisters_left[1], q.taxa_sisters_right[0], q.taxa_sisters_right[1]);
-        if (dictionary_4Tax_sequence.get(four_tax_sequence) == null) {
-            List<Quartet> temp_list = new ArrayList<>();
-            temp_list.add(q);
-            dictionary_4Tax_sequence.put(four_tax_sequence, temp_list);
-            List<Double> temp_list_2 = new ArrayList<>();
-            temp_list_2.add(q.weight);
-            dictionary_4Tax_sequence_weight.put(four_tax_sequence, temp_list_2);
+        if (map_weights_four_tax_seq.containsKey(four_tax_sequence) == false) { // this 4-tax-seq has no quartet-weights.
+            List<Double> list_weights = new ArrayList<>();
+            list_weights.add(q.weight);
+            map_weights_four_tax_seq.put(four_tax_sequence, list_weights);
         } else {
-            List<Quartet> temp_list = dictionary_4Tax_sequence.get(four_tax_sequence);
-            temp_list.add(q);
-            dictionary_4Tax_sequence.put(four_tax_sequence, temp_list);
-            List<Double> temp_list_2 = dictionary_4Tax_sequence_weight.get(four_tax_sequence);
-            temp_list_2.add(q.weight);
-            dictionary_4Tax_sequence_weight.put(four_tax_sequence, temp_list_2);
+            if (map_weights_four_tax_seq.get(four_tax_sequence).size() >= 3) {
+                System.out.println("\n\n\n\nL 118. FeatureComputer.java ... ratios-size > 3 for sequence " + four_tax_sequence + " , "
+                        + "printing the array-list .. " + map_weights_four_tax_seq.get(four_tax_sequence) + " EXITING.");
+                System.exit(-1);
+            }
+            map_weights_four_tax_seq.get(four_tax_sequence).add(q.weight);
         }
+
     }
 
 }

@@ -1,5 +1,6 @@
 package wqfm.utils;
 
+import wqfm.configs.Config;
 import wqfm.main.Main;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -7,9 +8,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 import phylonet.tree.io.ParseException;
 import phylonet.tree.model.sti.STITree;
-import wqfm.interfaces.Status;
+import wqfm.configs.DefaultValues;
 
 /**
  *
@@ -18,12 +20,12 @@ import wqfm.interfaces.Status;
 public class TreeHandler {
 
     public static String rerootTree(String newickTree, String outGroupNode) {
-        switch (Main.REROOT_MODE) {
-            case Status.REROOT_USING_JAR:
+        switch (Config.REROOT_MODE) {
+            case DefaultValues.REROOT_USING_JAR:
                 return TreeHandler.rerootTree_JAR(newickTree, outGroupNode);
-            case Status.REROOT_USING_PYTHON:
+            case DefaultValues.REROOT_USING_PYTHON:
                 return TreeHandler.rerootTree_python(newickTree, outGroupNode);
-            case Status.REROOT_USING_PERL:
+            case DefaultValues.REROOT_USING_PERL:
                 return TreeHandler.rerootTree_Perl(newickTree, outGroupNode);
             default:
                 System.out.println("-->>FOR NOW Reroot only support using jar and python dendropy [to add perl later].");
@@ -167,26 +169,31 @@ public class TreeHandler {
                 return sc.nextLine();
             }
 
-        } catch (Exception ex) {
+        } catch (IOException ex) {
         }
 
         return "ERROR_IN_TREE";
     }
 
     //eg: a b c d
-    public static String getStarTree(List<String> taxa_list_string) {
-        if (taxa_list_string.isEmpty()) {
+    public static String getStarTree(List<Integer> taxa_list_int) {
+        if (taxa_list_int.isEmpty()) {
             return "();";
         }
-        String s = "";
-        s += "(";
-        for (int i = 0; i < taxa_list_string.size(); i++) {
-            s += taxa_list_string.get(i);
-            if (i != taxa_list_string.size() - 1) {
-                s += ","; //do not add comma for the last taxon
-            }
-        }
-        s += ");";
-        return s;
+        return taxa_list_int
+                .stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(",", "(", ")"));
+
+//        String s = "";
+//        s += "(";
+//        for (int i = 0; i < taxa_list_int.size(); i++) {
+//            s += taxa_list_int.get(i);
+//            if (i != taxa_list_int.size() - 1) {
+//                s += ","; //do not add comma for the last taxon
+//            }
+//        }
+//        s += ");";
+//        return s;
     }
 }

@@ -5,6 +5,7 @@
  */
 package wqfm.testFunctions;
 
+import wqfm.configs.Config;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -16,20 +17,54 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
-import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 import javafx.util.Pair;
+import wqfm.feature.Bin;
 import wqfm.main.Main;
 import wqfm.utils.TreeHandler;
-import wqfm.interfaces.Status;
-import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.Quartet;
 import wqfm.utils.Helper;
+import wqfm.configs.DefaultValues;
 
 /**
  *
  * @author mahim
  */
 public class TestNormalFunctions {
+
+    public static void testInitialBipartitionFunctions() {
+        Map<Integer, Integer> map_partition = new HashMap<>();
+
+        Integer[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+        List<Integer> taxa_list_int = new ArrayList<>(Arrays.asList(arr));
+        // initially put all taxa to the right.
+        taxa_list_int.forEach((t) -> {
+            int partition = (Math.random() > 0.5) ? DefaultValues.LEFT_PARTITION : DefaultValues.RIGHT_PARTITION;
+            map_partition.put(t, partition);
+        });
+
+        System.out.println(map_partition);
+    }
+
+    private static List<Bin> getListOfBins(double lower_limit, double upper_limit, double step_size) {
+        List<Bin> bins = new ArrayList<>();
+        double lower_iter = lower_limit;
+        while (lower_iter < upper_limit) {
+            bins.add(new Bin(lower_iter, (lower_iter + step_size)));
+            lower_iter += step_size;
+        }
+        return bins;
+    }
+
+    public static void testBin() {
+        List<Bin> bins = getListOfBins(0.5, 1.0, 0.01);
+        System.out.println(
+                bins.stream()
+                        .map(Bin::toString)
+                        .collect(Collectors.joining("\n"))
+        );
+    }
 
     public static void testMyPairClass() {
         for (int i = 5; i <= 9; i++) {
@@ -43,46 +78,6 @@ public class TestNormalFunctions {
 
     static void compareQuartets(Quartet q1, Quartet q2) {
         System.out.println("Comparing " + q1.toString() + " , " + q2.toString() + " = " + q1.equals(q2));
-    }
-
-    public static void testMapAddQuartet() {
-
-        Quartet q1, q2, q3, q4, q5, q6, q7;
-
-        q1 = new Quartet("M", "Z", "A", "B", 22);
-        q3 = new Quartet("M", "Z", "A", "B", 31);
-        q2 = new Quartet("A", "B", "M", "Z", 22);
-        q4 = new Quartet("M", "Z", "B", "A", 10);
-        q5 = new Quartet("Z", "M", "B", "A", 100);
-        q7 = new Quartet("A", "M", "B", "Z", 22);
-
-        System.out.println("-------------------------------------------------------");
-
-        Map<Quartet, Pair<Double, Integer>> map_cuml_weight_quartets = new HashMap<>();
-        map_cuml_weight_quartets.put(q1, new Pair(q1.weight, -1));
-        System.out.println(map_cuml_weight_quartets);
-        System.out.println(map_cuml_weight_quartets.containsKey(q2));
-        System.out.println(map_cuml_weight_quartets.get(q2));
-        map_cuml_weight_quartets.put(q2, new Pair(1000, 1000));
-        System.out.println(map_cuml_weight_quartets);
-
-        System.out.println("*****************************************************************");
-        q1 = new Quartet("((7,8),(X2,9));4.0");
-        q2 = new Quartet("((7,8),(9,X2));0.0");
-
-        System.out.println(q1.equals(q2));
-        map_cuml_weight_quartets.clear();
-        System.out.println(map_cuml_weight_quartets);
-
-        map_cuml_weight_quartets.put(q1, new Pair(q1.weight, -100));
-        System.out.println(map_cuml_weight_quartets);
-        System.out.println(map_cuml_weight_quartets.containsKey(q2));
-        map_cuml_weight_quartets.put(q2, new Pair(7777, 7777));
-
-        /*
-        Comparing ((M,Z),(A,B));22.0 , ((Z,M),(B,A));100.0 = true
-        Comparing ((M,Z),(A,B));22.0 , ((A,M),(B,Z));22.0 = false
-         */
     }
 
     public static boolean checkAllValuesIFSame(List<Boolean> list, boolean val) {
@@ -106,7 +101,7 @@ public class TestNormalFunctions {
         String outGroupNode = "5";
         int i = 0;
 //            System.out.print(i + ": ");
-        Main.REROOT_MODE = Status.REROOT_USING_PERL;
+        Config.REROOT_MODE = DefaultValues.REROOT_USING_PERL;
         String rerootTree = TreeHandler.rerootTree(newickTree, outGroupNode);
         System.out.println(i + ": ->" + rerootTree);
 //        for (int i = 0; i < num; i++) {
@@ -140,13 +135,6 @@ public class TestNormalFunctions {
         System.out.println(pair.getKey() + " -> " + pair.getValue());
     }
 
-    private static void testNewickQuartet() {
-        String newickQuartet = "((Z,B),(D,C)); 41";
-        Quartet quartet = new Quartet(newickQuartet);
-//        quartet = new Quartet("A", "B", "D", "C", 41);
-        quartet.printQuartet();
-    }
-
     // Using python3 and dendropy ... this reroot_tree_new.py works
     // Command is: python3 reroot_tree_new.py <tree-newick> <outgroup> DON'T FORGET SEMI-COLON
     public static void testRerootFunction() {
@@ -154,7 +142,7 @@ public class TestNormalFunctions {
         String outGroupNode = "5";
 
 //            System.out.print(i + ": ");
-        Main.REROOT_MODE = Status.REROOT_USING_PYTHON;
+        Config.REROOT_MODE = DefaultValues.REROOT_USING_PYTHON;
         TreeHandler.rerootTree(newickTree, outGroupNode);
 
     }
@@ -311,15 +299,51 @@ public class TestNormalFunctions {
         System.out.println(entry + " , " + entry.getKey() + " , " + entry.getValue());
     }
 
-    public static void testStarTree() {
-        List<String> list1 = new ArrayList<>(Arrays.asList("Mahim", "Ronaldo"));
-        List<String> list2 = new ArrayList<>(Arrays.asList("Mahim"));
-        List<String> list3 = new ArrayList<>(Arrays.asList("Mahim", "Ronaldo", "CR7"));
-        List<String> list4 = new ArrayList<>();
-        System.out.println("List 1 ->" + TreeHandler.getStarTree(list1));
-        System.out.println("List 2 ->" + TreeHandler.getStarTree(list2));
-        System.out.println("List 3 ->" + TreeHandler.getStarTree(list3));
-        System.out.println("List 4 ->" + TreeHandler.getStarTree(list4));
+    public static void testReverseMap() {
+        Map<String, String> map_of_int_vs_str = new HashMap<>();
+        List<Integer> list_int = new ArrayList<>(Arrays.asList(22, 5, 43, 10, 31));
+//        List<String> list_str = new ArrayList<>(Arrays.asList("MAHIM", "ALVI", "PAPAN", "HRIDOY", "ZAHIN"));
+        List<String> list_str = new ArrayList<>(Arrays.asList("1", "2", "11", "12", "5"));
+        for (int i = 0; i < list_int.size(); i++) {
+            map_of_int_vs_str.put(String.valueOf(list_int.get(i)), list_str.get(i));
+        }
+        System.out.println(map_of_int_vs_str);
+//        String s = "(((MAHIM,ZAHIN),ALVI),(HRIDOY,PAPAN));";
+        String finalTree = "(((22,31),5),(10,43));";
+        System.out.println(finalTree);
+
+        String decodedTree = "";
+        for (int i = 0; i < finalTree.length(); i++) {
+            char c = finalTree.charAt(i);
+            if (c != '(' && c != ')' && c != ',' && c != ';') {
+                String key = "";
+                int j;
+                for (j = i + 1; j < finalTree.length(); j++) {
+                    char c1 = finalTree.charAt(j);
+                    if (c1 == ')' || c1 == '(' || c1 == ',' || c1 == ';') {
+                        break;
+                    }
+                }
+                // System.out.println(j);
+                key = finalTree.substring(i, j);
+                // System.out.println("i: "+i+ " j: "+j);
+                // System.out.println("Key: "+ key);
+                String val = map_of_int_vs_str.get(key);
+                //System.out.println(val);
+                decodedTree += val;
+                i += (j - 1 - i);
+            } else {
+                decodedTree += c;
+            }
+            //  System.out.println(finalTree.charAt(i));
+
+        }
+//        for(int key: map_of_int_vs_str.keySet()){
+//            System.out.println("<<REPLACING key=" + key + ", with val=" + map_of_int_vs_str.get(key) + ">>");
+//            replaced = replaced.replace(String.valueOf(key), map_of_int_vs_str.get(key));
+//        }
+        System.out.println(decodedTree);
+
     }
 
     private TreeMap<Double, Integer> sortMap(Map<Double, Integer> map) {
@@ -347,43 +371,6 @@ public class TestNormalFunctions {
         });
         for (Pair<Integer, Integer> pair : list_pairs) {
             System.out.println(pair);
-        }
-    }
-
-    public static void testDoubleListSort() {
-        List<List<Quartet>> double_list = new ArrayList<>();
-
-        // List<Integer> list_1 = new ArrayList<>(Arrays.asList(22,5,31));
-        List<Quartet> list_1 = new ArrayList<>(Arrays.asList(new Quartet("((a,b),(c,d));31"), new Quartet("((a,f),(g,h));31"), new Quartet("((g,z),(m,n));31")));
-        List<Quartet> list_2 = new ArrayList<>(Arrays.asList(new Quartet("((a,c),(f,l));200"), new Quartet("((p,q),(r,s));200")));
-        List<Quartet> list_3 = new ArrayList<>(Arrays.asList(new Quartet("((i,j),(a,k));22")));
-
-        double_list.add(list_1);
-        double_list.add(list_2);
-        double_list.add(list_3);
-
-        for (int i = 0; i < double_list.size(); i++) {
-            List<Quartet> list = double_list.get(i);
-            System.out.print("Row " + i + " : ");
-            for (Quartet q : list) {
-                System.out.print(q.toString() + "  ");
-            }
-            System.out.println("");
-        }
-
-        double_list.sort((List<Quartet> list1, List<Quartet> list2) -> {
-            return (int) (list2.get(0).weight - list1.get(0).weight); //To change body of generated lambdas, choose Tools | Templates.
-        });
-
-        System.out.println("-----------------------------------------");
-
-        for (int i = 0; i < double_list.size(); i++) {
-            List<Quartet> list = double_list.get(i);
-            System.out.print("Row " + i + " : ");
-            for (Quartet q : list) {
-                System.out.print(q.toString() + "  ");
-            }
-            System.out.println("");
         }
     }
 
