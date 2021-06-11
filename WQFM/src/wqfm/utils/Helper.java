@@ -230,24 +230,6 @@ public class Helper {
         return map.keySet().stream().noneMatch((key) -> (map.get(key) != val));
     }
 
-    public static String getReadableMap(Map<String, Integer> map_bipartitions) {
-        String s = ("LEFT: ");
-        for (String key : map_bipartitions.keySet()) {
-            if (map_bipartitions.get(key) == DefaultValues.LEFT_PARTITION) {
-                s += (key + ", ");
-            }
-        }
-//        s += (" ||| ");
-        s += ("\nRIGHT: ");
-        for (String key : map_bipartitions.keySet()) {
-            if (map_bipartitions.get(key) == DefaultValues.RIGHT_PARTITION) {
-                s += (key + ", ");
-            }
-        }
-        s += "\n";
-        return s;
-    }
-
     public static String getFinalTreeFromMap(String finalTree,
             Map<Integer, String> map_of_int_vs_str) {
 
@@ -298,7 +280,7 @@ public class Helper {
         });
         
         
-        System.out.println("COMPARING two maps function\nmap1 = " + map1 + "\nmap2 = " + map2 + "\nnewFinalMap = " + newFinalMap);
+//        System.out.println("COMPARING two maps function\nmap1 = " + map1 + "\nmap2 = " + map2 + "\nnewFinalMap = " + newFinalMap);
         
         
         return (map1.equals(newFinalMap));

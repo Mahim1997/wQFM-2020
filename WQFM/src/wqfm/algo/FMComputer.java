@@ -361,29 +361,30 @@ public class FMComputer {
         //Retrieve the stat's bipartition.
         StatsPerPass statOfMaxCumulativeGainBox = this.listOfPerPassStatistics.get(pass_index_with_max_cumulative_gain);
 
-        System.out.println("[FMComputer L 341] Cumulative gain (max) = " + max_cumulative_gain_of_current_iteration
-                + " , for pass = " + (pass_index_with_max_cumulative_gain + 1)
-                + " , Tax Passed = " + Helper.getStringMappedName(statOfMaxCumulativeGainBox.whichTaxaWasPassed));
+//        System.out.println("[FMComputer L 341] Cumulative gain (max) = " + max_cumulative_gain_of_current_iteration
+//                + " , for pass = " + (pass_index_with_max_cumulative_gain + 1)
+//                + " , Tax Passed = " + Helper.getStringMappedName(statOfMaxCumulativeGainBox.whichTaxaWasPassed));
 
 //                + " map_final_bipartition = \n" + Helper.getReadableMap(statOfMaxCumulativeGainBox.map_final_bipartition));
         //Initial bipartitions and ALL maps //Now change parameters accordingly for next FM iteration.
         //only when max-cumulative-gain is GREATER than zero, we will change, otherwise return the initial bipartition of this iteration
         if (max_cumulative_gain_of_current_iteration > Config.SMALLEPSILON) {
-            System.out.println("L 364. max_cumulative_gain_of_current_iteration = " + max_cumulative_gain_of_current_iteration
-                    + " , return true due to repeat. + this.bipartitionMap = \n"
-                    + Helper.getPartition(bipartitionMap, DefaultValues.LEFT_PARTITION, DefaultValues.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list));
+
+//            System.out.println("L 364. max_cumulative_gain_of_current_iteration = " + max_cumulative_gain_of_current_iteration
+//                    + " , return true due to repeat. + this.bipartitionMap = \n"
+//                    + Helper.getPartition(bipartitionMap, DefaultValues.LEFT_PARTITION, DefaultValues.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list));
 
             // Check if this is not first time, and previous was the same as this one.
             if ((this.isFirstTime == false) && (max_cumulative_gain_of_current_iteration == this.prevCumulativeMax)) {
-                System.out.println("Map 1 (stats.map): \n" + Helper.getPartition(statOfMaxCumulativeGainBox.map_final_bipartition, DefaultValues.LEFT_PARTITION, DefaultValues.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list));
-                System.out.println("Map 2 (this.prevMap): \n" + Helper.getPartition(this.prevMap, DefaultValues.LEFT_PARTITION, DefaultValues.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list));
+//                System.out.println("Map 1 (stats.map): \n" + Helper.getPartition(statOfMaxCumulativeGainBox.map_final_bipartition, DefaultValues.LEFT_PARTITION, DefaultValues.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list));
+//                System.out.println("Map 2 (this.prevMap): \n" + Helper.getPartition(this.prevMap, DefaultValues.LEFT_PARTITION, DefaultValues.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list));
 
                 if (Helper.areEqualBipartition(statOfMaxCumulativeGainBox.map_final_bipartition,
                         this.prevMap,
                         DefaultValues.LEFT_PARTITION,
                         DefaultValues.RIGHT_PARTITION,
                         DefaultValues.UNASSIGNED_PARTITION) == true) {
-                    System.out.println("L 381. Two maps are equal, return false. break loop.");
+//                    System.out.println("L 381. Two maps are equal, return false. break loop.");
                     return false;
                 }
             }
@@ -407,10 +408,10 @@ public class FMComputer {
             return true;
         }
 
-        System.out.println("L 376. level = " + this.level + " , max_cumulative_gain_of_current_iteration = "
-                + max_cumulative_gain_of_current_iteration + ", this.bipartitionMap = \n"
-                + Helper.getPartition(bipartitionMap, DefaultValues.LEFT_PARTITION, DefaultValues.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list)
-                + " , small_epsilone = " + Config.SMALLEPSILON + " , return false.");
+//        System.out.println("L 376. level = " + this.level + " , max_cumulative_gain_of_current_iteration = "
+//                + max_cumulative_gain_of_current_iteration + ", this.bipartitionMap = \n"
+//                + Helper.getPartition(bipartitionMap, DefaultValues.LEFT_PARTITION, DefaultValues.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list)
+//                + " , small_epsilon = " + Config.SMALLEPSILON + " , return false.");
 
         //Set initial map to list's 1st item's map.
         return false;
