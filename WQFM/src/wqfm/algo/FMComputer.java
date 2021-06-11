@@ -49,6 +49,7 @@ public class FMComputer {
     // for not going up in endless loop condition.
     private double prevCumulativeMax;
     private boolean isFirstTime;
+    private Map<Integer, Integer> prevMap;
 
     public FMComputer(CustomDSPerLevel customDS,
             Map<Integer, Integer> mapInitialBipartition,
@@ -77,6 +78,9 @@ public class FMComputer {
         for (int tax : this.customDS.taxa_list_int) {
             this.lockedTaxaBooleanMap.put(tax, Boolean.FALSE);
         }
+
+        // normal initialization
+        this.prevMap = new HashMap<>();
     }
 
     public void run_FM_singlepass_hypothetical_swap_threaded_version() throws InterruptedException, ExecutionException {//per pass or step [per num taxa of steps].
@@ -357,40 +361,57 @@ public class FMComputer {
         //Retrieve the stat's bipartition.
         StatsPerPass statOfMaxCumulativeGainBox = this.listOfPerPassStatistics.get(pass_index_with_max_cumulative_gain);
 
-        if (Config.DEBUG_MODE_PRINTING_GAINS_BIPARTITIONS) {
-            System.out.println("[FMComputer L 341] Cumulative gain (max) = " + max_cumulative_gain_of_current_iteration
-                    + " , for pass = " + (pass_index_with_max_cumulative_gain + 1)
-                    + " , Tax Passed = " + Helper.getStringMappedName(statOfMaxCumulativeGainBox.whichTaxaWasPassed));
-        }
+        System.out.println("[FMComputer L 341] Cumulative gain (max) = " + max_cumulative_gain_of_current_iteration
+                + " , for pass = " + (pass_index_with_max_cumulative_gain + 1)
+                + " , Tax Passed = " + Helper.getStringMappedName(statOfMaxCumulativeGainBox.whichTaxaWasPassed));
+
 //                + " map_final_bipartition = \n" + Helper.getReadableMap(statOfMaxCumulativeGainBox.map_final_bipartition));
         //Initial bipartitions and ALL maps //Now change parameters accordingly for next FM iteration.
         //only when max-cumulative-gain is GREATER than zero, we will change, otherwise return the initial bipartition of this iteration
-
         if (max_cumulative_gain_of_current_iteration > Config.SMALLEPSILON) {
-//            System.out.println("L 364. max_cumulative_gain_of_current_iteration = " + max_cumulative_gain_of_current_iteration + " , return true, repeat.");
+            System.out.println("L 364. max_cumulative_gain_of_current_iteration = " + max_cumulative_gain_of_current_iteration
+                    + " , return true due to repeat. + this.bipartitionMap = \n"
+                    + Helper.getPartition(bipartitionMap, DefaultValues.LEFT_PARTITION, DefaultValues.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list));
 
             // Check if this is not first time, and previous was the same as this one.
-            if((this.isFirstTime == false) && (max_cumulative_gain_of_current_iteration == this.prevCumulativeMax)){
-                return false;
+            if ((this.isFirstTime == false) && (max_cumulative_gain_of_current_iteration == this.prevCumulativeMax)) {
+                System.out.println("Map 1 (stats.map): \n" + Helper.getPartition(statOfMaxCumulativeGainBox.map_final_bipartition, DefaultValues.LEFT_PARTITION, DefaultValues.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list));
+                System.out.println("Map 2 (this.prevMap): \n" + Helper.getPartition(this.prevMap, DefaultValues.LEFT_PARTITION, DefaultValues.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list));
+
+                if (Helper.areEqualBipartition(statOfMaxCumulativeGainBox.map_final_bipartition,
+                        this.prevMap,
+                        DefaultValues.LEFT_PARTITION,
+                        DefaultValues.RIGHT_PARTITION,
+                        DefaultValues.UNASSIGNED_PARTITION) == true) {
+                    System.out.println("L 381. Two maps are equal, return false. break loop.");
+                    return false;
+                }
             }
-            
+
+            // will check on this map [left side will contain the prev. map]
             this.bipartitionMap = new HashMap<>(statOfMaxCumulativeGainBox.map_final_bipartition);
+
             this.initialBipartition_8_values = statOfMaxCumulativeGainBox._8_values_chosen_for_this_pass;
             this.listOfPerPassStatistics.clear();
             this.mapCandidateGainsPerListTax = new TreeMap<>(Collections.reverseOrder());
             this.mapCandidateTax_vs_8vals = new HashMap<>();
+
             for (int tax : this.customDS.taxa_list_int) {
                 this.lockedTaxaBooleanMap.put(tax, Boolean.FALSE);
             }
-            
+
             // change prev to this cumulative max
             this.prevCumulativeMax = max_cumulative_gain_of_current_iteration;
-            
+            this.prevMap = new HashMap<>(this.bipartitionMap);
+
             return true;
         }
 
-//        System.out.println("L 376. level = " + this.level + " , max_cumulative_gain_of_current_iteration = "
-//         + max_cumulative_gain_of_current_iteration + " , small_epsilone = " + Config.SMALLEPSILON + " , return false.");
+        System.out.println("L 376. level = " + this.level + " , max_cumulative_gain_of_current_iteration = "
+                + max_cumulative_gain_of_current_iteration + ", this.bipartitionMap = \n"
+                + Helper.getPartition(bipartitionMap, DefaultValues.LEFT_PARTITION, DefaultValues.RIGHT_PARTITION, InitialTable.map_of_int_vs_str_tax_list)
+                + " , small_epsilone = " + Config.SMALLEPSILON + " , return false.");
+
         //Set initial map to list's 1st item's map.
         return false;
     }
@@ -398,12 +419,12 @@ public class FMComputer {
     //Whole FM ALGORITHm
     public FMResultObject run_FM_Algorithm_Whole() {
         Map<Integer, Integer> map_previous_iteration;//= new HashMap<>();
-        boolean willIterateMore = true;
+        boolean willIterateMore;
         int iterationsFM = 0; //can have stopping criterion for 10k iterations ?
 
         while (true) { //stopping condition
             if (iterationsFM > Config.MAX_ITERATIONS_LIMIT) { //another stopping criterion.
-                System.out.println("[FMComputer L258.] Thread (" + Thread.currentThread().getName()
+                System.out.println("[FMComputer L409.] Thread (" + Thread.currentThread().getName()
                         + ", " + Thread.currentThread().getId() + ") MAX_ITERATIONS_LIMIT = "
                         + Config.MAX_ITERATIONS_LIMIT + " is reached for level = " + this.level);
                 break;

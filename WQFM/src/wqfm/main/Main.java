@@ -129,7 +129,7 @@ public class Main implements Callable<Integer> {
         return 0;
     }
 
-    private static void runwQFM() {
+    public static void runwQFM() {
         // Call wQFM runner here. ?
         System.out.println("================= **** ========== Running " + WQFM_VERSION + " ============== **** ====================");
 
