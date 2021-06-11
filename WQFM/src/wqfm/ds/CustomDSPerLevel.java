@@ -48,14 +48,18 @@ public class CustomDSPerLevel {
 
     private void printMap_RelevantQuartetsIndicesPerTaxa() {
         System.out.println("----------- Printing Map <Taxa,RelevantQrtIndex> ---------");
-        for (int key_taxa : map_taxa_relevant_quartet_indices.keySet()) {
+        map_taxa_relevant_quartet_indices.keySet().stream().map((key_taxa) -> {
             List<Integer> list_relevant_qrts_indices = map_taxa_relevant_quartet_indices.get(key_taxa);
             System.out.print("Taxa:<" + key_taxa + ">: Length: " + list_relevant_qrts_indices.size() + "  ==>> ");
+            return list_relevant_qrts_indices;
+        }).map((list_relevant_qrts_indices) -> {
             for (int i = 0; i < list_relevant_qrts_indices.size(); i++) {
                 System.out.print(list_relevant_qrts_indices.get(i) + ",");
             }
+            return list_relevant_qrts_indices;
+        }).forEachOrdered((_item) -> {
             System.out.println("");
-        }
+        });
     }
 
     private void printMap_RelevantQuartetsPeraTaxa() {
@@ -124,7 +128,6 @@ public class CustomDSPerLevel {
                 .reduce(s, String::concat);
         return s;
     }
-    
 
     public void printSortedQuartetsTable() {
 
@@ -141,7 +144,7 @@ public class CustomDSPerLevel {
                     System.out.println(
                             list_quartet_indices.stream()
                                     .map(qrt_idx -> this.initial_table1_of_list_of_quartets.get(qrt_idx))
-                                    .map(quartet -> quartet.getNamedQuartet()) // quartet.getNamedQuartet()
+                                    .map(quartet -> quartet.getNamedQuartet())
                                     .collect(Collectors.joining("\n"))
                     );
                 });

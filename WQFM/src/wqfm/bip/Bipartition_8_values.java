@@ -1,21 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package wqfm.bip;
 
 import wqfm.configs.Config;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import javafx.util.Pair;
 import wqfm.ds.CustomDSPerLevel;
 import wqfm.ds.Quartet;
 import wqfm.feature.FeatureComputer;
-import wqfm.main.Main;
 import wqfm.utils.TaxaUtils;
 import wqfm.configs.DefaultValues;
 
@@ -140,8 +131,7 @@ public class Bipartition_8_values {
                     break;
             }
         }
-        
-        
+
         if (Config.PARTITION_SCORE_MODE == DefaultValues.PARTITION_SCORE_FULL_DYNAMIC) {
             FeatureComputer.computeBinningFeature(map_four_tax_seq_weights_list, customDS.level);
         }

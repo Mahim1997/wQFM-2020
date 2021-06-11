@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -44,7 +45,6 @@ public class Helper {
     }
 
     public static void runSystemCommand(String cmd) {
-        System.out.println(cmd);
         try {
             Process p = Runtime.getRuntime().exec(cmd);
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -161,15 +161,28 @@ public class Helper {
                 .collect(Collectors.joining(", "));
     }
 
+    public static String getPartition(Map<Integer, Integer> partition_map,
+            int left_partition, int right_partition,
+            Map<Integer, String> reverse_mapping) {
+
+        StringBuilder bld = new StringBuilder();
+
+        bld
+                .append("LEFT: ")
+                .append(getKeysWithSpecifiedValue(partition_map, left_partition, reverse_mapping))
+                .append("\n")
+                .append("RIGHT: ")
+                .append(getKeysWithSpecifiedValue(partition_map, right_partition, reverse_mapping))
+                .append("\n");
+
+        return bld.toString();
+    }
+
     public static void printPartition(Map<Integer, Integer> partition_map,
             int left_partition, int right_partition,
             Map<Integer, String> reverse_mapping) {
-        System.out.print("LEFT:  ");
-        System.out.println(getKeysWithSpecifiedValue(partition_map, left_partition, reverse_mapping));
 
-        System.out.print("RIGHT: ");
-        System.out.println(getKeysWithSpecifiedValue(partition_map, right_partition, reverse_mapping));
-
+        System.out.println(getPartition(partition_map, left_partition, right_partition, reverse_mapping));
     }
 
     private static String getDummyName(int x) {
@@ -216,24 +229,6 @@ public class Helper {
         return map.keySet().stream().noneMatch((key) -> (map.get(key) != val));
     }
 
-    public static String getReadableMap(Map<String, Integer> map_bipartitions) {
-        String s = ("LEFT: ");
-        for (String key : map_bipartitions.keySet()) {
-            if (map_bipartitions.get(key) == DefaultValues.LEFT_PARTITION) {
-                s += (key + ", ");
-            }
-        }
-//        s += (" ||| ");
-        s += ("\nRIGHT: ");
-        for (String key : map_bipartitions.keySet()) {
-            if (map_bipartitions.get(key) == DefaultValues.RIGHT_PARTITION) {
-                s += (key + ", ");
-            }
-        }
-        s += "\n";
-        return s;
-    }
-
     public static String getFinalTreeFromMap(String finalTree,
             Map<Integer, String> map_of_int_vs_str) {
 
@@ -268,6 +263,26 @@ public class Helper {
 //            replaced = replaced.replace(String.valueOf(key), map_of_int_vs_str.get(key));
 //        }
         return decodedTree;
+    }
+
+    public static boolean areEqualBipartition(Map<Integer, Integer> map1, Map<Integer, Integer> map2,
+            int leftPartition, int rightPartition, int unassignedPartition) {
+
+        // check if normally equal.
+        if(map1.equals(map2)){
+            return true;
+        }
+
+        Map<Integer, Integer> newFinalMap = new HashMap<>();
+        map2.keySet().forEach((key) -> {
+            newFinalMap.put(key, (map2.get(key) == unassignedPartition) ? unassignedPartition : ((map2.get(key) == leftPartition) ? rightPartition : leftPartition)); // only non-zeros will be flipped
+        });
+        
+        
+//        System.out.println("COMPARING two maps function\nmap1 = " + map1 + "\nmap2 = " + map2 + "\nnewFinalMap = " + newFinalMap);
+        
+        
+        return (map1.equals(newFinalMap));
     }
 
 }

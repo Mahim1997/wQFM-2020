@@ -44,8 +44,7 @@ public class InitialTable { //STORED separately to have the synchronized add fun
         return list_quartets.size();
     }
 
-    public void addToListOfQuartets(Quartet q) { //maybe make this method sync ? [NO NEED]
-//        System.out.println("InitTable. Quartet is added." + q);
+    public void addToListOfQuartets(Quartet q) {
         this.list_quartets.add(q);
     }
 
@@ -56,7 +55,7 @@ public class InitialTable { //STORED separately to have the synchronized add fun
     }
 
     public void assignByReference(InitialTable initialTable) {
-        this.list_quartets = initialTable.list_quartets; //assign be reference
+        this.list_quartets = initialTable.list_quartets; //assign by reference
     }
 
 }
