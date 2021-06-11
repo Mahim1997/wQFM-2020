@@ -1,5 +1,6 @@
 package wqfm.utils;
 
+import wqfm.configs.Config;
 import wqfm.configs.DefaultValues;
 import wqfm.configs.Scripts;
 import wqfm.main.Main;
@@ -16,6 +17,8 @@ public class QuartetScoreHandler {
         bld.append(Main.PYTHON_ENGINE) // python3/pyhton
                 .append(" ")
                 .append(Scripts.QUARTET_SCORE_COMPUTER) // compute_quartet_score.py
+                .append(" ")
+                .append(Config.INPUT_FILE_NAME)
                 .append(" ")
                 .append(speciesTreeFileName)
                 .append(" ")
