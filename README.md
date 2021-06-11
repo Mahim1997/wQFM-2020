@@ -139,19 +139,16 @@ We can use the jar file to compute quartet scores of a reference species tree wi
 java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -q 1 # just prints quartet score details on console.
 java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -q 1 -qo "qscore-details.txt" # for convenience, dumps to a file.
 
-
-# Just to get the quartet score
-java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-file" -q 2 # to print on console
-java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-file" -q 2 -qo "qscore-details.txt" # to dump to a file
-
 ## Eg. if you have python setup instead of python3. Now, the scripts will be called using "python <script-name.py> <args>"
-java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-file" -q 2 -pe python
+java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -q 2 -pe python
 ```
     
-* If you want to annotate the branches of a given species tree with quartet support with respect to a set of weighted quartets
+* If you want to find the quartet score without generating species tree (i.e. without running wQFM algorithm)
 ```bash
-# eg. using annotations level of 1 (use -pe python if you have python setup instead of python3)
-java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-without-annotations" -o "species-tree-with-annotations" -t 1
+# Just to get the quartet scores without generating any estimated species tree
+
+java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-file" -q 2 # to print on console
+java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-file" -q 2 -qo "qscore-details.txt" # to dump to a file
 ```
 
 #### Relevant Multiple Options
