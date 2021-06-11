@@ -90,7 +90,23 @@ def get_satisfied_weights(dict_quartets, dict_quartets_stree):
         
     return satisfied_weights
 
+"""Get required score(s) according to quartet score level"""
+def get_string_output(qscore_level, satisfied_wqrts, total_weight_wqrts):
+    if qscore_level == 1:
+        s = str(satisfied_wqrts)
+    
+    elif qscore_level == 2:
+        if total_weight_wqrts == 0:
+            percent_satisfied = 0
+        else:
+            percent_satisfied = float(satisfied_wqrts) / float(total_weight_wqrts)
+        
+        s = str(satisfied_wqrts) + "\t" + str(total_weight_wqrts) + "\t" + str(percent_satisfied)
+    else:
+        s = ""
+    return s
 
+""" Main function """
 def main(input_file_wqrts, stree_file, qscore_level, qscore_output_file=None):
     dict_quartets, total_weight_wqrts = get_input_wqrts(input_file_wqrts)
 
@@ -98,15 +114,13 @@ def main(input_file_wqrts, stree_file, qscore_level, qscore_output_file=None):
 
     satisfied_weights = get_satisfied_weights(dict_quartets, dict_quartets_stree)
 
-    print(satisfied_weights, total_weight_wqrts)
+    s = get_string_output(qscore_level, satisfied_weights, total_weight_wqrts)
+    print(s)
 
-    # s = get_string_output(qscore_level, satisfied_wqrts, total_weight_wqrts)
-    # print(s)
-
-    # if qscore_output_file != None:
-    #     with open(qscore_output_file, mode='w') as fout:
-    #         fout.write(s)
-    #         fout.write("\n")
+    if qscore_output_file != None:
+        with open(qscore_output_file, mode='w') as fout:
+            fout.write(s)
+            fout.write("\n")
 
 
 #################################################################################################
