@@ -14,15 +14,15 @@ public class StatsPerPass {
     public Bipartition_8_values _8_values_chosen_for_this_pass;
     public final Map<Integer, Integer> map_final_bipartition;
 
-    public StatsPerPass(int whichTaxaWasPassed,
-            double maxGainOfThisPass,
+    public StatsPerPass(int whichTaxaWasPassed, double maxGainOfThisPass,
             Bipartition_8_values _8_vals,
             Map<Integer, Integer> map) {
-
         this.whichTaxaWasPassed = whichTaxaWasPassed;
         this.maxGainOfThisPass = maxGainOfThisPass;
         this._8_values_chosen_for_this_pass = new Bipartition_8_values(_8_vals);
-        this.map_final_bipartition = map; // this works, no need to create a new hashmap
+        this.map_final_bipartition = map; // this also works.
+//        this.map_final_bipartition = new HashMap<>(map);
+
     }
 
     @Override
