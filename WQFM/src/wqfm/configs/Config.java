@@ -24,11 +24,14 @@ public class Config {
     public static int MAX_ITERATIONS_LIMIT = 1000000; //can we keep it as another stopping-criterion ? [100k]
 
     public static int ANNOTATIONS_LEVEL = DefaultValues.ANNOTATIONS_LEVEL0_NONE;
+    public static int QUARTET_SCORE_LEVEL = DefaultValues.QUARTET_SCORE_LEVEL_0_NONE;
     
     public static String INPUT_FILE_NAME = DefaultValues.INPUT_FILE_NAME_WQRTS_DEFAULT; // "input_files/weighted_quartets_avian_biological_dataset";
     public static String OUTPUT_FILE_NAME = DefaultValues.OUTPUT_FILE_NAME_DEFAULT;
     
     public static String INPUT_MODE = DefaultValues.INPUT_MODE_DEFAULT;
     
+    
+    public static String QUARTET_SCORE_OUTPUT_FILE = "quartet-score-output-file.log";
 
 }

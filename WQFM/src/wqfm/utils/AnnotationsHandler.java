@@ -2,6 +2,7 @@ package wqfm.utils;
 
 import wqfm.configs.Config;
 import wqfm.configs.DefaultValues;
+import wqfm.configs.Scripts;
 
 import wqfm.main.Main;
 
@@ -37,7 +38,7 @@ public class AnnotationsHandler {
     private static void handleQuartetSupport(String tree) {
         String cmd = Main.PYTHON_ENGINE
                 + " "
-                + DefaultValues.SCRIPT_BRANCH_ANNOTATIONS_QUARTET_SUPPORT
+                + Scripts.BRANCH_ANNOTATIONS_QUARTET_SUPPORT
                 + " "
                 + Config.INPUT_FILE_NAME
                 + " "
@@ -51,7 +52,7 @@ public class AnnotationsHandler {
     private static void handleQuartetSupportNormalizedSum(String tree) {
         String cmd = Main.PYTHON_ENGINE
                 + " "
-                + DefaultValues.SCRIPT_BRANCH_ANNOTATIONS_QUARTET_SUPPORT
+                + Scripts.BRANCH_ANNOTATIONS_QUARTET_SUPPORT
                 + " "
                 + Config.INPUT_FILE_NAME
                 + " "
@@ -67,7 +68,7 @@ public class AnnotationsHandler {
     private static void handleQuartetSupportNormalizedMax(String tree) {
         String cmd = Main.PYTHON_ENGINE
                 + " "
-                + DefaultValues.SCRIPT_BRANCH_ANNOTATIONS_QUARTET_SUPPORT
+                + Scripts.BRANCH_ANNOTATIONS_QUARTET_SUPPORT
                 + " "
                 + Config.INPUT_FILE_NAME
                 + " "

@@ -19,7 +19,7 @@ public class DebugRun {
         
         Bin.WILL_DO_DYNAMIC = false;
         
-        Main.runwQFM();
-        
+        String tree = Main.runwQFM();
+        System.out.println(tree);
     }
 }
