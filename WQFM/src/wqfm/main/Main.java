@@ -52,10 +52,10 @@ public class Main implements Callable<Integer> {
     private String inputFileMode = Config.INPUT_MODE;
 
     // for quartet score level
-    @CommandLine.Option(names = {"-q", "--quartet_score_level"}, required = false, description = "q=0: do not show quartet score(default)\nq=1: show quartet score only\nq=2: show quartet score, proportion of quartets satisfied, total weight of quartets")
+    @CommandLine.Option(names = {"-q", "--quartet_score_level"}, required = false, description = "q=0: do not show quartet score(default)\nq=1: show quartet score only\nq=2: show quartet score, total weight of quartets, proportion of quartets satisfied.")
     private int quartetScoreLevel = DefaultValues.QUARTET_SCORE_LEVEL_0_NONE;
 
-    @CommandLine.Option(names = {"-qo", "--quartet_score_output_file"}, required = false, description = "(default) null\nIf given, quartet scores will be output here, along with the reference species tree.")
+    @CommandLine.Option(names = {"-qo", "--quartet_score_output_file"}, required = false, description = "(default) null\nIf given, quartet scores will be output here.")
     private String quartetScoreOutputFile = null;
 
     private static void goDebugMode() {
