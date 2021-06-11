@@ -116,7 +116,7 @@ java -jar wQFM-v1.3.jar -i "input-file-name" -o "output-file-name" -t 2
 # Annotate branches with normalized average quartet support (normalized over the most dominant topology's weight, so this option will provide highest possible branch support if all dominant quartets agree with a branch)
 java -jar wQFM-v1.3.jar -i "input-file-name" -o "output-file-name" -t 3
 
-## Eg. if you have python setup instead of python3. Now, the scripts will be called using "python <script-name.py> <args>"
+## Eg. if you have python setup instead of python3. Now, the scripts will be called using "python <script-name.py> [args]"
 java -jar wQFM-v1.3.jar -i "input-file-name" -o "output-file-name" -t 1 -pe python
 ```
     
@@ -139,7 +139,7 @@ We can use the jar file to compute quartet scores of a reference species tree wi
 java -jar wQFM-v1.3.jar -i "input-file-name" -o "output-file-name" -q 1 # just prints quartet score details on console.
 java -jar wQFM-v1.3.jar -i "input-file-name" -o "output-file-name" -q 1 -qo "qscore-details.txt" # for convenience, dumps to a file.
 
-## Eg. if you have python setup instead of python3. Now, the scripts will be called using "python <script-name.py> <args>"
+## Eg. if you have python setup instead of python3. Now, the scripts will be called using "python <script-name.py> [args]"
 java -jar wQFM-v1.3.jar -i "input-file-name" -o "output-file-name" -q 2 -pe python
 ```
     
@@ -180,12 +180,22 @@ java -jar wQFM-v1.3.jar -i "input-file-weighted-quartets" -st "species-tree-file
 	beta=<BETA> for 1[ws] - <BETA>[wv] partition score
 	beta="dyanmic" then dynamic bin heuristic is used.
 
--h, --help      Show this help message and exit.
+-q, --quartet_score_level=<quartetScoreLevel>
+	q=0: do not show quartet score(default)
+	q=1: show quartet score only
+	q=2: show quartet score, total weight of quartets, proportion of quartets satisfied
+
+-qo, --quartet_score_output_file=<quartetScoreOutputFile>
+    (default) null
+    If given, quartet scores will be output here.
 
 -pe, --python_engine=<pythonEngine>
 	(default) python3
 	(otherwise) python
-	i.e. If you have "python" setup in your O.S., then scripts will be run using "python <script.py>"
+	i.e. If you have "python" setup in your O.S., then scripts will be run using "python <script.py> [args]"
+
+
+-h, --help      Show this help message and exit.
 
 -V, --version   Print version information and exit.
 ```
