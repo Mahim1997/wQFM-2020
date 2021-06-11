@@ -101,11 +101,11 @@ java -jar wQFM-v1.2.jar -i "input-file-gene-trees" -o "output-file-name" -im gen
   ```
 
 
-### **To infer branch supports**
+### To infer branch supports
 
 wQFM can annotate the branches in the output tree with the quartet support which is defined as the number of quartets in the input set of gene trees that agree with a branch.
 
-* Annotating the output species tree with -t flag 
+* Annotating the output species tree with **-t** flag 
 ```bash
 # Annotate branches with average quartet support (the average weights of quartets in your gene trees that agree with a branch)
 java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 1 
@@ -116,8 +116,36 @@ java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 2
 # Annotate branches with normalized average quartet support (normalized over the most dominant topology's weight, so this option will provide highest possible branch support if all dominant quartets agree with a branch)
 java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 3
 
-## Eg. if you have python setup instead of python3. Now, the scripts will be called using "python ..."
+## Eg. if you have python setup instead of python3. Now, the scripts will be called using "python <script-name.py> <args>"
 java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -t 1 -pe python
+```
+    
+* If you want to annotate the branches of a given species tree with quartet support with respect to a set of weighted quartets
+```bash
+# eg. using annotations level of 1 (use -pe python if you have python setup instead of python3)
+java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-without-annotations" -o "species-tree-with-annotations" -t 1
+```
+
+### To infer quartet scores
+We can use the jar file to compute quartet scores of a reference species tree with respect to a set of weighted quartets. (See Relevant Multiple Options below for details)
+
+* Quartet Scores with **-q** flag to control level of verbosity, and **-qo** to indicate the file path where the quartet scores will be written to (tab separated)
+```bash
+
+# Use q = 1 to get only the total weight of quartets that are satisfied by the given produced species tree
+# Use q = 2 to get total weight of satisfied quartets, total weight of quartets present in the input wqrts file, and proportion of quartets satisfied.
+
+# Run wQFM input and output using quartet scores
+java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -q 1 # just prints quartet score details on console.
+java -jar wQFM-v1.2.jar -i "input-file-name" -o "output-file-name" -q 1 -qo "qscore-details.txt" # for convenience, dumps to a file.
+
+
+# Just to get the quartet score
+java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-file" -q 2 # to print on console
+java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-file" -q 2 -qo "qscore-details.txt" # to dump to a file
+
+## Eg. if you have python setup instead of python3. Now, the scripts will be called using "python <script-name.py> <args>"
+java -jar wQFM-v1.2.jar -i "input-file-weighted-quartets" -st "species-tree-file" -q 2 -pe python
 ```
     
 * If you want to annotate the branches of a given species tree with quartet support with respect to a set of weighted quartets
