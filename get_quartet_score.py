@@ -1,57 +1,47 @@
-import gene
-
 import sys
 
-dict_4TaxSeq_to_totalWts = {} # Key: 4-tax-sequence, Value: Total-Cumulative-Weight-of-Quartets
-
-def sort_4TaxSequence(tax1, tax2, tax3, tax4):
-    list_custom = []
-    list_custom.append(tax1)
-    list_custom.append(tax2)
-    list_custom.append(tax3)
-    list_custom.append(tax4)
-    list_custom.sort()
-    (t1, t2, t3, t4) = list_custom
-    return (t1, t2, t3, t4)
-    # return list_custom
-
-""" Appends one single quartet to dictionary
-"""
-def append_to_dictionary(quartet, max_mode):
-    # (tax1, tax2, tax3, tax4, weight) = get_quartet(line)
-    # (t1, t2, t3, t4) = sort_4TaxSequence(tax1, tax2, tax3, tax4) # any sorting order
-    
-    (t1, t2, t3, t4, weight) = quartet
-    # print(tax1, tax2, tax3, tax4, weight, t1, t2, t3, t4)
-    key_4Tax_seq = sort_4TaxSequence(t1, t2, t3, t4)
-
-    if key_4Tax_seq not in dict_4TaxSeq_to_totalWts:
-        dict_4TaxSeq_to_totalWts[key_4Tax_seq] = 0 ## initialize as ZERO
-
-    if max_mode == False: ## use sum mode.
-        dict_4TaxSeq_to_totalWts[key_4Tax_seq] = dict_4TaxSeq_to_totalWts[key_4Tax_seq] + weight
-    else: ## use MAX mode
-        dict_4TaxSeq_to_totalWts[key_4Tax_seq] = max(dict_4TaxSeq_to_totalWts[key_4Tax_seq], weight)
-    
-
-def get_normalized_quartet(qrt):
-    (t1, t2, t3, t4, weight) = qrt
-    key_4Tax_seq = sort_4TaxSequence(t1, t2, t3, t4)
-    DENOMINATOR = dict_4TaxSeq_to_totalWts[key_4Tax_seq]
-    weight = weight / float(DENOMINATOR)
-    qrt = (t1, t2, t3, t4, weight)
-    return qrt
 
 
-def normalize_quartets_weights(list_quartets, max_mode=False):    
-    for quartet in list_quartets:
-        append_to_dictionary(quartet, max_mode=max_mode)
-    
-    new_list_quartets = [get_normalized_quartet(qrt) for qrt in list_quartets]
-    
-    # for qrt, qrt_new in zip(list_quartets, new_list_quartets):
-        # print(qrt, qrt_new)
+def printUsageExit():
+    print("python get_quartet_score.py <input-wqrts> <stree-reference> <quartet-score-level> [quartet-score-output-file]")
+    sys.exit()
+
+""" Get sorted quartets a,b|c,d: w """
+def getSortedQuartet(line):
+    stringsReplace = ["\n", ";", "(", ")"]
+    for s in stringsReplace:
+        line = line.replace(s, "") ## remove these chars
         
-    return new_list_quartets
+    line = line.replace(" ", ",")  ## replace WHITESPACE with COMMA    
+    arr = line.split(",") ## split by COMMA
+
+    # arr[0:1].sort() ## Maybe not necessary
+    # arr[2:3].sort() ## Maybe not necessary
+
+    return (arr[0], arr[1], arr[2], arr[3], float(arr[4]))
+
+"""Get list of input weighted quartets"""
+def get_input_wqrts(input_file_wqrts):
+
+    with open(input_file_wqrts, mode='r') as fin:
+        lines = [l.strip() for l in fin.readlines()]
+
+    quartets = [getSortedQuartet(line) for line in lines]
+    return quartets
+
+
+
+
+if __name__ == '__main__':
     
+    lens = len(sys.argv)
+
+    if (lens == 4) or (lens == 5):
+        input_file_wqrts = sys.argv[1]
+        stree_file = sys.argv[2]
+        qscore_level = int(sys.argv[3])
     
+        if lens == 5:
+            qscore_output_file = sys.argv[4]
+    else:
+        printUsageExit()
