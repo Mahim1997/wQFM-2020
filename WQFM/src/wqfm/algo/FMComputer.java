@@ -85,7 +85,7 @@ public class FMComputer {
                 Use short-cuts (excluding deferred), and compute after-hypothetical-swap-values*/
             List<Integer> relevantQuartetsBeforeHypoMoving = customDS.map_taxa_relevant_quartet_indices.get(taxToConsider);
             //we lock the taxa if it does not have any relevant quartets (hence no new information) :( 
-            if(relevantQuartetsBeforeHypoMoving==null) {
+            if(relevantQuartetsBeforeHypoMoving == null) {
                 this.lockedTaxaBooleanMap.put(taxToConsider, true);
                 continue;
             }
