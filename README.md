@@ -1,13 +1,13 @@
 # wQFM
-#### wQFM (version 1.3)
+#### wQFM (version 1.4)
 This repository contains the official implementation of <!--code and helper scripts of--> our paper [**"wQFM: Highly Accurate Genome-scale Species Tree Estimation from Weighted Quartets"**](https://academic.oup.com/bioinformatics/advance-article-abstract/doi/10.1093/bioinformatics/btab428/6292084) accepted in ***Bioinformatics, 2021***.
 
 ## Notice to all the users
-- Codebase has been slightly updated **(on June 12, 2021)** to fix some precision related bugs.
-- Version **v-1.3** had it fixed.
 - Codebase has been slightly updated **(on April 15, 2022)** to fix some null pointer issues which was encountered when there is no relevant quartets for a particular taxa at any given level.
 - New version (i.e. the current stable version **v-1.4**) has it fixed. Please use the current version if you have used the jar file/codebase before the aforementioned date.
 - New version also includes quartet score outputs (please see below **"To infer quartet scores"** section).
+- Codebase has been slightly updated **(on June 12, 2021)** to fix some precision related bugs in version **v-1.3**.
+
 
 ## Short Description
 
