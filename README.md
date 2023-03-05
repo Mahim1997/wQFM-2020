@@ -3,6 +3,7 @@
 This repository contains the official implementation of <!--code and helper scripts of--> our paper [**"wQFM: Highly Accurate Genome-scale Species Tree Estimation from Weighted Quartets"**](https://academic.oup.com/bioinformatics/advance-article-abstract/doi/10.1093/bioinformatics/btab428/6292084) accepted in ***Bioinformatics, 2021***.
 
 ## Notice to all the users
+- Dataset link has been updated **(March 5, 2023)**
 - Codebase has been slightly updated **(on April 15, 2022)** to fix some null pointer issues which was encountered when there is no relevant quartets for a particular taxa at any given level.
 - New version (i.e. the current stable version **v-1.4**) has it fixed. Please use the current version if you have used the jar file/codebase before the aforementioned date.
 - New version also includes quartet score outputs (please see below **"To infer quartet scores"** section).
@@ -226,7 +227,7 @@ So, if you do provide stars in input quartet-file, wQFM will terminate (after gi
 ## Datasets
 The simulated datasets investigated in this study are available [here](https://sites.google.com/eng.ucsd.edu/datasets/home?authuser=0)
 
-The input gene trees, corresponding weighted quartets and the estimated species trees are available [here](https://drive.google.com/drive/folders/1IYKYWG81Sld8QwzZNO5D71mOulGVd7ax?usp=sharing).
+The input gene trees, corresponding weighted quartets and the estimated species trees are available [here](https://drive.google.com/drive/folders/1vJ1jKBNxPJua9eXgAOS6DCe0yVd5kCtC?usp=sharing).
 
 
 As of May 1, 2021, the datasets (used for analysis) contain the following:
