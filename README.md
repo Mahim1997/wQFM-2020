@@ -305,3 +305,14 @@ We are always looking to improve our codebase.
 For any bugs, please post on [wQFM-2020 issues page](https://github.com/Mahim1997/wQFM-2020/issues).
 
 Alternatively, you can email at ``mahim.mahbub.97@gmail.com`` or ``zahinwahab@gmail.com``.
+
+## Extensions on wQFM
+1. wQFM-TREE:
+- It removes the bottleneck of enumerating the quartet set and computes the quartet score directly from the gene trees using graph theoretic and combinatorial techniques enabling analysis of large datasets of thousands of taxa and gene trees.
+- Published in Bioinformatics Advances: https://academic.oup.com/bioinformaticsadvances/article/5/1/vbaf053/8075148
+- Github: https://github.com/abdur-rafi/wQFM-TREE
+
+2. wQFM-GDL: 
+- This algorithm extends both wQFM and wQFM-TREE for gene duplication and loss in addition to ILS. That means it can analyze multicopy gene trees (similar to the algorithm ASTRAL-Pro).
+- Published in RECOMB-CG 2026, under review in Systematic Biology: https://link.springer.com/chapter/10.1007/978-3-032-26891-4_8
+- Github: https://github.com/abdur-rafi/wQFM-GDL
